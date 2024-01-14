@@ -168,7 +168,7 @@ checkstyle  代码格式检查
 ### 简易 vim 配置（服务器配置使用）
 
 ```vim
-wget -P /etc/vimrc https://raw.githubusercontent.com/yuluo-yx/use/master/vim/_vimrc  -O /etc/vimrc
+curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/_vimrc >> /etc/vim/vimrc
 ```
 
 
