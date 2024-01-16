@@ -16,6 +16,8 @@ uBlock Origin Ad block
 
 ### 快捷键整理
 
+在 terminal 中，快速切换到命令的行首，行尾和清空命令 ctrl a, ctrl e and ctrl q
+
 截图到剪贴板 shift + command + control + 4 (不按 shift 存储为文件)
 
 切换输入法：control + 空格 切换到上一个输入法
