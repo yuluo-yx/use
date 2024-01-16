@@ -18,4 +18,5 @@ set hlsearch		                " 搜索时，高亮显示搜索结果
 set wildmenu						" 命令模式下，底部操作指令按下 Tab 键自动补全，第一次按下 Tab，会显示所有匹配的操作指令的清单；第二次按下 Tab，会依次选择各个指令
 
 syntax on               		    " 语法高亮。自动识别代码，使用多种颜色表示
-highlight WhitespaceEOL ctermbg=red guibg=blue	" 显示行尾的空格
+hi MatchParen ctermbg=Yellow guibg=lightblue    " 括号高亮匹配
+highlight WhitespaceEOL ctermbg=red guibg=Yellow	" 显示行尾的空格
