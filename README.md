@@ -2,15 +2,17 @@
 
 # Chrome 扩展
 
-Grammarly 语法检查
+IDM Integration Module idm 下载扩展，接管浏览器下载行为，下载速度更快
 
-DM Integration Module idm 下载扩展
+JSON Viewer pro 格式化查看 json 数据，可能是最好看的
 
-JSON Formatter json 格式化查看
+AdBlock 拦截广告
 
-uBlock Origin Ad block
+Wappalyzer 查看网站编写用到的框架
 
 油猴 任意网站都可以使用的脚本管理工具
+
+其他的浏览器 chrome 提示说不支持了，过段时间在更新。
 
 # Mac 
 
@@ -66,25 +68,25 @@ Command + shift + . 显示隐藏文件
 
 ### 应用整理
 
-raycast 应用启动器 alfred 替代
+Raycast 应用启动器 （替代选择：Alfred）
 
-snipaste 截图
+Snipaste 截图软件
 
 - 自己调整快捷键，可能冲突 
   -  command + 1 截屏
   -  command + 2 截屏并自动复制
 
-monitorcontrol 在 mac 中控制显示器
+Monitorcontrol 控制外接显示器的屏幕亮度
 
-rectangle 窗口管理
+Rectangle 窗口管理
 
-deepl 翻译工具
+Deepl 翻译工具
 
-- 选中文本 command + c + c
+- 选中文本 command + c + c 启动翻译
 
-only switch 系统管理替代
+Only switch 系统管理替代软件
 
-scroll reverser 鼠标翻转
+Scroll reverser 鼠标翻转
 
 # IDEA （win mac 类似）
 
