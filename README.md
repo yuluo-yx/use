@@ -2,7 +2,7 @@
 
 # Chrome 扩展
 
-IDM Integration Module idm 下载扩展，接管浏览器下载行为，下载速度更快
+IDM Integration Module idm 下载扩展插件，接管浏览器下载行为，下载速度更快
 
 JSON Viewer pro 格式化查看 json 数据，可能是最好看的
 
@@ -10,9 +10,9 @@ AdBlock 拦截广告
 
 Wappalyzer 查看网站编写用到的框架
 
-油猴 任意网站都可以使用的脚本管理工具
+Chrono下载管理器 好用的 google 浏览器下载管理插件
 
-其他的浏览器 chrome 提示说不支持了，过段时间在更新。
+油猴 任意网站都可以使用的脚本管理工具
 
 # Mac 
 
@@ -92,38 +92,39 @@ Scroll reverser 鼠标翻转
 
 ### 快捷键
 
-1. 所有带下划线的Alt+下划线字符
-2. 新建 alt+insert
-3. 操作文件  右侧controller右侧的文档键
-4. 选择maven模板：Alt+a
-5. 打开代码窗口ctrl+shift+f12
-6. 关闭当前窗口 ctrl+F4
+1. 所有带下划线的 Alt+下划线字符
+2. 新建 alt + insert
+3. 操作文件  右侧 controller 右侧的文档键
+4. 选择maven模板：Alt + a
+5. 打开代码窗口ctrl + shift + f12
+6. 关闭当前窗口 ctrl + F4
 7. 窗口之间的切换 Alt + 左右键
-8. ctrl+I实现接口中的方法
-9. 关闭或者放出侧边栏  ctrl+shift+F12
-10. 复制一个类的全限定名称：ctrl+shift+alt+c
+8. ctrl + I 实现接口中的方法
+9. 关闭或者放出侧边栏  ctrl + shift + F12
+10. 复制一个类的全限定名称：ctrl + shift + alt + c
 11. 复制光标所在的当前行 ctrl + d
-12. 复制文件绝对路径 ctrl+shift+c
-13. 复制文件的绝对路径和包名 alt+ctrl+shift+c
-14. 撤销上一步的撤销操作  ctrl+shift+z
-15. 删除当前行  ctrl+y
-16. 在当前行之后开始新行 shift+enter
-17. 在当前行之前开始新行 ctrl+alt+enter
-18. 代码补全 ctrl+space
-19. 格式化代码  ctrl+alt+L
-20. 参数信息提醒 ctrl+p
-21. 修改名称 shift+f6
-22. 移动当前行 ctrl + shift + 上下键
-23. 快速定位某个文件的某一行  ctrl+shift+N
-24. 删除光标前面的单词或者是中文句子 ctrl+backsoace
-25. 删除光标后面的单词或者中文句子 ctrl+delete
-26. 取消缩进 shift+tab
-27. ctrl+tab 打开编辑过的代码窗口
-28. 打开翻译窗口 ctrl shift o
-29. 翻译当前选中的单词 ctrl shift y
-30. 安装了maven helper之后，使用 ctrl alt r来快速调出maven操作窗口
+12. 复制文件绝对路径 ctrl + shift + c
+13. 复制文件的绝对路径和包名 alt + ctrl + shift + c
+14. 撤销上一步的撤销操作  ctrl + shift + z
+15. 删除当前行  ctrl + y
+16. 在当前行之后开始新行 shift + enter
+17. 在当前行之前开始新行 ctrl + alt + enter
+18. 格式化代码  ctrl + alt + L
+19. 参数信息提醒 ctrl + p
+20. 修改名称 shift + f6
+21. 移动当前行 ctrl + shift + 上下键
+22. 快速定位某个文件的某一行  ctrl + shift + N
+23. 删除光标前面的单词或者是中文句子 ctrl + backsoace
+24. 删除光标后面的单词或者中文句子 ctrl + delete
+25. 取消缩进 shift + tab
+26. ctrl + tab 打开编辑过的代码窗口
+27. 打开翻译窗口 ctrl shift o
+28. 翻译当前选中的单词 ctrl shift y
+29. 安装了 maven helper 之后，使用 ctrl alt r来快速调出 maven 操作窗口
 
 ### 插件
+
+#### 常用
 
 Atom Metrinal icons 文件 icons
 
@@ -131,13 +132,15 @@ CodeGlance pro 代码地图
 
 maven helper 快速分析 maven 依赖
 
-Mybatis x 映射工具
-
 translation 翻译工具
 
 nyan progress bar 进度条
 
+#### 增强
+
 checkstyle  代码格式检查
+
+MybatisX Mapper 文件和 XML 文件关联插件
 
 # Vim 常用命令
 
