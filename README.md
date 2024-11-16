@@ -80,6 +80,8 @@ Monitorcontrol 控制外接显示器的屏幕亮度
 
 Rectangle 窗口管理
 
+- control + option + 方向箭头 应用屏幕朝箭头方向分屏
+
 Deepl 翻译工具
 
 - 选中文本 command + c + c 启动翻译
