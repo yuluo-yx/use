@@ -1,5 +1,3 @@
-
-
 # Chrome 扩展
 
 IDM Integration Module idm 下载扩展插件，接管浏览器下载行为，下载速度更快
@@ -26,9 +24,9 @@ Chrono下载管理器 好用的 google 浏览器下载管理插件
 
 应用之间切换：command + tab
 
-- command + ~ 向前选择
+- command + ~ 或 command + shift + tab 向前选择
 
-应用打开的窗口之间切换 command + ~ 
+- 应用打开的窗口之间切换 command + ~ 
 
 Command + h 隐藏当前窗口，效果等同于 command + w （关闭当前窗口）
 
