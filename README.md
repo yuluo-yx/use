@@ -136,6 +136,8 @@ translation 翻译工具
 
 nyan progress bar 进度条
 
+Rainbow Brackets 彩虹括号
+
 #### 增强
 
 checkstyle  代码格式检查
