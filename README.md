@@ -93,7 +93,7 @@ Scroll reverser 鼠标翻转
 ### 快捷键
 
 1. 所有带下划线的 Alt+下划线字符
-2. 新建 alt + insert
+2. 新建 alt + insert (Mac 如果没有 insert 为 control shift fn)
 3. 操作文件  右侧 controller 右侧的文档键
 4. 选择maven模板：Alt + a
 5. 打开代码窗口ctrl + shift + f12
@@ -111,7 +111,7 @@ Scroll reverser 鼠标翻转
 17. 在当前行之前开始新行 ctrl + alt + enter
 18. 格式化代码  ctrl + alt + L
 19. 参数信息提醒 ctrl + p
-20. 修改名称 shift + f6
+20. 修改名称 shift + f6（Mac 没有 f1 功能键时 fn + 功能键）
 21. 移动当前行 ctrl + shift + 上下键
 22. 快速定位某个文件的某一行  ctrl + shift + N
 23. 删除光标前面的单词或者是中文句子 ctrl + backsoace
