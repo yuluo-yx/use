@@ -22,7 +22,7 @@ Chrono下载管理器 好用的 google 浏览器下载管理插件
 
 切换输入法：control + 空格 切换到上一个输入法
 
-应用之间切换：command + tab
+应用之间切换：command + tab (在切换已经最小化的应用窗口时 先按住 command tab 选择到应用窗口之后，松开 tab 按住 option 再松开 command)
 
 - command + ~ 或 command + shift + tab 向前选择
 
