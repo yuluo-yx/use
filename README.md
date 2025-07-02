@@ -88,6 +88,10 @@ Only switch 系统管理替代软件
 
 Scroll reverser 鼠标翻转
 
+### 搜狗输入法奇淫巧计
+
+Mac 上中文输入最好的应该就是搜狗输入法了... 这里介绍一些使用中的技巧，提升打字效率....
+
 # IDEA （win mac 类似）
 
 ### 快捷键
@@ -184,7 +188,7 @@ MybatisX Mapper 文件和 XML 文件关联插件
 ### 简易 vim 配置（服务器配置使用）
 
 ```vim
-curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/_vimrc >> /etc/vim/vimrc
+curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/_vimrc >> ~/.vimrc
 ```
 
 
