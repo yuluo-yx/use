@@ -1,14 +1,12 @@
 # Chrome 扩展
 
-IDM Integration Module idm 下载扩展插件，接管浏览器下载行为，下载速度更快
-
 JSON Viewer pro 格式化查看 json 数据，可能是最好看的
 
 AdBlock 拦截广告
 
-Wappalyzer 查看网站编写用到的框架
-
 Chrono下载管理器 好用的 google 浏览器下载管理插件
+
+IDM Integration Module idm 下载扩展插件，接管浏览器下载行为，下载速度更快(需要下载 IDM)
 
 油猴 任意网站都可以使用的脚本管理工具
 
@@ -18,9 +16,9 @@ Chrono下载管理器 好用的 google 浏览器下载管理插件
 
 在 Terminal 中，快速切换到命令的行首，行尾和清空命令 ctrl a, ctrl e and ctrl q
 
-截图到剪贴板 shift + command + control + 4 (不按 shift 存储为文件)（推荐使用 Snipaste）
+截图到剪贴板 shift + command + control + 4 (不按 shift 存储为文件)**（推荐使用 Snipaste）**
 
-切换输入法：control + 空格 切换到上一个输入法
+切换输入法：control + 空格
 
 应用之间切换：command + tab (在切换已经最小化的应用窗口时 先按住 command tab 选择到应用窗口之后，松开 tab 按住 option 再松开 command)
 
@@ -58,7 +56,7 @@ enter 重命名文件和文件夹内
 
 Command + ctrl + f  将打开的应用全屏显示
 
-- terminal 打开默认为小窗口，在 设置里自己调整下（属于使用洁癖）
+- terminal 打开默认为小窗口，在设置里自己调整下（属于使用洁癖）
 
 Command + shift + . 显示隐藏文件
 
@@ -71,8 +69,7 @@ Raycast 应用启动器 （替代选择：Alfred）
 Snipaste 截图软件
 
 - 自己调整快捷键，可能冲突 
-  -  command + 1 截屏
-  -  command + 2 截屏并自动复制
+  -  command + F1 截屏
 
 Monitorcontrol 控制外接显示器的屏幕亮度
 
@@ -86,7 +83,11 @@ Deepl 翻译工具
 
 Only switch 系统管理替代软件
 
-Scroll reverser 鼠标翻转
+RunCat 显示一个奔跑的小猫，速度越快 CPU 负载越高
+
+Shui 提醒每隔一定时间喝水
+
+--Scroll reverser 鼠标翻转--
 
 ### 搜狗输入法奇淫巧计
 
@@ -140,7 +141,7 @@ translation 翻译工具
 
 nyan progress bar 进度条
 
-Rainbow Brackets 彩虹括号
+--Rainbow Brackets 彩虹括号--
 
 #### 增强
 
@@ -188,11 +189,5 @@ MybatisX Mapper 文件和 XML 文件关联插件
 ### 简易 vim 配置（服务器配置使用）
 
 ```vim
-curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/_vimrc >> ~/.vimrc
+curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/simple._vimrc >> ~/.vimrc
 ```
-
-
-
-
-
- 
