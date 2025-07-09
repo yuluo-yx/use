@@ -10,6 +10,10 @@ IDM Integration Module idm 下载扩展插件，接管浏览器下载行为，�
 
 油猴 任意网站都可以使用的脚本管理工具
 
+File Icons for GitHub and GitLab 精美的 Github 图标
+
+Refined GitHub 重构 Github 页面效果
+
 # Mac 
 
 ### 快捷键整理
