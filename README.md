@@ -89,7 +89,7 @@ RunCat 显示一个奔跑的小猫，速度越快 CPU 负载越高
 
 Shui 提醒每隔一定时间喝水
 
-$Scroll reverser 鼠标翻转$
+～～Scroll reverser 鼠标翻转～～
 
 ### 搜狗输入法奇淫巧计
 
