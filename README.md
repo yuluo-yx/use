@@ -68,7 +68,7 @@ Command + shift + . 显示隐藏文件
 
 ### 应用整理
 
-Raycast 应用启动器 （替代选择：Alfred）
+Raycast 应用启动器
 
 Snipaste 截图软件
 
@@ -83,19 +83,17 @@ Rectangle 窗口管理
 
 有道翻译
 
-Only switch 系统管理替代软件
-
 RunCat 显示一个奔跑的小猫，速度越快 CPU 负载越高
 
 Shui 提醒每隔一定时间喝水
 
-～～Scroll reverser 鼠标翻转～～
+#### 没啥大作用的软件 🥱
 
-### 搜狗输入法奇淫巧计
+~~Only switch 系统管理替代软件~~
 
-Mac 上中文输入最好的应该就是搜狗输入法了... 这里介绍一些使用中的技巧，提升打字效率....
+~~Scroll reverser 鼠标翻转~~
 
-# IDEA （win mac 类似）
+# Jetbrains 工具通用快捷键（Win Mac 相似）
 
 ### 快捷键
 
