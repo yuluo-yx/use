@@ -97,11 +97,11 @@ Shui 提醒每隔一定时间喝水
 
 ### 快捷键
 
-1. 所有带下划线的 Alt+下划线字符
-2. 新建 alt + insert (Mac 如果没有 insert 为 control shift fn)
-3. 操作文件  右侧 controller 右侧的文档键
+1. 所有带下划线的 Alt + 下划线字符
+2. 新建 alt + insert (Mac 看系统而已，例如 insert 为 control shift fn)
+3. 操作文件 右侧 controller 右侧的文档键
 4. 选择maven模板：Alt + a
-5. 打开代码窗口ctrl + shift + f12
+5. 打开代码窗口 ctrl + shift + f12
 6. 关闭当前窗口 ctrl + F4
 7. 窗口之间的切换 Alt + 左右键
 8. ctrl + I 实现接口中的方法
@@ -125,7 +125,7 @@ Shui 提醒每隔一定时间喝水
 26. ctrl + tab 打开编辑过的代码窗口
 27. 打开翻译窗口 ctrl shift o
 28. 翻译当前选中的单词 ctrl shift y
-29. 安装了 maven helper 之后，使用 ctrl alt r来快速调出 maven 操作窗口
+29. 安装了 maven helper 之后，使用 ctrl alt r 来快速调出 maven 操作窗口
 
 ### 插件
 
@@ -135,17 +135,17 @@ Atom Metrinal icons 文件 icons
 
 CodeGlance pro 代码地图
 
-maven helper 快速分析 maven 依赖
+Maven Helper 快速分析 Maven 依赖
 
-translation 翻译工具
+Translation 翻译工具
 
-nyan progress bar 进度条
+Nyan progress bar 进度条
 
---Rainbow Brackets 彩虹括号--
+~~Rainbow Brackets 彩虹括号~~
 
 #### 增强
 
-checkstyle  代码格式检查
+Checkstyle  代码格式检查
 
 MybatisX Mapper 文件和 XML 文件关联插件
 
@@ -186,8 +186,8 @@ MybatisX Mapper 文件和 XML 文件关联插件
 - n 向下检索
 - N 向上检索
 
-### 简易 vim 配置（服务器配置使用）
+### 简易 Vim 配置（服务器配置使用）
 
-```vim
+```shell
 curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/simple._vimrc >> ~/.vimrc
 ```
