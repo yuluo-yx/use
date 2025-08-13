@@ -139,6 +139,8 @@ Maven Helper 快速分析 Maven 依赖
 
 Translation 翻译工具
 
+Git Tool Box Git 能力增强插件
+
 Nyan progress bar 进度条
 
 ~~Rainbow Brackets 彩虹括号~~
