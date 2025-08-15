@@ -73,7 +73,8 @@ Raycast 应用启动器
 Snipaste 截图软件
 
 - 自己调整快捷键，可能冲突 
-  -  command + F1 截屏
+  - F1 截图并赋值
+  - F2 贴图
 
 Monitorcontrol 控制外接显示器的屏幕亮度
 
@@ -93,40 +94,58 @@ Shui 提醒每隔一定时间喝水
 
 ~~Scroll reverser 鼠标翻转~~
 
-# Jetbrains 工具通用快捷键（Win Mac 相似）
+# Jetbrains 工具通用快捷键（Win Mac 相似，以 Mac 为主）
+
+### 键盘说明
+
+⌘ Command
+⇧ Shift
+⌥ Option
+⌃ Control
+↩︎ Return/Enter
+⌫ Delete
+⌦ 向前删除键（Fn+Delete）
+↑ 上箭头
+↓ 下箭头
+← 左箭头
+→ 右箭头
+⇞ Page Up（Fn+↑）
+⇟ Page Down（Fn+↓）
+Home Fn + ←
+End Fn + →
+⇥ 右制表符（Tab键）
+⇤ 左制表符（Shift+Tab）
+⎋ Escape (Esc)
 
 ### 快捷键
 
-1. 所有带下划线的 Alt + 下划线字符
-2. 新建 alt + insert (Mac 看系统而已，例如 insert 为 control shift fn)
-3. 操作文件 右侧 controller 右侧的文档键
-4. 选择maven模板：Alt + a
-5. 打开代码窗口 ctrl + shift + f12
-6. 关闭当前窗口 ctrl + F4
-7. 窗口之间的切换 Alt + 左右键
-8. ctrl + I 实现接口中的方法
-9. 关闭或者放出侧边栏  ctrl + shift + F12
-10. 复制一个类的全限定名称：ctrl + shift + alt + c
-11. 复制光标所在的当前行 ctrl + d
-12. 复制文件绝对路径 ctrl + shift + c
-13. 复制文件的绝对路径和包名 alt + ctrl + shift + c
-14. 撤销上一步的撤销操作  ctrl + shift + z
-15. 删除当前行  ctrl + y
-16. 在当前行之后开始新行 shift + enter
-17. 在当前行之前开始新行 ctrl + alt + enter
-18. 格式化代码  ctrl + alt + L
-19. 参数信息提醒 ctrl + p
-20. 修改名称 shift + f6（Mac 没有 f1 功能键时 fn + 功能键）
-21. 移动当前行 ctrl + shift + 上下键
-22. 快速定位某个文件的某一行  ctrl + shift + N
-23. 删除光标前面的单词或者是中文句子 ctrl + backsoace
-24. 删除光标后面的单词或者中文句子 ctrl + delete
-25. 取消缩进 shift + tab
-26. ctrl + tab 打开编辑过的代码窗口
-27. 打开翻译窗口 ctrl shift o
-28. 翻译当前选中的单词 ctrl shift y
-29. 安装了 maven helper 之后，使用 ctrl alt r 来快速调出 maven 操作窗口
+1. 所有带下划线的 ⌘ + 下划线字符
+     例如 ⌘ 1 打开左侧的文件窗口，⌘ 0 打开 commit 左侧窗口
+2. 新建文件，目录等 ⌘ n  
+3. 编辑器打开窗口之间的切换/反向切换 ⌃ + ⇥ / ⌃ + ⇧ + ⇥ 
+4. ctrl + i 实现接口中的方法
+5. 复制一个类的全限定名称：⌥ + ⇧ + ⌘ + c
+6. 复制光标所在的当前行 ⌃ + d
+7. 复制文件绝对路径 ⌃ + ⇧ + c
+8. 复制文件的绝对路径和包名 ⌘ + ⌘ + ⇧ + c
+9. 撤销上一步的撤销操作  ⌃ + ⇧ + z
+10. 删除当前行或选中的文本  ⌘ + ⌫
+11. 在当前行之后开始新行 ⇧ + ↩︎
+12. 在当前行之前开始新行 ⌃ + ⌘ + ↩︎
+13. 格式化代码  ⌃ + ⌘ + L (大写 ⇧+l)
+14. 参数信息提醒 ⌃ + p
+15. 修改文件名称 ⇧ + F6（Mac 没有 F1 功能键时 Fn + 功能键）
+16. 修改文件夹名称 F6
+17. 移动当前行 option + ⇧ + ↑/↓
+18. 快速定位某个文件的某一行 ⌘ + l
+19. 删除光标前面的单词或者是中文句子 ⌃ + ⌦
+20. 删除光标后面的单词或者中文句子 ⌃ + ⌫
+21. 取消缩进 ⇧ + ⇥
+22. 翻译当前选中的单词 ⌃ ⌘ u
 
+23. ⌘ + ⌥ + T 包围代码（使用 if..else, try..catch, for, synchronized 等包围选中的代码
+
+24. (IDEA) 安装了 maven helper 之后，使用 ⌃ ⌘ r 来快速调出 maven 操作窗口
 ### 插件
 
 #### 常用
