@@ -98,24 +98,24 @@ Shui 提醒每隔一定时间喝水
 
 ### 键盘说明
 
-⌘ Command
-⇧ Shift
-⌥ Option
-⌃ Control
-↩︎ Return/Enter
-⌫ Delete
-⌦ 向前删除键（Fn+Delete）
-↑ 上箭头
-↓ 下箭头
-← 左箭头
-→ 右箭头
-⇞ Page Up（Fn+↑）
-⇟ Page Down（Fn+↓）
-Home Fn + ←
-End Fn + →
-⇥ 右制表符（Tab键）
-⇤ 左制表符（Shift+Tab）
-⎋ Escape (Esc)
+⌘ Command <br>
+⇧ Shift <br>
+⌥ Option <br>
+⌃ Control <br>
+↩︎ Return/Enter <br>
+⌫ Delete <br>
+⌦ 向前删除键（Fn+Delete）<br>
+↑ 上箭头 <br>
+↓ 下箭头 <br>
+← 左箭头 <br>
+→ 右箭头 <br>
+⇞ Page Up（Fn+↑）<br>
+⇟ Page Down（Fn+↓）<br>
+Home Fn + ← <br>
+End Fn + → <br>
+⇥ 右制表符（Tab键）<br>
+⇤ 左制表符（Shift+Tab）<br>
+⎋ Escape (Esc) <br>
 
 ### 快捷键
 
