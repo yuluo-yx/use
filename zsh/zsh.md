@@ -1,8 +1,11 @@
 # Zsh  插件使用指南
 
+zsh 框架用 oh-my-zsh 听说 zim 也不错，比前者更快。
+
 ## z 
 
 z 是一个快速目录跳转的工具，在终端中按下 z 并回车，会看到跳转过的目录。
+和 autojump 功能相似，
 
 此时只需要 z 目录末尾路径即可完成跳转：
 
@@ -26,11 +29,9 @@ $ gti status
 git status
 ```
 
-
-
 ## web-search
 
- 通过命令行使用搜索引擎。
+通过命令行使用搜索引擎。
 
 ```text
 # 打开google搜索引擎
@@ -61,6 +62,7 @@ bing idea
 经典插件，自动补全。
 
 ## copypath，copybuffer
+
 zsh自带的插件
 
 copypath可以用来将当前目录快速复制到剪切板
@@ -71,6 +73,20 @@ $ copypath
 ```
 
 copybuffer会自动映射到 ctrl + o快捷键，用于复制当前终端显示的命令
+
 ## kubectl
 
 提供 kubectl 的补全操作以及其他额外功能等。
+
+## fzf
+
+模糊搜索。
+
+ff 模糊搜索文件并预览
+
+ctrl r 模糊搜索 history
+ctrl t 搜索文件
+
+将 ff 搜索到的文件传给 vim
+
+vim `ff`
