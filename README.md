@@ -94,6 +94,8 @@ Shui 提醒每隔一定时间喝水
 
 Mos 让鼠标滚轮更丝滑
 
+OrbStack Docker Desktop 平替
+
 #### 没啥大作用的软件 🥱
 
 ~~Only switch 系统管理替代软件~~
