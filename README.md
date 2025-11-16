@@ -64,7 +64,11 @@ Command + ctrl + f  将打开的应用全屏显示
 
 Command + shift + . 显示隐藏文件
 
+### Terminal
+
 在 terminal 中打开当前路径下的 Finder :  open . 
+
+在 terminal 打开时，按下 command t 打开一个新终端，alt 1 2 在打开的终端之间切换，command w 关闭当前终端
 
 ### 应用整理
 
@@ -175,6 +179,11 @@ MybatisX Mapper 文件和 XML 文件关联插件
 # Vim 常用命令
 
 ### Vim 常用指令
+
+#### NerdTree
+
+ctrl n 打开 & 关闭
+ctrl w w 在打开的文件目录和终端之间互相切换
 
 #### 光标移动
 
