@@ -90,3 +90,6 @@ ctrl t 搜索文件
 将 ff 搜索到的文件传给 vim
 
 vim `ff`
+
+在服务器上时很多场景下没有 zsh 只有 bash，同样可以用 ctrl r 搜索。回车执行，多次 ctrl r 向上搜索
+
