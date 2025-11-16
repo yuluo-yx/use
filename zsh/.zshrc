@@ -1,6 +1,10 @@
-export ZSH="/Users/shown/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="ys"
+
+# 设置自定义主题目录
+USER_NAME=$(whoami)
+ZSH_CUSTOM="$HOME/.${USER_NAME}_env/theme/zsh"
 
 plugins=(
     thefuck
@@ -15,8 +19,8 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-source ~/.shown_env/zsh/aliases.zsh
-source ~/.shown_env/zsh/envs.zsh
-source ~/.shown_env/zsh/function.zsh
-source ~/.shown_env/zsh/ai_envs.zsh
-source ~/.shown_env/zsh/fzf.zsh
+source ~/.${USER_NAME}_env/config/zsh/aliases.zsh
+source ~/.${USER_NAME}_env/config/zsh/envs.zsh
+source ~/.${USER_NAME}_env/config/zsh/function.zsh
+source ~/.${USER_NAME}_env/config/zsh/ai_envs.zsh
+source ~/.${USER_NAME}_env/config/zsh/fzf.zsh

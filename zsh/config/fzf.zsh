@@ -5,3 +5,4 @@ if [[ ! "$PATH" == */Users/shown/.oh-my-zsh/custom/plugins/fzf/bin* ]]; then
 fi
 
 source <(fzf --zsh)
+
