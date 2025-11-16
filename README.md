@@ -6,15 +6,15 @@ AdBlock 拦截广告
 
 Chrono下载管理器 好用的 google 浏览器下载管理插件
 
-IDM Integration Module idm 下载扩展插件，接管浏览器下载行为，下载速度更快(需要下载 IDM)
-
 油猴 任意网站都可以使用的脚本管理工具
 
 File Icons for GitHub and GitLab 精美的 Github 图标
 
 Refined GitHub 重构 Github 页面效果
 
-# Mac 
+~~IDM Integration Module idm 下载扩展插件，接管浏览器下载行为，下载速度更快(需要下载 IDM)~~
+
+# Mac
 
 ### 快捷键整理
 
@@ -60,11 +60,15 @@ enter 重命名文件和文件夹内
 
 Command + ctrl + f  将打开的应用全屏显示
 
-- terminal 打开默认为小窗口，在设置里自己调整下（属于使用洁癖）
+- terminal 打开默认为小窗口，在设置里自己调整下 ~~（属于使用洁癖）~~
 
 Command + shift + . 显示隐藏文件
 
+### Terminal
+
 在 terminal 中打开当前路径下的 Finder :  open . 
+
+在 terminal 打开时，按下 command t 打开一个新终端，alt 1 2 在打开的终端之间切换，command w 关闭当前终端
 
 ### 应用整理
 
@@ -84,9 +88,13 @@ Rectangle 窗口管理
 
 有道翻译
 
-RunCat 显示一个奔跑的小猫，速度越快 CPU 负载越高
+RunCat 显示一个奔跑的小猫，速度越快 CPU 负载越高，可以很方便的看到 ip. ~~（raycast 输入 ip 也可以）~~
 
 Shui 提醒每隔一定时间喝水
+
+Mos 让鼠标滚轮更丝滑
+
+OrbStack Docker Desktop 平替
 
 #### 没啥大作用的软件 🥱
 
@@ -173,6 +181,12 @@ MybatisX Mapper 文件和 XML 文件关联插件
 # Vim 常用命令
 
 ### Vim 常用指令
+
+#### NerdTree
+
+ctrl n 打开 & 关闭
+
+ctrl w w 在打开的文件目录和终端之间互相切换
 
 #### 光标移动
 
