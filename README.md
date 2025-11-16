@@ -183,6 +183,7 @@ MybatisX Mapper 文件和 XML 文件关联插件
 #### NerdTree
 
 ctrl n 打开 & 关闭
+
 ctrl w w 在打开的文件目录和终端之间互相切换
 
 #### 光标移动
