@@ -8,6 +8,7 @@ alias kg="kubectl get"
 alias ka="kubectl apply"
 alias kcf="kubectl create -f"
 alias kd="kubectl describe"
+alias klf="kubectl logs -f"
 
 # python 
 alias py="python3"
