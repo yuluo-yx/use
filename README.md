@@ -6,15 +6,15 @@ AdBlock 拦截广告
 
 Chrono下载管理器 好用的 google 浏览器下载管理插件
 
-IDM Integration Module idm 下载扩展插件，接管浏览器下载行为，下载速度更快(需要下载 IDM)
-
 油猴 任意网站都可以使用的脚本管理工具
 
 File Icons for GitHub and GitLab 精美的 Github 图标
 
 Refined GitHub 重构 Github 页面效果
 
-# Mac 
+~~IDM Integration Module idm 下载扩展插件，接管浏览器下载行为，下载速度更快(需要下载 IDM)~~
+
+# Mac
 
 ### 快捷键整理
 
@@ -60,7 +60,7 @@ enter 重命名文件和文件夹内
 
 Command + ctrl + f  将打开的应用全屏显示
 
-- terminal 打开默认为小窗口，在设置里自己调整下（属于使用洁癖）
+- terminal 打开默认为小窗口，在设置里自己调整下 ~~（属于使用洁癖）~~
 
 Command + shift + . 显示隐藏文件
 
@@ -84,9 +84,11 @@ Rectangle 窗口管理
 
 有道翻译
 
-RunCat 显示一个奔跑的小猫，速度越快 CPU 负载越高
+RunCat 显示一个奔跑的小猫，速度越快 CPU 负载越高，可以很方便的看到 ip. ~~（raycast 输入 ip 也可以）~~
 
 Shui 提醒每隔一定时间喝水
+
+Mos 让鼠标滚轮更丝滑
 
 #### 没啥大作用的软件 🥱
 
