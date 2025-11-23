@@ -150,13 +150,29 @@ else
     echo "oh-my-zsh 已安装"
 fi
 
+# 检查并安装 thefuck
+if ! command -v thefuck &> /dev/null; then
+    echo "未找到 thefuck 命令，正在尝试安装..."
+    if ! install_package thefuck; then
+        echo "thefuck 安装失败，请手动安装 thefuck"
+        echo "macOS: brew install thefuck 或从 https://github.com/nvbn/thefuck 下载"
+        echo "Ubuntu: sudo apt-get install thefuck"
+        echo "CentOS: sudo yum install thefuck"
+        echo "Arch Linux: sudo pacman -S thefuck"
+        exit 1
+    fi
+    echo "thefuck 安装完成"
+else
+    echo "thefuck 已安装"
+fi
+
 # 检查并安装 zsh-syntax-highlighting 插件
 if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" ]; then
     echo "正在安装 zsh-syntax-highlighting 插件..."
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting || {
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting" || {
         echo "zsh-syntax-highlighting 插件安装失败"
         echo "可以稍后手动安装:"
-        echo "  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
+        echo "  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting"
     }
 else
     echo "zsh-syntax-highlighting 插件已安装"
@@ -165,10 +181,10 @@ fi
 # 检查并安装 zsh-autosuggestions 插件
 if [ ! -d "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" ]; then
     echo "正在安装 zsh-autosuggestions 插件..."
-    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions || {
+    git clone https://github.com/zsh-users/zsh-autosuggestions "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions" || {
         echo "zsh-autosuggestions 插件安装失败"
         echo "可以稍后手动安装:"
-        echo "  git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+        echo "  git clone https://github.com/zsh-users/zsh-autosuggestions $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
     }
 else
     echo "zsh-autosuggestions 插件已安装"
@@ -176,23 +192,23 @@ fi
 
 # 创建必要的目录结构
 echo "创建目录结构..."
-mkdir -p ~/.${USER_NAME}_env/config/zsh
-mkdir -p ~/.${USER_NAME}_env/theme/zsh
+mkdir -p ~/.${USER_NAME}_env/zsh/config
+mkdir -p ~/.${USER_NAME}_env/zsh/theme
 
 # 复制 zsh 配置文件
 echo "复制 zsh 配置文件..."
-cp -r "$SCRIPT_DIR/zsh/config/"* ~/.${USER_NAME}_env/config/zsh/ 2>/dev/null || true
+cp -r "$SCRIPT_DIR/zsh/config/"* ~/.${USER_NAME}_env/zsh/config/ 2>/dev/null || true
 
-# 复制 zsh 主题文件
+# 复制 zsh 主题文件到 oh-my-zsh 标准主题目录
 echo "复制 zsh 主题文件..."
-# 首先检查项目中是否有 theme 目录
+# 首先检查项目中是否有 theme 目录（单数形式）
 if [ -d "$SCRIPT_DIR/zsh/theme" ]; then
-    cp -r "$SCRIPT_DIR/zsh/theme/"* ~/.${USER_NAME}_env/theme/zsh/ 2>/dev/null || true
+    cp -r "$SCRIPT_DIR/zsh/theme/"* ~/.oh-my-zsh/themes/ 2>/dev/null || true
+    echo "从项目复制主题文件到 oh-my-zsh"
 else
-    # 如果项目中没有 theme 目录，从 oh-my-zsh 中复制 ys 主题
+    # 如果项目中没有主题目录，从 oh-my-zsh 中复制 ys 主题
     if [ -f "$HOME/.oh-my-zsh/themes/ys.zsh-theme" ]; then
-        cp "$HOME/.oh-my-zsh/themes/ys.zsh-theme" ~/.${USER_NAME}_env/theme/zsh/
-        echo "从 oh-my-zsh 复制 ys 主题"
+        echo "使用 oh-my-zsh 默认的 ys 主题"
     fi
 fi
 
