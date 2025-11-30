@@ -1,4 +1,4 @@
-# Chrome 扩展
+## Chrome 扩展
 
 JSON Viewer pro 格式化查看 json 数据，可能是最好看的
 
@@ -14,7 +14,28 @@ Refined GitHub 重构 Github 页面效果
 
 ~~IDM Integration Module IDM 下载扩展插件，接管浏览器下载行为，下载速度更快(需要下载 IDM)~~
 
-# Mac
+## Mac
+
+### 键盘说明
+
+⌘ Command <br>
+⇧ Shift <br>
+⌥ Option <br>
+⌃ Control <br>
+↩︎ Return/Enter <br>
+⌫ Delete <br>
+⌦ 向前删除键（Fn+Delete）<br>
+↑ 上箭头 <br>
+↓ 下箭头 <br>
+← 左箭头 <br>
+→ 右箭头 <br>
+⇞ Page Up（Fn+↑）<br>
+⇟ Page Down（Fn+↓）<br>
+Home Fn + ← <br>
+End Fn + → <br>
+⇥ 右制表符（Tab键）<br>
+⇤ 左制表符（Shift+Tab）<br>
+⎋ Escape (Esc) <br>
 
 ### 快捷键整理
 
@@ -102,28 +123,7 @@ OrbStack Docker Desktop 平替
 
 ~~Scroll reverser 鼠标翻转~~
 
-# Jetbrains 工具通用快捷键（Win Mac 相似，以 Mac 为主）
-
-### 键盘说明
-
-⌘ Command <br>
-⇧ Shift <br>
-⌥ Option <br>
-⌃ Control <br>
-↩︎ Return/Enter <br>
-⌫ Delete <br>
-⌦ 向前删除键（Fn+Delete）<br>
-↑ 上箭头 <br>
-↓ 下箭头 <br>
-← 左箭头 <br>
-→ 右箭头 <br>
-⇞ Page Up（Fn+↑）<br>
-⇟ Page Down（Fn+↓）<br>
-Home Fn + ← <br>
-End Fn + → <br>
-⇥ 右制表符（Tab键）<br>
-⇤ 左制表符（Shift+Tab）<br>
-⎋ Escape (Esc) <br>
+## Jetbrains 工具通用快捷键（Win Mac 相似，以 Mac 为主）
 
 ### 快捷键
 
@@ -178,7 +178,7 @@ Checkstyle  代码格式检查
 
 MybatisX Mapper 文件和 XML 文件关联插件
 
-# Vim 常用命令
+## Vim 常用命令
 
 ### Vim 常用指令
 
