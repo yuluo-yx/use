@@ -12,7 +12,7 @@ File Icons for GitHub and GitLab 精美的 Github 图标
 
 Refined GitHub 重构 Github 页面效果
 
-~~IDM Integration Module idm 下载扩展插件，接管浏览器下载行为，下载速度更快(需要下载 IDM)~~
+~~IDM Integration Module IDM 下载扩展插件，接管浏览器下载行为，下载速度更快(需要下载 IDM)~~
 
 # Mac
 
