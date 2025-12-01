@@ -1,6 +1,6 @@
-export ZSH="/Users/shown/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="ys"
+ZSH_THEME="yz"
 
 plugins=(
     thefuck
@@ -15,8 +15,8 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-source ~/.shown_env/zsh/aliases.zsh
-source ~/.shown_env/zsh/envs.zsh
-source ~/.shown_env/zsh/function.zsh
-source ~/.shown_env/zsh/ai_envs.zsh
-source ~/.shown_env/zsh/fzf.zsh
+source ~/.${USER}_env/zsh/config/aliases.zsh
+source ~/.${USER}_env/zsh/config/envs.zsh
+source ~/.${USER}_env/zsh/config/function.zsh
+source ~/.${USER}_env/zsh/config/ai_envs.zsh
+source ~/.${USER}_env/zsh/config/fzf.zsh
