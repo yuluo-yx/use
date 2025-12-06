@@ -28,3 +28,6 @@ alias c="onefetch"
 # fzf
 alias f="fzf"
 alias ff='fzf --preview "bat --color=always {}"'
+
+# eza ls
+alias ls="eza -L 1 -s name -laT --total-size" 
