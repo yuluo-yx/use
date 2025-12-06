@@ -98,3 +98,13 @@ ctrl t 搜索文件
 vim `ff`
 
 在服务器上时很多场景下没有 zsh 只有 bash，同样可以用 ctrl r 搜索。回车执行，多次 ctrl r 向上搜索
+
+## eza
+
+代替 ls，ls 输出更丰富些。
+
+```shell
+brew install eza
+```
+
+在 zsh 中配置 
