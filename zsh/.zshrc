@@ -16,8 +16,7 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-source ~/.${USER}_env/zsh/config/aliases.zsh
-source ~/.${USER}_env/zsh/config/envs.zsh
-source ~/.${USER}_env/zsh/config/function.zsh
-source ~/.${USER}_env/zsh/config/ai_envs.zsh
-source ~/.${USER}_env/zsh/config/fzf.zsh
+source ${HOME}/.${USER}_env/zsh/aliases.zsh
+source ${HOME}/.${USER}_env/zsh/envs.zsh
+source ${HOME}/.${USER}_env/zsh/function.zsh
+source ${HOME}/.${USER}_env/zsh/fzf.zsh

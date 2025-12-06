@@ -4,6 +4,7 @@
 eval $(thefuck --alias fuck)
 
 # Yazi
+# 目前为止还没有用起来...
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	yazi "$@" --cwd-file="$tmp"
@@ -12,8 +13,10 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-# autojump plugin config
-[[ -s /Users/shown/.autojump/etc/profile.d/autojump.sh ]] && source /Users/shown/.autojump/etc/profile.d/autojump.sh
-
 # fzf
 export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
+
+# logcat
+function logcat() {
+
+}

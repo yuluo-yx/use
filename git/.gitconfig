@@ -1,0 +1,43 @@
+[core]
+    autocrlf = input
+    compression = 0
+    longpaths = true
+    editor = vim
+[user]
+    name = yuluo-yx
+    email = yuluo08290126@gmail.com
+[http]
+        proxy = http://127.0.0.1:7890
+[https]
+        proxy = http://127.0.0.1:7890
+[alias]
+    br = branch
+    c  = commit -s -m
+    co = checkout
+    ch = cherry-pick
+    dump = cat-file -p
+    hist = log --pretty=format:'%C(yellow)[%ad]%C(reset) %C(green)[%h]%C(reset) | %C(red)%s %C(bold red){{%an}}%C(reset) %C(blue)%d%C(reset)' --graph --date=short
+    st = status
+    type = cat-file -t
+[filter "lfs"]
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+[credential]
+    helper = store
+
+[diff]
+    tool = vimdiff
+
+[merge]
+    tool = vimdiff
+
+[push]
+    default = current
+[color]
+    ui = true
+    branch = auto
+    diff = auto
+    status = auto
+    grep = auto

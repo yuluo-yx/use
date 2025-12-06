@@ -1,11 +1,5 @@
 # Zsh  插件使用指南
 
-## 配置脚本
-
-```shell
-
-```
-
 zsh 框架用 oh-my-zsh 听说 zim 也不错，比前者更快。
 
 ## z 
@@ -105,6 +99,7 @@ vim `ff`
 
 ```shell
 brew install eza
-```
 
-在 zsh 中配置 
+eza -l
+eza -D 显示目录
+```
