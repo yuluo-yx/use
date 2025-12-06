@@ -229,40 +229,4 @@ curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/simple._vimrc >> 
 
 ## Quick Start
 
-### 一键配置脚本
-
-项目提供了一键配置脚本，可以自动配置 vim 和 zsh 环境，包括安装所有必要的依赖项。脚本支持多种操作系统：
-
-- **macOS** (使用 Homebrew 包管理器)
-- **Ubuntu** (使用 apt-get 包管理器)
-- **CentOS** (使用 yum 包管理器)
-- **Arch Linux** (使用 pacman 包管理器)
-
-```bash
-# 克隆项目
-git clone <repository-url>
-cd use
-
-# 运行一键配置脚本
-./setup.sh
-```
-
-脚本会自动完成以下操作：
-1. 检测操作系统类型（支持 macOS、Ubuntu、CentOS、Arch Linux）
-2. 自动安装所需的依赖包（git、curl、zsh、vim）
-3. 检查并安装 oh-my-zsh（如果未安装）
-4. 安装 zsh-syntax-highlighting 和 zsh-autosuggestions 插件
-5. 创建 `~/.{USER}_env/config/zsh` 和 `~/.{USER}_env/theme/zsh` 目录
-6. 复制所有 zsh 配置文件到对应目录
-7. 配置 .zshrc 文件
-8. 检查并安装 vim-plug（如果未安装）
-9. 配置 .vimrc 文件
-10. 自动安装所有 vim 插件
-11. 自动备份原有配置文件（如果存在）
-
-配置完成后，执行以下命令使配置生效：
-```bash
-source ~/.zshrc
-```
-
-或者重新打开终端窗口。
+Coming soon...
