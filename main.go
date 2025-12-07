@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"errors"
 	"flag"
 	"fmt"
@@ -11,6 +12,15 @@ import (
 	"runtime"
 	"strings"
 )
+
+//go:embed git/.gitconfig
+var gitConfig embed.FS
+
+//go:embed vim/.vimrc vim/simple._vimrc
+var vimConfig embed.FS
+
+//go:embed zsh/.zshrc zsh/config/* zsh/theme/*
+var zshConfig embed.FS
 
 var (
 	configVim *bool
@@ -61,6 +71,7 @@ var (
 	checkZshError     = errors.New("检查 zsh 安装失败")
 	checkOhMyZshError = errors.New("检查 oh-my-zsh 安装失败")
 	checkPip3Error    = errors.New("检查 pip3 安装失败")
+	checkEzaError     = errors.New("检查 eza 安装失败")
 
 	installVimError     = errors.New("安装 vim 失败")
 	installGitError     = errors.New("安装 git 失败")
@@ -68,6 +79,7 @@ var (
 	installZshError     = errors.New("安装 zsh 失败")
 	installTheFuckError = errors.New("安装 thefuck 失败")
 	installOhMyZshError = errors.New("安装 oh-my-zsh 失败")
+	installEzaError     = errors.New("安装 eza 失败")
 
 	gitCfgError = errors.New("git 配置失败")
 	zshCfgError = errors.New("zsh 配置失败")
@@ -88,6 +100,7 @@ const (
 	ToolZsh     tools = "zsh"
 	ToolOMZ     tools = "oh-my-zsh"
 	ToolTheFuck tools = "thefuck"
+	ToolEza     tools = "eza"
 )
 
 func getError(tool tools, act action) error {
@@ -106,6 +119,8 @@ func getError(tool tools, act action) error {
 			return installTheFuckError
 		case ToolOMZ:
 			return installOhMyZshError
+		case ToolEza:
+			return installEzaError
 		default:
 			return UnknownTool
 		}
@@ -123,6 +138,8 @@ func getError(tool tools, act action) error {
 			return checkOhMyZshError
 		case ToolZsh:
 			return checkZshError
+		case ToolEza:
+			return checkEzaError
 		default:
 			return UnknownTool
 		}
@@ -270,10 +287,9 @@ func zsh() error {
 	// 复制 .zshrc
 	zshrcPath := filepath.Join(homeDir, ".zshrc")
 	if _, err := os.Stat(zshrcPath); os.IsNotExist(err) {
-		src := "zsh/.zshrc"
-		input, err := os.ReadFile(src)
+		input, err := zshConfig.ReadFile("zsh/.zshrc")
 		if err != nil {
-			return fmt.Errorf("%w: 读取 .zshrc 失败: %w", zshCfgError, err)
+			return fmt.Errorf("%w: 读取嵌入 .zshrc 失败: %w", zshCfgError, err)
 		}
 		if err := os.WriteFile(zshrcPath, input, 0644); err != nil {
 			return fmt.Errorf("%w: 写入 .zshrc 失败: %w", zshCfgError, err)
@@ -296,7 +312,8 @@ func zsh() error {
 	for _, file := range configFiles {
 		src := filepath.Join("zsh/config", file)
 		dst := filepath.Join(configDir, file)
-		data, err := os.ReadFile(src)
+		// 从嵌入文件读取
+		data, err := zshConfig.ReadFile(src)
 		if err != nil {
 			slog.Info("跳过文件", "file", file, "reason", "读取失败")
 			continue
@@ -305,6 +322,7 @@ func zsh() error {
 			return fmt.Errorf("%w: 写入配置文件 %s 失败: %w", zshCfgError, file, err)
 		}
 	}
+	slog.Info("已复制 zsh 配置文件")
 
 	// Step2: 安装主题
 	slog.Info("Step2: 安装主题")
@@ -312,9 +330,8 @@ func zsh() error {
 	if err := os.MkdirAll(omzCustomDir, 0755); err != nil {
 		slog.Info("跳过主题安装", "reason", "oh-my-zsh 未安装")
 	} else {
-		themeSrc := "zsh/themes/yz.zsh-theme"
 		themeDst := filepath.Join(omzCustomDir, "yz.zsh-theme")
-		data, err := os.ReadFile(themeSrc)
+		data, err := zshConfig.ReadFile("zsh/themes/yz.zsh-theme")
 		if err == nil {
 			if err := os.WriteFile(themeDst, data, 0644); err != nil {
 				return fmt.Errorf("%w: 安装主题失败: %w", zshCfgError, err)
@@ -362,14 +379,12 @@ func vim() error {
 	// 复制 .vimrc
 	vimrcPath := filepath.Join(homeDir, ".vimrc")
 	if _, err := os.Stat(vimrcPath); os.IsNotExist(err) {
-		src := "vim/.vimrc"
-		input, err := os.ReadFile(src)
+		input, err := vimConfig.ReadFile("vim/.vimrc")
 		if err != nil {
 			// 如果 .vimrc 不存在，尝试使用 simple._vimrc
-			src = "vim/simple._vimrc"
-			input, err = os.ReadFile(src)
+			input, err = vimConfig.ReadFile("vim/simple._vimrc")
 			if err != nil {
-				return fmt.Errorf("%w: 读取 vimrc 失败: %w", vimCfgError, err)
+				return fmt.Errorf("%w: 读取嵌入 vimrc 失败: %w", vimCfgError, err)
 			}
 		}
 		if err := os.WriteFile(vimrcPath, input, 0644); err != nil {
@@ -377,7 +392,7 @@ func vim() error {
 		}
 		slog.Info("已复制 .vimrc", "path", vimrcPath)
 	} else {
-		slog.Info(".vimrc 存在，跳过")
+		slog.Info(".vimrc 已存在，跳过")
 	}
 
 	// Step2: 安装 vim-plug 插件管理器
@@ -418,16 +433,14 @@ func git() error {
 	// 检查用户目录下是否有 .gitconfig 文件
 	gitconfigPath := filepath.Join(homeDir, ".gitconfig")
 	if _, err := os.Stat(gitconfigPath); os.IsNotExist(err) {
-		// 复制默认配置文件到用户目录
-		src := "git/.gitconfig"
-		input, err := os.ReadFile(src)
+		input, err := gitConfig.ReadFile("git/.gitconfig")
 		if err != nil {
-			return fmt.Errorf("%w: 读取源文件失败: %w", gitCfgError, err)
+			return fmt.Errorf("%w: 读取嵌入配置失败: %w", gitCfgError, err)
 		}
 		if err := os.WriteFile(gitconfigPath, input, 0644); err != nil {
 			return fmt.Errorf("%w: 写入文件失败: %w", gitCfgError, err)
 		}
-		slog.Info("已复制 git/.gitconfig", "path", gitconfigPath)
+		slog.Info("已复制 .gitconfig", "path", gitconfigPath)
 	} else {
 		slog.Info(".gitconfig 已存在，跳过配置")
 	}
@@ -460,7 +473,7 @@ func _main() error {
 	}
 
 	if *configAll || *configZsh {
-		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolPython, ToolTheFuck)
+		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolPython, ToolTheFuck, ToolEza)
 		configFuncs = append(configFuncs, zsh)
 	}
 
