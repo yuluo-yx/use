@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"flag"
 	"fmt"
 	"log/slog"
 	"os"
@@ -11,7 +12,22 @@ import (
 	"strings"
 )
 
+var (
+	configVim *bool
+	configGit *bool
+	configZsh *bool
+	configAll *bool
+)
+
+func init() {
+	configVim = flag.Bool("vim", false, "配置 vim")
+	configGit = flag.Bool("git", false, "配置 git")
+	configZsh = flag.Bool("zsh", false, "配置 zsh")
+	configAll = flag.Bool("all", false, "配置所有工具")
+}
+
 func main() {
+	flag.Parse()
 
 	if err := _main(); err != nil {
 		panic(err)
@@ -421,21 +437,49 @@ func git() error {
 
 func _main() error {
 
+	// 如果没有指定任何参数，显示帮助
+	if !*configVim && !*configGit && !*configZsh && !*configAll {
+		flag.Usage()
+		return nil
+	}
+
+	// 确定需要安装和配置的工具
+	var (
+		toolsToInstall []tools
+		configFuncs    []ExecFunc
+	)
+
+	if *configAll || *configGit {
+		toolsToInstall = append(toolsToInstall, ToolGit)
+		configFuncs = append(configFuncs, git)
+	}
+
+	if *configAll || *configVim {
+		toolsToInstall = append(toolsToInstall, ToolVim)
+		configFuncs = append(configFuncs, vim)
+	}
+
+	if *configAll || *configZsh {
+		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolPython, ToolTheFuck)
+		configFuncs = append(configFuncs, zsh)
+	}
+
 	// 检查安装
-	tools := []tools{ToolGit, ToolVim, ToolZsh, ToolOMZ, ToolPython, ToolTheFuck}
-	for _, tool := range tools {
+	slog.Info("开始检查和安装工具...")
+	for _, tool := range toolsToInstall {
 		if err := checkAndInstall(tool); err != nil {
 			return err
 		}
 	}
 
 	// 配置
-	cfgFuncs := []ExecFunc{git, vim, zsh}
-	for _, cfgFu := range cfgFuncs {
-		if err := cfgFu(); err != nil {
+	slog.Info("开始配置...")
+	for _, cfgFunc := range configFuncs {
+		if err := cfgFunc(); err != nil {
 			return err
 		}
 	}
 
+	slog.Info("所有配置完成！")
 	return nil
 }
