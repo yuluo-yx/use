@@ -18,5 +18,7 @@ export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
 
 # logcat
 function logcat() {
-
+    cat "$1" | \
+    GREP_COLORS='mt=01;42' grep -E 'ERROR|WARNING|INFO|DEBUG' --color=always | \
+    GREP_COLORS='mt=01;46' grep '$2' --color=always
 }
