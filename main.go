@@ -101,6 +101,7 @@ const (
 	ToolOMZ     tools = "oh-my-zsh"
 	ToolTheFuck tools = "thefuck"
 	ToolEza     tools = "eza"
+	ToolPip3    tools = "pip3"
 )
 
 func getError(tool tools, act action) error {
@@ -140,6 +141,8 @@ func getError(tool tools, act action) error {
 			return checkZshError
 		case ToolEza:
 			return checkEzaError
+		case ToolPip3:
+			return checkPip3Error
 		default:
 			return UnknownTool
 		}
@@ -163,7 +166,6 @@ func conditionOS() (osType, error) {
 func execCmd(cmd string, args ...string) error {
 
 	command := exec.Command(cmd, args...)
-	slog.Info("exec cmd", "cmd", cmd, "args", args)
 
 	return command.Run()
 }
@@ -201,7 +203,6 @@ func checkFunc(cmdName tools, errMsg error) ExecFunc {
 		if cmdName == "oh-my-zsh" {
 			homeDir, err := os.UserHomeDir()
 			if err != nil {
-				slog.Error(err.Error())
 				return fmt.Errorf("%w: %w", errMsg, err)
 			}
 			omzPath := filepath.Join(homeDir, ".oh-my-zsh")
@@ -212,7 +213,6 @@ func checkFunc(cmdName tools, errMsg error) ExecFunc {
 		}
 
 		if err := execCmd("command", "-v", string(cmdName)); err != nil {
-			slog.Error(err.Error())
 			return fmt.Errorf("%w: %w", errMsg, err)
 		}
 		return nil
@@ -227,37 +227,35 @@ func installFunc(pkgName tools, errMsg error) ExecFunc {
 			// oh-my-zsh 需要通过脚本安装
 			installCmd := `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended`
 			if err := execCmd("zsh", "-c", installCmd); err != nil {
-				slog.Error(err.Error())
 				return fmt.Errorf("%w: %w", errMsg, err)
 			}
+			slog.Info("已安装", "tool", "oh-my-zsh")
 			return nil
 		}
 
 		if pkgName == ToolTheFuck {
 			// the fuck 通过 pip 安装
-			if err := checkFunc("pip3", checkPip3Error)(); err != nil {
-				slog.Error(err.Error())
-				// 先 panic
-				panic(err)
+			if err := checkFunc(ToolPip3, checkPip3Error)(); err != nil {
+				return fmt.Errorf("未找到 pip3，无法安装 thefuck: %w", err)
 			}
-			if err := execCmd("pip3", "install", "-y", "thefuck"); err != nil {
-				slog.Error(err.Error())
-				panic(err)
+			// pip install 没有 -y 参数，直接安装
+			if err := execCmd("pip3", "install", "thefuck"); err != nil {
+				return fmt.Errorf("%w: %w", errMsg, err)
 			}
+			slog.Info("已安装", "tool", "thefuck")
 			return nil
 		}
 
 		pm, args, err := getPackageManager()
 		if err != nil {
-			slog.Error(err.Error())
 			return fmt.Errorf("获取包管理器失败: %w", err)
 		}
 
 		fullArgs := append(args, string(pkgName))
 		if err := execCmd(pm, fullArgs...); err != nil {
-			slog.Error(err.Error())
 			return fmt.Errorf("%w: %w", errMsg, err)
 		}
+		slog.Info("已安装", "tool", string(pkgName))
 		return nil
 	}
 }
@@ -265,11 +263,10 @@ func installFunc(pkgName tools, errMsg error) ExecFunc {
 func checkAndInstall(tool tools) error {
 
 	if err := checkFunc(tool, getError(tool, ActionCheck))(); err != nil {
-
-		slog.Info("Check&Install", "tool", string(tool), "msg", "未安装，正在安装...")
+		slog.Info("正在安装", "tool", string(tool))
 		return installFunc(tool, getError(tool, ActionInstall))()
 	}
-
+	slog.Info("已存在", "tool", string(tool))
 	return nil
 }
 
@@ -322,7 +319,7 @@ func zsh() error {
 			return fmt.Errorf("%w: 写入配置文件 %s 失败: %w", zshCfgError, file, err)
 		}
 	}
-	slog.Info("已复制 zsh 配置文件")
+	slog.Info("已复制 zsh 配置文件", "count", len(configFiles))
 
 	// Step2: 安装主题
 	slog.Info("Step2: 安装主题")
@@ -409,9 +406,9 @@ func vim() error {
 		if err := execCmd("sh", "-c", cmd); err != nil {
 			return fmt.Errorf("%w: 下载 vim-plug 失败: %w", vimCfgError, err)
 		}
-		slog.Info("vim-plug 安装成功")
+		slog.Info("已安装", "tool", "vim-plug")
 	} else {
-		slog.Info("vim-plug 已安装，跳过")
+		slog.Info("vim-plug 已存在，跳过")
 	}
 
 	// Step3: 提示安装插件
@@ -450,13 +447,11 @@ func git() error {
 
 func _main() error {
 
-	// 如果没有指定任何参数，显示帮助
 	if !*configVim && !*configGit && !*configZsh && !*configAll {
 		flag.Usage()
 		return nil
 	}
 
-	// 确定需要安装和配置的工具
 	var (
 		toolsToInstall []tools
 		configFuncs    []ExecFunc

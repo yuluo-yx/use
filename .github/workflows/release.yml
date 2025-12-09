@@ -1,0 +1,79 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # 当推送 v* 标签时触发，例如 v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Build binaries
+        run: make release
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            bin/use-linux-amd64
+            bin/use-linux-arm64
+            bin/use-darwin-amd64
+            bin/use-darwin-arm64
+            bin/checksums.txt
+          body: |
+            ## 安装说明
+
+            ### Linux (AMD64)
+            ```bash
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.VERSION }}/use-linux-amd64
+            chmod +x use-linux-amd64
+            sudo mv use-linux-amd64 /usr/local/bin/use
+            ```
+
+            ### Linux (ARM64)
+            ```bash
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.VERSION }}/use-linux-arm64
+            chmod +x use-linux-arm64
+            sudo mv use-linux-arm64 /usr/local/bin/use
+            ```
+
+            ### macOS (Intel)
+            ```bash
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.VERSION }}/use-darwin-amd64
+            chmod +x use-darwin-amd64
+            sudo mv use-darwin-amd64 /usr/local/bin/use
+            ```
+
+            ### macOS (Apple Silicon)
+            ```bash
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.VERSION }}/use-darwin-arm64
+            chmod +x use-darwin-arm64
+            sudo mv use-darwin-arm64 /usr/local/bin/use
+            ```
+
+            ### 验证校验和
+            ```bash
+            wget https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.VERSION }}/checksums.txt
+            sha256sum -c checksums.txt
+            ```
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
