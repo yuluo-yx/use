@@ -274,7 +274,6 @@ func zsh() error {
 
 	slog.Info("正在配置 zsh...")
 
-	// Step1: 复制配置文件
 	slog.Info("Step1: 配置文件")
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -321,7 +320,6 @@ func zsh() error {
 	}
 	slog.Info("已复制 zsh 配置文件", "count", len(configFiles))
 
-	// Step2: 安装主题
 	slog.Info("Step2: 安装主题")
 	omzCustomDir := filepath.Join(homeDir, ".oh-my-zsh/custom/themes")
 	if err := os.MkdirAll(omzCustomDir, 0755); err != nil {
@@ -337,8 +335,39 @@ func zsh() error {
 		}
 	}
 
-	// Step3: 设置默认 shell
-	slog.Info("Step3: 设置默认 shell")
+	slog.Info("Step3: 安装插件")
+	omzPluginsDir := filepath.Join(homeDir, ".oh-my-zsh/custom/plugins")
+	if err := os.MkdirAll(omzPluginsDir, 0755); err != nil {
+		slog.Info("跳过插件安装", "reason", "oh-my-zsh 未安装")
+	} else {
+		// 安装 zsh-autosuggestions
+		autoSuggestDir := filepath.Join(omzPluginsDir, "zsh-autosuggestions")
+		if _, err := os.Stat(autoSuggestDir); os.IsNotExist(err) {
+			slog.Info("正在安装 zsh-autosuggestions...")
+			if err := execCmd("git", "clone", "https://github.com/zsh-users/zsh-autosuggestions", autoSuggestDir); err != nil {
+				slog.Info("安装 zsh-autosuggestions 失败", "error", err.Error())
+			} else {
+				slog.Info("已安装", "plugin", "zsh-autosuggestions")
+			}
+		} else {
+			slog.Info("zsh-autosuggestions 已存在，跳过")
+		}
+
+		// 安装 zsh-syntax-highlighting
+		syntaxHighlightDir := filepath.Join(omzPluginsDir, "zsh-syntax-highlighting")
+		if _, err := os.Stat(syntaxHighlightDir); os.IsNotExist(err) {
+			slog.Info("正在安装 zsh-syntax-highlighting...")
+			if err := execCmd("git", "clone", "https://github.com/zsh-users/zsh-syntax-highlighting.git", syntaxHighlightDir); err != nil {
+				slog.Info("安装 zsh-syntax-highlighting 失败", "error", err.Error())
+			} else {
+				slog.Info("已安装", "plugin", "zsh-syntax-highlighting")
+			}
+		} else {
+			slog.Info("zsh-syntax-highlighting 已存在，跳过")
+		}
+	}
+
+	slog.Info("Step4: 设置默认 shell")
 	output, err := exec.Command("sh", "-c", "echo $SHELL").Output()
 	if err != nil {
 		return fmt.Errorf("%w: 获取当前 shell 失败: %w", zshCfgError, err)
@@ -355,8 +384,7 @@ func zsh() error {
 		slog.Info("当前 shell 已经是 zsh")
 	}
 
-	// Step4: 提示用户
-	slog.Info("Step4: 应用配置")
+	slog.Info("Step5: 应用配置")
 	slog.Info("配置完成！执行 'source ~/.zshrc' 或重新打开终端应用配置")
 
 	return nil
@@ -468,7 +496,7 @@ func _main() error {
 	}
 
 	if *configAll || *configZsh {
-		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolPython, ToolTheFuck, ToolEza)
+		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolPython, ToolTheFuck)
 		configFuncs = append(configFuncs, zsh)
 	}
 

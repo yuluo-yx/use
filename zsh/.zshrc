@@ -11,7 +11,6 @@ plugins=(
     copypath
     copybuffer
     kubectl
-    eza
 )
 
 source $ZSH/oh-my-zsh.sh
