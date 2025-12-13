@@ -14,6 +14,3 @@ export CARGO_UNSTABLE_SPARSE_REGISTRY=true
 
 # AI envs
 export AI_DASHSCOPE_API_KEY="sk-xxxx"
-
-# eza envs
-# export FPATH="/Users/shown/.oh-my-zsh/custom/plugins/ezacompletions/zsh:$FPATH"

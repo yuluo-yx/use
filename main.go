@@ -67,21 +67,20 @@ var (
 	checkVimError     = errors.New("检查 vim 安装失败")
 	checkGitError     = errors.New("检查 git 安装失败")
 	checkTheFuckError = errors.New("检查 thefuck 安装失败")
-	checkPythonError  = errors.New("检查 python 安装失败")
 	checkZshError     = errors.New("检查 zsh 安装失败")
 	checkOhMyZshError = errors.New("检查 oh-my-zsh 安装失败")
-	checkPip3Error    = errors.New("检查 pip3 安装失败")
 	checkEzaError     = errors.New("检查 eza 安装失败")
 	checkFzfError     = errors.New("检查 fzf 安装失败")
+	checkBatError     = errors.New("检查 bat 安装失败")
 
 	installVimError     = errors.New("安装 vim 失败")
 	installGitError     = errors.New("安装 git 失败")
-	installPythonError  = errors.New("安装 python 失败")
 	installZshError     = errors.New("安装 zsh 失败")
 	installTheFuckError = errors.New("安装 thefuck 失败")
 	installOhMyZshError = errors.New("安装 oh-my-zsh 失败")
 	installEzaError     = errors.New("安装 eza 失败")
 	installFzfError     = errors.New("安装 fzf 失败")
+	installBatError     = errors.New("安装 bat 失败")
 
 	gitCfgError = errors.New("git 配置失败")
 	zshCfgError = errors.New("zsh 配置失败")
@@ -98,13 +97,12 @@ type tools string
 const (
 	ToolGit     tools = "git"
 	ToolVim     tools = "vim"
-	ToolPython  tools = "python3"
 	ToolZsh     tools = "zsh"
 	ToolOMZ     tools = "oh-my-zsh"
 	ToolTheFuck tools = "thefuck"
 	ToolEza     tools = "eza"
-	ToolPip3    tools = "pip3"
 	ToolFzf     tools = "fzf"
+	ToolBat     tools = "bat"
 )
 
 func getError(tool tools, act action) error {
@@ -115,8 +113,6 @@ func getError(tool tools, act action) error {
 			return installGitError
 		case ToolVim:
 			return installVimError
-		case ToolPython:
-			return installPythonError
 		case ToolZsh:
 			return installZshError
 		case ToolTheFuck:
@@ -127,6 +123,8 @@ func getError(tool tools, act action) error {
 			return installEzaError
 		case ToolFzf:
 			return installFzfError
+		case ToolBat:
+			return installBatError
 		default:
 			return UnknownTool
 		}
@@ -136,8 +134,6 @@ func getError(tool tools, act action) error {
 			return checkGitError
 		case ToolVim:
 			return checkVimError
-		case ToolPython:
-			return checkPythonError
 		case ToolTheFuck:
 			return checkTheFuckError
 		case ToolOMZ:
@@ -146,10 +142,10 @@ func getError(tool tools, act action) error {
 			return checkZshError
 		case ToolEza:
 			return checkEzaError
-		case ToolPip3:
-			return checkPip3Error
 		case ToolFzf:
 			return checkFzfError
+		case ToolBat:
+			return checkBatError
 		default:
 			return UnknownTool
 		}
@@ -372,6 +368,19 @@ func zsh() error {
 		} else {
 			slog.Info("zsh-syntax-highlighting 已存在，跳过")
 		}
+
+		// 安装 fzf 插件
+		fzfPluginDir := filepath.Join(omzPluginsDir, "fzf")
+		if _, err := os.Stat(fzfPluginDir); os.IsNotExist(err) {
+			slog.Info("正在安装 fzf 插件...")
+			if err := execCmd("git", "clone", "--depth 1", "https://github.com/junegunn/fzf.git", fzfPluginDir); err != nil {
+				slog.Info("安装 fzf 插件 失败", "error", err.Error())
+			} else {
+				slog.Info("已安装", "plugin", "fzf")
+			}
+		} else {
+			slog.Info("fzf 插件 已存在，跳过")
+		}
 	}
 
 	fmt.Println("\033[36mStep4: 设置默认 shell\033[0m")
@@ -516,7 +525,7 @@ func _main() error {
 	}
 
 	if *configAll || *configZsh {
-		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolPython, ToolTheFuck)
+		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolTheFuck, ToolBat)
 		configFuncs = append(configFuncs, zsh)
 	}
 
