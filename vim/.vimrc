@@ -29,6 +29,7 @@ set exrc                            " 允许在本地目录中加载 .vimrc 文�
 set secure                          " 只在安全模式下加载本地配置文件
 set relativenumber                  " 显示相对行号
 set list                            " 显示不可见字符
+set listchars=tab:\|\ ,trail:▫     " 设置显示的不可见字符样式
 set ttimeoutlen=0                   " 连续按键的超时时间为 0
 set notimeout                       " 不设置按键超时
 set viewoptions=cursor,folds,slash,unix " 设置保存视图的选项

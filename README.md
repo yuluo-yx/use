@@ -230,3 +230,7 @@ curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/simple._vimrc >> 
 ## Quick Start
 
 Coming soon...
+
+1. 确保系统已经换源；
+2. 以 root 用户执行，因为需要切换 shell
+

@@ -1,6 +1,6 @@
 export ZSH="$HOME/.oh-my-zsh"
 
-ZSH_THEME="yz"
+ZSH_THEME="use-custom"
 
 plugins=(
     thefuck

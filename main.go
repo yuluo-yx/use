@@ -72,6 +72,7 @@ var (
 	checkOhMyZshError = errors.New("检查 oh-my-zsh 安装失败")
 	checkPip3Error    = errors.New("检查 pip3 安装失败")
 	checkEzaError     = errors.New("检查 eza 安装失败")
+	checkFzfError     = errors.New("检查 fzf 安装失败")
 
 	installVimError     = errors.New("安装 vim 失败")
 	installGitError     = errors.New("安装 git 失败")
@@ -80,6 +81,7 @@ var (
 	installTheFuckError = errors.New("安装 thefuck 失败")
 	installOhMyZshError = errors.New("安装 oh-my-zsh 失败")
 	installEzaError     = errors.New("安装 eza 失败")
+	installFzfError     = errors.New("安装 fzf 失败")
 
 	gitCfgError = errors.New("git 配置失败")
 	zshCfgError = errors.New("zsh 配置失败")
@@ -102,6 +104,7 @@ const (
 	ToolTheFuck tools = "thefuck"
 	ToolEza     tools = "eza"
 	ToolPip3    tools = "pip3"
+	ToolFzf     tools = "fzf"
 )
 
 func getError(tool tools, act action) error {
@@ -122,6 +125,8 @@ func getError(tool tools, act action) error {
 			return installOhMyZshError
 		case ToolEza:
 			return installEzaError
+		case ToolFzf:
+			return installFzfError
 		default:
 			return UnknownTool
 		}
@@ -143,6 +148,8 @@ func getError(tool tools, act action) error {
 			return checkEzaError
 		case ToolPip3:
 			return checkPip3Error
+		case ToolFzf:
+			return checkFzfError
 		default:
 			return UnknownTool
 		}
@@ -166,8 +173,15 @@ func conditionOS() (osType, error) {
 func execCmd(cmd string, args ...string) error {
 
 	command := exec.Command(cmd, args...)
+	output, err := command.CombinedOutput()
+	if err != nil {
+		if len(output) > 0 {
+			return fmt.Errorf("%w: %s", err, string(output))
+		}
+		return err
+	}
 
-	return command.Run()
+	return nil
 }
 
 func getPackageManager() (string, []string, error) {
@@ -181,13 +195,13 @@ func getPackageManager() (string, []string, error) {
 	case OSDarwin:
 		return "brew", []string{"install"}, nil
 	case OSLinux:
-		if execCmd("command", "-v", "apt") == nil {
+		if _, err := exec.LookPath("apt"); err == nil {
 			return "apt", []string{"install", "-y"}, nil
-		} else if execCmd("command", "-v", "yum") == nil {
+		} else if _, err := exec.LookPath("yum"); err == nil {
 			return "yum", []string{"install", "-y"}, nil
-		} else if execCmd("command", "-v", "dnf") == nil {
+		} else if _, err := exec.LookPath("dnf"); err == nil {
 			return "dnf", []string{"install", "-y"}, nil
-		} else if execCmd("command", "-v", "pacman") == nil {
+		} else if _, err := exec.LookPath("pacman"); err == nil {
 			return "pacman", []string{"-S", "--noconfirm"}, nil
 		}
 		return "", nil, pkgManagerError
@@ -212,7 +226,7 @@ func checkFunc(cmdName tools, errMsg error) ExecFunc {
 			return nil
 		}
 
-		if err := execCmd("command", "-v", string(cmdName)); err != nil {
+		if _, err := exec.LookPath(string(cmdName)); err != nil {
 			return fmt.Errorf("%w: %w", errMsg, err)
 		}
 		return nil
@@ -230,19 +244,6 @@ func installFunc(pkgName tools, errMsg error) ExecFunc {
 				return fmt.Errorf("%w: %w", errMsg, err)
 			}
 			slog.Info("已安装", "tool", "oh-my-zsh")
-			return nil
-		}
-
-		if pkgName == ToolTheFuck {
-			// the fuck 通过 pip 安装
-			if err := checkFunc(ToolPip3, checkPip3Error)(); err != nil {
-				return fmt.Errorf("未找到 pip3，无法安装 thefuck: %w", err)
-			}
-			// pip install 没有 -y 参数，直接安装
-			if err := execCmd("pip3", "install", "thefuck"); err != nil {
-				return fmt.Errorf("%w: %w", errMsg, err)
-			}
-			slog.Info("已安装", "tool", "thefuck")
 			return nil
 		}
 
@@ -274,7 +275,7 @@ func zsh() error {
 
 	slog.Info("正在配置 zsh...")
 
-	slog.Info("Step1: 配置文件")
+	fmt.Println("\033[36mStep1: 配置文件\033[0m")
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return fmt.Errorf("%w: %w", zshCfgError, err)
@@ -282,23 +283,29 @@ func zsh() error {
 
 	// 复制 .zshrc
 	zshrcPath := filepath.Join(homeDir, ".zshrc")
-	if _, err := os.Stat(zshrcPath); os.IsNotExist(err) {
-		input, err := zshConfig.ReadFile("zsh/.zshrc")
-		if err != nil {
-			return fmt.Errorf("%w: 读取嵌入 .zshrc 失败: %w", zshCfgError, err)
+	// 备份旧文件（如果存在）
+	if _, err := os.Stat(zshrcPath); err == nil {
+		backupPath := zshrcPath + ".backup"
+		if err := os.Rename(zshrcPath, backupPath); err != nil {
+			slog.Info("备份旧配置失败", "error", err.Error())
+		} else {
+			slog.Info("已备份旧配置", "path", backupPath)
 		}
-		if err := os.WriteFile(zshrcPath, input, 0644); err != nil {
-			return fmt.Errorf("%w: 写入 .zshrc 失败: %w", zshCfgError, err)
-		}
-		slog.Info("已复制 .zshrc", "path", zshrcPath)
-	} else {
-		slog.Info(".zshrc 已存在，跳过")
 	}
+
+	input, err := zshConfig.ReadFile("zsh/.zshrc")
+	if err != nil {
+		return fmt.Errorf("%w: 读取嵌入 .zshrc 失败: %w", zshCfgError, err)
+	}
+	if err := os.WriteFile(zshrcPath, input, 0644); err != nil {
+		return fmt.Errorf("%w: 写入 .zshrc 失败: %w", zshCfgError, err)
+	}
+	slog.Info("已复制 .zshrc", "path", zshrcPath)
 
 	// 复制 config 目录
 	configDir := filepath.Join(
 		homeDir,
-		fmt.Sprintf("%s_env/%s", os.Getenv("USER"), ToolZsh),
+		fmt.Sprintf(".%s_env/%s", os.Getenv("USER"), ToolZsh),
 	)
 	if err := os.MkdirAll(configDir, 0755); err != nil {
 		return fmt.Errorf("%w: 创建配置目录失败: %w", zshCfgError, err)
@@ -320,13 +327,13 @@ func zsh() error {
 	}
 	slog.Info("已复制 zsh 配置文件", "count", len(configFiles))
 
-	slog.Info("Step2: 安装主题")
+	fmt.Println("\033[36mStep2: 安装主题\033[0m")
 	omzCustomDir := filepath.Join(homeDir, ".oh-my-zsh/custom/themes")
 	if err := os.MkdirAll(omzCustomDir, 0755); err != nil {
 		slog.Info("跳过主题安装", "reason", "oh-my-zsh 未安装")
 	} else {
-		themeDst := filepath.Join(omzCustomDir, "yz.zsh-theme")
-		data, err := zshConfig.ReadFile("zsh/themes/yz.zsh-theme")
+		themeDst := filepath.Join(omzCustomDir, "use-custom.zsh-theme")
+		data, err := zshConfig.ReadFile("zsh/theme/use-custom.zsh-theme")
 		if err == nil {
 			if err := os.WriteFile(themeDst, data, 0644); err != nil {
 				return fmt.Errorf("%w: 安装主题失败: %w", zshCfgError, err)
@@ -335,7 +342,7 @@ func zsh() error {
 		}
 	}
 
-	slog.Info("Step3: 安装插件")
+	fmt.Println("\033[36mStep3: 安装插件\033[0m")
 	omzPluginsDir := filepath.Join(homeDir, ".oh-my-zsh/custom/plugins")
 	if err := os.MkdirAll(omzPluginsDir, 0755); err != nil {
 		slog.Info("跳过插件安装", "reason", "oh-my-zsh 未安装")
@@ -367,7 +374,7 @@ func zsh() error {
 		}
 	}
 
-	slog.Info("Step4: 设置默认 shell")
+	fmt.Println("\033[36mStep4: 设置默认 shell\033[0m")
 	output, err := exec.Command("sh", "-c", "echo $SHELL").Output()
 	if err != nil {
 		return fmt.Errorf("%w: 获取当前 shell 失败: %w", zshCfgError, err)
@@ -375,16 +382,23 @@ func zsh() error {
 
 	currentShell := strings.TrimSpace(string(output))
 	if !strings.Contains(currentShell, "zsh") {
-		slog.Info("当前 shell 不是 zsh，正在切换...")
-		if err := execCmd("chsh", "-s", "/bin/zsh"); err != nil {
-			return fmt.Errorf("%w: 切换 shell 失败: %w", zshCfgError, err)
+		// 检查是否是 root 用户
+		if os.Getuid() == 0 {
+			slog.Info("当前 shell 不是 zsh，正在切换...")
+			if err := execCmd("chsh", "-s", "/bin/zsh"); err != nil {
+				return fmt.Errorf("%w: 切换 shell 失败: %w", zshCfgError, err)
+			}
+			slog.Info("已切换到 zsh，重新登录后生效")
+		} else {
+			fmt.Println("\033[33m当前 shell 不是 zsh，请手动执行以下命令切换：\033[0m")
+			fmt.Println("\033[32m  chsh -s /bin/zsh\033[0m")
+			fmt.Println("\033[33m然后重新登录生效\033[0m")
 		}
-		slog.Info("已切换到 zsh，重新登录后生效")
 	} else {
 		slog.Info("当前 shell 已经是 zsh")
 	}
 
-	slog.Info("Step5: 应用配置")
+	fmt.Println("\033[36mStep5: 应用配置\033[0m")
 	slog.Info("配置完成！执行 'source ~/.zshrc' 或重新打开终端应用配置")
 
 	return nil
@@ -395,7 +409,7 @@ func vim() error {
 	slog.Info("正在配置 vim...")
 
 	// Step1: 复制配置文件
-	slog.Info("Step1: 配置文件")
+	fmt.Println("\033[36mStep1: 配置文件\033[0m")
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return fmt.Errorf("%w: %w", vimCfgError, err)
@@ -421,8 +435,9 @@ func vim() error {
 	}
 
 	// Step2: 安装 vim-plug 插件管理器
-	slog.Info("Step2: 安装插件管理器 vim-plug")
+	fmt.Println("\033[36mStep2: 安装插件管理器 vim-plug\033[0m")
 	vimPlugPath := filepath.Join(homeDir, ".vim/autoload/plug.vim")
+	vimPlugInstalled := false
 	if _, err := os.Stat(vimPlugPath); os.IsNotExist(err) {
 		slog.Info("下载 vim-plug...")
 		// 创建目录
@@ -435,13 +450,18 @@ func vim() error {
 			return fmt.Errorf("%w: 下载 vim-plug 失败: %w", vimCfgError, err)
 		}
 		slog.Info("已安装", "tool", "vim-plug")
+		vimPlugInstalled = true
 	} else {
 		slog.Info("vim-plug 已存在，跳过")
 	}
 
 	// Step3: 提示安装插件
-	slog.Info("Step3: 安装插件")
-	slog.Info("配置完成！打开 vim 执行 ':PlugInstall' 安装插件")
+	if vimPlugInstalled {
+		fmt.Println("\033[36mStep3: 安装插件\033[0m")
+		fmt.Println("\033[32m配置完成！打开 vim 执行 ':PlugInstall' 安装插件\033[0m")
+	} else {
+		fmt.Println("\033[32mvim 配置完成！\033[0m")
+	}
 
 	return nil
 }
