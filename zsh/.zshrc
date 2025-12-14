@@ -1,16 +1,17 @@
 export ZSH="$HOME/.oh-my-zsh"
 
+# Custom Theme, can edit it.
 ZSH_THEME="use-custom"
 
 plugins=(
-    thefuck
     z
-    web-search
-    zsh-syntax-highlighting
-    zsh-autosuggestions
+    kubectl
+    thefuck
     copypath
     copybuffer
-    kubectl
+    web-search
+    zsh-autosuggestions
+    zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
