@@ -27,6 +27,7 @@ var (
 	configGit *bool
 	configZsh *bool
 	configAll *bool
+	dryRun    *bool
 )
 
 func init() {
@@ -34,6 +35,7 @@ func init() {
 	configGit = flag.Bool("git", false, "配置 git")
 	configZsh = flag.Bool("zsh", false, "配置 zsh")
 	configAll = flag.Bool("all", false, "配置所有工具")
+	dryRun = flag.Bool("dry-run", false, "预览模式，不实际执行操作")
 }
 
 func main() {
@@ -167,6 +169,10 @@ func conditionOS() (osType, error) {
 }
 
 func execCmd(cmd string, args ...string) error {
+	if *dryRun {
+		slog.Info("[DRY RUN] 执行命令", "cmd", cmd, "args", args)
+		return nil
+	}
 
 	command := exec.Command(cmd, args...)
 	output, err := command.CombinedOutput()
@@ -178,6 +184,22 @@ func execCmd(cmd string, args ...string) error {
 	}
 
 	return nil
+}
+
+func writeFile(path string, data []byte, perm os.FileMode) error {
+	if *dryRun {
+		slog.Info("[DRY RUN] 写入文件", "path", path, "size", len(data))
+		return nil
+	}
+	return os.WriteFile(path, data, perm)
+}
+
+func mkdirAll(path string, perm os.FileMode) error {
+	if *dryRun {
+		slog.Info("[DRY RUN] 创建目录", "path", path)
+		return nil
+	}
+	return os.MkdirAll(path, perm)
 }
 
 func getPackageManager() (string, []string, error) {
@@ -293,7 +315,7 @@ func zsh() error {
 	if err != nil {
 		return fmt.Errorf("%w: 读取嵌入 .zshrc 失败: %w", zshCfgError, err)
 	}
-	if err := os.WriteFile(zshrcPath, input, 0644); err != nil {
+	if err := writeFile(zshrcPath, input, 0644); err != nil {
 		return fmt.Errorf("%w: 写入 .zshrc 失败: %w", zshCfgError, err)
 	}
 	slog.Info("已复制 .zshrc", "path", zshrcPath)
@@ -303,7 +325,7 @@ func zsh() error {
 		homeDir,
 		fmt.Sprintf(".%s_env/%s", os.Getenv("USER"), ToolZsh),
 	)
-	if err := os.MkdirAll(configDir, 0755); err != nil {
+	if err := mkdirAll(configDir, 0755); err != nil {
 		return fmt.Errorf("%w: 创建配置目录失败: %w", zshCfgError, err)
 	}
 
@@ -317,7 +339,7 @@ func zsh() error {
 			slog.Info("跳过文件", "file", file, "reason", "读取失败")
 			continue
 		}
-		if err := os.WriteFile(dst, data, 0644); err != nil {
+		if err := writeFile(dst, data, 0644); err != nil {
 			return fmt.Errorf("%w: 写入配置文件 %s 失败: %w", zshCfgError, file, err)
 		}
 	}
@@ -325,13 +347,13 @@ func zsh() error {
 
 	fmt.Println("\033[36mStep2: 安装主题\033[0m")
 	omzCustomDir := filepath.Join(homeDir, ".oh-my-zsh/custom/themes")
-	if err := os.MkdirAll(omzCustomDir, 0755); err != nil {
+	if err := mkdirAll(omzCustomDir, 0755); err != nil {
 		slog.Info("跳过主题安装", "reason", "oh-my-zsh 未安装")
 	} else {
 		themeDst := filepath.Join(omzCustomDir, "use-custom.zsh-theme")
 		data, err := zshConfig.ReadFile("zsh/theme/use-custom.zsh-theme")
 		if err == nil {
-			if err := os.WriteFile(themeDst, data, 0644); err != nil {
+			if err := writeFile(themeDst, data, 0644); err != nil {
 				return fmt.Errorf("%w: 安装主题失败: %w", zshCfgError, err)
 			}
 			slog.Info("已安装 zsh 主题")
@@ -340,7 +362,7 @@ func zsh() error {
 
 	fmt.Println("\033[36mStep3: 安装插件\033[0m")
 	omzPluginsDir := filepath.Join(homeDir, ".oh-my-zsh/custom/plugins")
-	if err := os.MkdirAll(omzPluginsDir, 0755); err != nil {
+	if err := mkdirAll(omzPluginsDir, 0755); err != nil {
 		slog.Info("跳过插件安装", "reason", "oh-my-zsh 未安装")
 	} else {
 		// 安装 zsh-autosuggestions
@@ -422,7 +444,7 @@ func vim() error {
 				return fmt.Errorf("%w: 读取嵌入 vimrc 失败: %w", vimCfgError, err)
 			}
 		}
-		if err := os.WriteFile(vimrcPath, input, 0644); err != nil {
+		if err := writeFile(vimrcPath, input, 0644); err != nil {
 			return fmt.Errorf("%w: 写入 .vimrc 失败: %w", vimCfgError, err)
 		}
 		slog.Info("已复制 .vimrc", "path", vimrcPath)
@@ -437,7 +459,7 @@ func vim() error {
 	if _, err := os.Stat(vimPlugPath); os.IsNotExist(err) {
 		slog.Info("下载 vim-plug...")
 		// 创建目录
-		if err := os.MkdirAll(filepath.Dir(vimPlugPath), 0755); err != nil {
+		if err := mkdirAll(filepath.Dir(vimPlugPath), 0755); err != nil {
 			return fmt.Errorf("%w: 创建 vim 目录失败: %w", vimCfgError, err)
 		}
 		// 下载 vim-plug
@@ -478,7 +500,7 @@ func git() error {
 		if err != nil {
 			return fmt.Errorf("%w: 读取嵌入配置失败: %w", gitCfgError, err)
 		}
-		if err := os.WriteFile(gitconfigPath, input, 0644); err != nil {
+		if err := writeFile(gitconfigPath, input, 0644); err != nil {
 			return fmt.Errorf("%w: 写入文件失败: %w", gitCfgError, err)
 		}
 		slog.Info("已复制 .gitconfig", "path", gitconfigPath)
@@ -494,6 +516,13 @@ func _main() error {
 	if !*configVim && !*configGit && !*configZsh && !*configAll {
 		flag.Usage()
 		return nil
+	}
+
+	if *dryRun {
+		slog.Info("========================================")
+		slog.Info("       预览模式 (Dry Run)")
+		slog.Info("  不会执行任何实际操作")
+		slog.Info("========================================")
 	}
 
 	var (

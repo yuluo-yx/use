@@ -49,7 +49,7 @@ End Fn + → <br>
 
 - command + ~ 或 command + shift + tab 向前选择
 
-- 应用打开的窗口之间切换 command + ~ 
+- 应用打开的窗口之间切换 command + ~
 
 Command + h 隐藏当前窗口，效果等同于 command + w （关闭当前窗口）
 
@@ -57,7 +57,7 @@ Command + m 最小化当前窗口到 dock
 
 Command + shift + z 反撤销
 
-Command + q 退出选中的应用 
+Command + q 退出选中的应用
 
 **Command +** **右箭头** 将光标移至当前行的行尾
 
@@ -87,7 +87,7 @@ Command + shift + . 显示隐藏文件
 
 ### Terminal
 
-在 terminal 中打开当前路径下的 Finder :  open . 
+在 terminal 中打开当前路径下的 Finder :  open .
 
 在 terminal 打开时，按下 command t 打开一个新终端，alt 1 2 在打开的终端之间切换，command w 关闭当前终端
 
@@ -97,7 +97,7 @@ Raycast 应用启动器
 
 Snipaste 截图软件
 
-- 自己调整快捷键，可能冲突 
+- 自己调整快捷键，可能冲突
   - F1 截图并赋值
   - F2 贴图
 
@@ -129,9 +129,9 @@ OrbStack Docker Desktop 平替
 
 1. 所有带下划线的 ⌘ + 下划线字符
      例如 ⌘ 1 打开左侧的文件窗口，⌘ 0 打开 commit 左侧窗口
-2. 在侧边栏新建文件，目录等 ⌘ n   
-3. 编辑器打开窗口之间的切换/反向切换 ⌃ + ⇥ / ⌃ + ⇧ + ⇥ 
-4. 实现接口中的方法 ⌃ + i 
+2. 在侧边栏新建文件，目录等 ⌘ n
+3. 编辑器打开窗口之间的切换/反向切换 ⌃ + ⇥ / ⌃ + ⇧ + ⇥
+4. 实现接口中的方法 ⌃ + i
 5. 复制一个类的全限定名称：⌥ + ⇧ + ⌘ + c
 6. 复制光标所在的当前行 ⌘ + d
 7. 复制文件绝对路径 ⌘ + ⇧ + c
@@ -153,7 +153,7 @@ OrbStack Docker Desktop 平替
 
 23. ⌘ + ⌥ + T 包围代码（使用 if..else, try..catch, for, synchronized 等包围选中的代码
 24. (IDEA) 安装了 maven helper 之后，使用 ⌃ ⌘ r 来快速调出 maven 操作窗口
-    
+
 ### 插件
 
 #### 常用
@@ -229,8 +229,7 @@ curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/simple._vimrc >> 
 
 ## Quick Start
 
-Coming soon...
-
 1. 确保系统已经换源；
-2. 需要手动安装 fzf
-3. 
+2. thefuck 需要 python 3.11 版本；
+3. eza 在 centos 系统中不支持 yum 直接安装；
+4. linux 安装软件时需要 sudo 权限，以 sudo ./bin/use --all 执行，mac 不需要。
