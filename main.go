@@ -368,19 +368,6 @@ func zsh() error {
 		} else {
 			slog.Info("zsh-syntax-highlighting 已存在，跳过")
 		}
-
-		// 安装 fzf 插件
-		fzfPluginDir := filepath.Join(omzPluginsDir, "fzf")
-		if _, err := os.Stat(fzfPluginDir); os.IsNotExist(err) {
-			slog.Info("正在安装 fzf 插件...")
-			if err := execCmd("git", "clone", "--depth 1", "https://github.com/junegunn/fzf.git", fzfPluginDir); err != nil {
-				slog.Info("安装 fzf 插件 失败", "error", err.Error())
-			} else {
-				slog.Info("已安装", "plugin", "fzf")
-			}
-		} else {
-			slog.Info("fzf 插件 已存在，跳过")
-		}
 	}
 
 	fmt.Println("\033[36mStep4: 设置默认 shell\033[0m")
