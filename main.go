@@ -23,17 +23,19 @@ var vimConfig embed.FS
 var zshConfig embed.FS
 
 var (
-	configVim *bool
-	configGit *bool
-	configZsh *bool
-	configAll *bool
-	dryRun    *bool
+	configVim   *bool
+	configGit   *bool
+	configZsh   *bool
+	configMacos *bool
+	configAll   *bool
+	dryRun      *bool
 )
 
 func init() {
 	configVim = flag.Bool("vim", false, "配置 vim")
 	configGit = flag.Bool("git", false, "配置 git")
 	configZsh = flag.Bool("zsh", false, "配置 zsh")
+	configMacos = flag.Bool("macos", false, "macOS 个性化配置")
 	configAll = flag.Bool("all", false, "配置所有工具")
 	dryRun = flag.Bool("dry-run", false, "预览模式，不实际执行操作")
 }
@@ -59,134 +61,105 @@ type osType string
 const (
 	OSLinux  osType = "linux"
 	OSDarwin osType = "darwin"
+
 	// not supported yet
 	OSWindows osType = "windows"
+)
+
+type archType string
+
+const (
+	ArchAMD64 archType = "amd64"
+	ArchARM64 archType = "arm64"
 )
 
 type ExecFunc func() error
 
 var (
-	checkVimError     = errors.New("检查 vim 安装失败")
-	checkGitError     = errors.New("检查 git 安装失败")
-	checkTheFuckError = errors.New("检查 thefuck 安装失败")
-	checkZshError     = errors.New("检查 zsh 安装失败")
-	checkOhMyZshError = errors.New("检查 oh-my-zsh 安装失败")
-	checkEzaError     = errors.New("检查 eza 安装失败")
-	checkFzfError     = errors.New("检查 fzf 安装失败")
-	checkBatError     = errors.New("检查 bat 安装失败")
-
-	installVimError     = errors.New("安装 vim 失败")
-	installGitError     = errors.New("安装 git 失败")
-	installZshError     = errors.New("安装 zsh 失败")
-	installTheFuckError = errors.New("安装 thefuck 失败")
-	installOhMyZshError = errors.New("安装 oh-my-zsh 失败")
-	installEzaError     = errors.New("安装 eza 失败")
-	installFzfError     = errors.New("安装 fzf 失败")
-	installBatError     = errors.New("安装 bat 失败")
-
-	gitCfgError = errors.New("git 配置失败")
-	zshCfgError = errors.New("zsh 配置失败")
-	vimCfgError = errors.New("vim 配置失败")
-
-	pkgManagerError = errors.New("无法检测到可用的包管理器")
-	osError         = errors.New("不支持的操作系统")
-
-	UnknownTool = errors.New("未知工具")
+	ErrPkgManager    = errors.New("无法检测到可用的包管理器")
+	ErrUnsupportedOS = errors.New("不支持的操作系统")
+	ErrUnknownTool   = errors.New("未知工具")
 )
+
+var toolErrors = map[tools]map[action]error{
+	ToolGit:     {ActionCheck: errors.New("检查 git 安装失败"), ActionInstall: errors.New("安装 git 失败"), ActionConfig: errors.New("git 配置失败")},
+	ToolVim:     {ActionCheck: errors.New("检查 vim 安装失败"), ActionInstall: errors.New("安装 vim 失败"), ActionConfig: errors.New("vim 配置失败")},
+	ToolZsh:     {ActionCheck: errors.New("检查 zsh 安装失败"), ActionInstall: errors.New("安装 zsh 失败"), ActionConfig: errors.New("zsh 配置失败")},
+	ToolOMZ:     {ActionCheck: errors.New("检查 oh-my-zsh 安装失败"), ActionInstall: errors.New("安装 oh-my-zsh 失败")},
+	ToolTheFuck: {ActionCheck: errors.New("检查 thefuck 安装失败"), ActionInstall: errors.New("安装 thefuck 失败")},
+	ToolEza:     {ActionCheck: errors.New("检查 eza 安装失败"), ActionInstall: errors.New("安装 eza 失败")},
+	ToolFzf:     {ActionCheck: errors.New("检查 fzf 安装失败"), ActionInstall: errors.New("安装 fzf 失败")},
+	ToolBat:     {ActionCheck: errors.New("检查 bat 安装失败"), ActionInstall: errors.New("安装 bat 失败")},
+}
 
 type tools string
 
 const (
-	ToolGit     tools = "git"
-	ToolVim     tools = "vim"
-	ToolZsh     tools = "zsh"
-	ToolOMZ     tools = "oh-my-zsh"
+	ToolGit tools = "git"
+	ToolVim tools = "vim"
+	ToolZsh tools = "zsh"
+	ToolOMZ tools = "oh-my-zsh"
+
+	// https://github.com/nvbn/thefuck
 	ToolTheFuck tools = "thefuck"
-	ToolEza     tools = "eza"
-	ToolFzf     tools = "fzf"
-	ToolBat     tools = "bat"
+	// https://github.com/eza-community/eza
+	ToolEza tools = "eza"
+	// https://github.com/junegunn/fzf
+	ToolFzf tools = "fzf"
+	// https://github.com/sharkdp/bat
+	ToolBat tools = "bat"
 )
 
 func getError(tool tools, act action) error {
-	switch act {
-	case ActionInstall:
-		switch tool {
-		case ToolGit:
-			return installGitError
-		case ToolVim:
-			return installVimError
-		case ToolZsh:
-			return installZshError
-		case ToolTheFuck:
-			return installTheFuckError
-		case ToolOMZ:
-			return installOhMyZshError
-		case ToolEza:
-			return installEzaError
-		case ToolFzf:
-			return installFzfError
-		case ToolBat:
-			return installBatError
-		default:
-			return UnknownTool
-		}
-	case ActionCheck:
-		switch tool {
-		case ToolGit:
-			return checkGitError
-		case ToolVim:
-			return checkVimError
-		case ToolTheFuck:
-			return checkTheFuckError
-		case ToolOMZ:
-			return checkOhMyZshError
-		case ToolZsh:
-			return checkZshError
-		case ToolEza:
-			return checkEzaError
-		case ToolFzf:
-			return checkFzfError
-		case ToolBat:
-			return checkBatError
-		default:
-			return UnknownTool
+
+	if errs, ok := toolErrors[tool]; ok {
+		if err, ok := errs[act]; ok {
+			return err
 		}
 	}
-
-	return nil
+	return ErrUnknownTool
 }
 
 func conditionOS() (osType, error) {
 
 	switch runtime.GOOS {
-	case string(OSLinux):
+	case "linux":
 		return OSLinux, nil
-	case string(OSDarwin):
+	case "darwin":
 		return OSDarwin, nil
 	default:
-		return "", osError
+		return "", ErrUnsupportedOS
+	}
+}
+
+func getArch() archType {
+
+	switch runtime.GOARCH {
+	case "amd64":
+		return ArchAMD64
+	case "arm64":
+		return ArchARM64
+	default:
+		return ArchARM64
 	}
 }
 
 func execCmd(cmd string, args ...string) error {
+
 	if *dryRun {
 		slog.Info("[DRY RUN] 执行命令", "cmd", cmd, "args", args)
 		return nil
 	}
 
-	command := exec.Command(cmd, args...)
-	output, err := command.CombinedOutput()
-	if err != nil {
-		if len(output) > 0 {
-			return fmt.Errorf("%w: %s", err, string(output))
-		}
-		return err
+	output, err := exec.Command(cmd, args...).CombinedOutput()
+	if err != nil && len(output) > 0 {
+		return fmt.Errorf("%w: %s", err, string(output))
 	}
-
-	return nil
+	return err
 }
 
 func writeFile(path string, data []byte, perm os.FileMode) error {
+
 	if *dryRun {
 		slog.Info("[DRY RUN] 写入文件", "path", path, "size", len(data))
 		return nil
@@ -195,11 +168,242 @@ func writeFile(path string, data []byte, perm os.FileMode) error {
 }
 
 func mkdirAll(path string, perm os.FileMode) error {
+
 	if *dryRun {
 		slog.Info("[DRY RUN] 创建目录", "path", path)
 		return nil
 	}
 	return os.MkdirAll(path, perm)
+}
+
+// copyConfigFile 复制嵌入的配置文件到目标路径
+func copyConfigFile(fs embed.FS, srcPath, dstPath string, cfgErr error) error {
+
+	if _, err := os.Stat(dstPath); err == nil {
+		slog.Info("配置文件已存在，跳过", "path", dstPath)
+		return nil
+	}
+
+	data, err := fs.ReadFile(srcPath)
+	if err != nil {
+		return fmt.Errorf("%w: 读取嵌入配置失败: %w", cfgErr, err)
+	}
+
+	if err := writeFile(dstPath, data, 0644); err != nil {
+		return fmt.Errorf("%w: 写入文件失败: %w", cfgErr, err)
+	}
+
+	slog.Info("已复制配置文件", "path", dstPath)
+	return nil
+}
+
+// downloadAndInstallBinary 下载并安装二进制文件
+// 兼容 fzf 包管理器版本过低等其他问题
+func downloadAndInstallBinary(url, tmpFile, binName, targetDir string, needExtract bool) error {
+
+	if *dryRun {
+		slog.Info("[DRY RUN] 下载并安装二进制", "url", url, "target", filepath.Join(targetDir, binName))
+		return nil
+	}
+
+	slog.Info("正在下载", "url", url)
+	if err := execCmd("curl", "-fsSL", "-o", tmpFile, url); err != nil {
+		return fmt.Errorf("下载失败: %w", err)
+	}
+
+	if err := mkdirAll(targetDir, 0755); err != nil {
+		return fmt.Errorf("创建目录失败: %w", err)
+	}
+
+	if needExtract {
+		// 解压文件
+		slog.Info("正在解压", "file", tmpFile)
+		tmpDir := filepath.Join("/tmp", "extract_"+binName)
+		if err := mkdirAll(tmpDir, 0755); err != nil {
+			return fmt.Errorf("创建临时目录失败: %w", err)
+		}
+		defer os.RemoveAll(tmpDir)
+
+		// 根据文件类型解压
+		if strings.HasSuffix(tmpFile, ".tar.gz") || strings.HasSuffix(tmpFile, ".tgz") {
+			if err := execCmd("tar", "-xzf", tmpFile, "-C", tmpDir); err != nil {
+				return fmt.Errorf("解压失败: %w", err)
+			}
+		} else if strings.HasSuffix(tmpFile, ".zip") {
+			if err := execCmd("unzip", "-q", tmpFile, "-d", tmpDir); err != nil {
+				return fmt.Errorf("解压失败: %w", err)
+			}
+		}
+
+		var foundBinary string
+		filepath.Walk(tmpDir, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() && (info.Name() == binName || strings.HasPrefix(info.Name(), binName)) {
+				if info.Mode()&0111 != 0 {
+					foundBinary = path
+					return filepath.SkipDir
+				}
+			}
+			return nil
+		})
+
+		if foundBinary == "" {
+			return fmt.Errorf("未找到二进制文件: %s", binName)
+		}
+
+		targetPath := filepath.Join(targetDir, binName)
+		if err := execCmd("mv", foundBinary, targetPath); err != nil {
+			return fmt.Errorf("移动文件失败: %w", err)
+		}
+
+		if err := execCmd("chmod", "+x", targetPath); err != nil {
+			return fmt.Errorf("设置权限失败: %w", err)
+		}
+	} else {
+		targetPath := filepath.Join(targetDir, binName)
+		if err := execCmd("mv", tmpFile, targetPath); err != nil {
+			return fmt.Errorf("移动文件失败: %w", err)
+		}
+
+		if err := execCmd("chmod", "+x", targetPath); err != nil {
+			return fmt.Errorf("设置权限失败: %w", err)
+		}
+	}
+
+	if _, err := os.Stat(tmpFile); err == nil {
+		os.Remove(tmpFile)
+	}
+
+	slog.Info("安装成功", "binary", binName, "path", filepath.Join(targetDir, binName))
+	return nil
+}
+
+// installBinaryTool 安装二进制工具（fzf, bat, eza）
+func installBinaryTool(tool tools) error {
+
+	const (
+		fzfVersion    = "0.67.0"
+		fzfGithubLink = "https://github.com/junegunn/fzf/releases/download/v%s/fzf-%s-%s_%s.tar.gz"
+
+		batVersion    = "0.26.1"
+		batGithubLink = "https://github.com/sharkdp/bat/releases/download/v%s/bat-v%s-%s.tar.gz"
+
+		ezaVersion    = "0.23.4"
+		ezaGithubLink = "https://github.com/eza-community/eza/releases/download/v%s/eza_%s.tar.gz"
+	)
+
+	osStr, err := conditionOS()
+	if err != nil {
+		return err
+	}
+	arch := getArch()
+
+	targetDir := "/usr/local/bin"
+	if osStr == OSDarwin {
+		// macOS 优先使用 /usr/local/bin
+		if _, err := os.Stat("/usr/local/bin"); os.IsNotExist(err) {
+			if err := mkdirAll("/usr/local/bin", 0755); err != nil {
+				// 如果无法创建，使用用户目录
+				homeDir, _ := os.UserHomeDir()
+				targetDir = filepath.Join(homeDir, ".local", "bin")
+			}
+		}
+	} else {
+		// Linux 检查权限，如果无法写入 /usr/local/bin，使用用户目录
+		if _, err := os.Stat("/usr/local/bin"); err != nil || os.Getenv("USER") != "root" {
+			homeDir, _ := os.UserHomeDir()
+			targetDir = filepath.Join(homeDir, ".local", "bin")
+		}
+	}
+
+	var url, tmpFile, binName string
+	var needExtract bool
+
+	switch tool {
+	case ToolFzf:
+		binName = "fzf"
+		needExtract = true
+		var osName, ext string
+		switch osStr {
+		case OSLinux:
+			osName = "linux"
+			ext = "tar.gz"
+		case OSDarwin:
+			osName = "darwin"
+			ext = "zip"
+		}
+
+		archName := "amd64"
+		if arch == ArchARM64 {
+			archName = "arm64"
+		}
+
+		url = fmt.Sprintf(fzfGithubLink, fzfVersion, fzfVersion, osName, archName)
+		tmpFile = "/tmp/fzf.tar.gz"
+		if ext == "zip" {
+			tmpFile = "/tmp/fzf.zip"
+		}
+
+	case ToolBat:
+		binName = "bat"
+		needExtract = true
+		var platform string
+		switch osStr {
+		case OSLinux:
+			if arch == ArchARM64 {
+				platform = "aarch64-unknown-linux-gnu"
+			} else {
+				platform = "x86_64-unknown-linux-gnu"
+			}
+		case OSDarwin:
+			if arch == ArchARM64 {
+				platform = "aarch64-apple-darwin"
+			} else {
+				platform = "x86_64-apple-darwin"
+			}
+		}
+		url = fmt.Sprintf(batGithubLink, batVersion, batVersion, platform)
+		tmpFile = "/tmp/bat.tar.gz"
+
+	case ToolEza:
+		binName = "eza"
+		needExtract = false
+		switch osStr {
+		case OSLinux:
+			var platform string
+			if arch == ArchARM64 {
+				platform = "aarch64-unknown-linux-gnu"
+			} else {
+				platform = "x86_64-unknown-linux-gnu"
+			}
+			url = fmt.Sprintf(ezaGithubLink, ezaVersion, platform)
+			needExtract = true
+		case OSDarwin:
+			// eza 在 macOS 上没有预编译二进制，尝试使用包管理器
+			pm, args, err := getPackageManager()
+			if err != nil {
+				return fmt.Errorf("获取包管理器失败: %w", err)
+			}
+			fullArgs := append(args, "eza")
+			if err := execCmd(pm, fullArgs...); err != nil {
+				return fmt.Errorf("安装 eza 失败: %w", err)
+			}
+			slog.Info("已安装", "tool", "eza")
+			return nil
+		}
+		tmpFile = "/tmp/eza.tar.gz"
+
+	default:
+		return fmt.Errorf("不支持的工具: %s", tool)
+	}
+
+	if url == "" {
+		return fmt.Errorf("无法确定下载链接")
+	}
+
+	return downloadAndInstallBinary(url, tmpFile, binName, targetDir, needExtract)
 }
 
 func getPackageManager() (string, []string, error) {
@@ -209,23 +413,28 @@ func getPackageManager() (string, []string, error) {
 		return "", nil, err
 	}
 
-	switch osStr {
-	case OSDarwin:
+	if osStr == OSDarwin {
 		return "brew", []string{"install"}, nil
-	case OSLinux:
-		if _, err := exec.LookPath("apt"); err == nil {
-			return "apt", []string{"install", "-y"}, nil
-		} else if _, err := exec.LookPath("yum"); err == nil {
-			return "yum", []string{"install", "-y"}, nil
-		} else if _, err := exec.LookPath("dnf"); err == nil {
-			return "dnf", []string{"install", "-y"}, nil
-		} else if _, err := exec.LookPath("pacman"); err == nil {
-			return "pacman", []string{"-S", "--noconfirm"}, nil
-		}
-		return "", nil, pkgManagerError
-	default:
-		return "", nil, osError
 	}
+
+	// Linux package managers
+	managers := []struct {
+		name string
+		args []string
+	}{
+		{"apt", []string{"install", "-y"}},
+		{"yum", []string{"install", "-y"}},
+		{"dnf", []string{"install", "-y"}},
+		{"pacman", []string{"-S", "--noconfirm"}},
+	}
+
+	for _, pm := range managers {
+		if _, err := exec.LookPath(pm.name); err == nil {
+			return pm.name, pm.args, nil
+		}
+	}
+
+	return "", nil, ErrPkgManager
 }
 
 func checkFunc(cmdName tools, errMsg error) ExecFunc {
@@ -265,6 +474,14 @@ func installFunc(pkgName tools, errMsg error) ExecFunc {
 			return nil
 		}
 
+		// fzf, bat, eza 使用自定义的二进制安装方式安装
+		if pkgName == ToolFzf || pkgName == ToolBat || pkgName == ToolEza {
+			if err := installBinaryTool(pkgName); err != nil {
+				return fmt.Errorf("%w: %w", errMsg, err)
+			}
+			return nil
+		}
+
 		pm, args, err := getPackageManager()
 		if err != nil {
 			return fmt.Errorf("获取包管理器失败: %w", err)
@@ -280,7 +497,6 @@ func installFunc(pkgName tools, errMsg error) ExecFunc {
 }
 
 func checkAndInstall(tool tools) error {
-
 	if err := checkFunc(tool, getError(tool, ActionCheck))(); err != nil {
 		slog.Info("正在安装", "tool", string(tool))
 		return installFunc(tool, getError(tool, ActionInstall))()
@@ -296,7 +512,7 @@ func zsh() error {
 	fmt.Println("\033[36mStep1: 配置文件\033[0m")
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return fmt.Errorf("%w: %w", zshCfgError, err)
+		return fmt.Errorf("%w: %w", getError(ToolZsh, ActionConfig), err)
 	}
 
 	// 复制 .zshrc
@@ -313,10 +529,10 @@ func zsh() error {
 
 	input, err := zshConfig.ReadFile("zsh/.zshrc")
 	if err != nil {
-		return fmt.Errorf("%w: 读取嵌入 .zshrc 失败: %w", zshCfgError, err)
+		return fmt.Errorf("%w: 读取嵌入 .zshrc 失败: %w", getError(ToolZsh, ActionConfig), err)
 	}
 	if err := writeFile(zshrcPath, input, 0644); err != nil {
-		return fmt.Errorf("%w: 写入 .zshrc 失败: %w", zshCfgError, err)
+		return fmt.Errorf("%w: 写入 .zshrc 失败: %w", getError(ToolZsh, ActionConfig), err)
 	}
 	slog.Info("已复制 .zshrc", "path", zshrcPath)
 
@@ -326,7 +542,7 @@ func zsh() error {
 		fmt.Sprintf(".%s_env/%s", os.Getenv("USER"), ToolZsh),
 	)
 	if err := mkdirAll(configDir, 0755); err != nil {
-		return fmt.Errorf("%w: 创建配置目录失败: %w", zshCfgError, err)
+		return fmt.Errorf("%w: 创建配置目录失败: %w", getError(ToolZsh, ActionConfig), err)
 	}
 
 	configFiles := []string{"aliases.zsh", "envs.zsh", "function.zsh", "fzf.zsh"}
@@ -340,7 +556,7 @@ func zsh() error {
 			continue
 		}
 		if err := writeFile(dst, data, 0644); err != nil {
-			return fmt.Errorf("%w: 写入配置文件 %s 失败: %w", zshCfgError, file, err)
+			return fmt.Errorf("%w: 写入配置文件 %s 失败: %w", getError(ToolZsh, ActionConfig), file, err)
 		}
 	}
 	slog.Info("已复制 zsh 配置文件", "count", len(configFiles))
@@ -354,7 +570,7 @@ func zsh() error {
 		data, err := zshConfig.ReadFile("zsh/theme/use-custom.zsh-theme")
 		if err == nil {
 			if err := writeFile(themeDst, data, 0644); err != nil {
-				return fmt.Errorf("%w: 安装主题失败: %w", zshCfgError, err)
+				return fmt.Errorf("%w: 安装主题失败: %w", getError(ToolZsh, ActionConfig), err)
 			}
 			slog.Info("已安装 zsh 主题")
 		}
@@ -365,37 +581,34 @@ func zsh() error {
 	if err := mkdirAll(omzPluginsDir, 0755); err != nil {
 		slog.Info("跳过插件安装", "reason", "oh-my-zsh 未安装")
 	} else {
-		// 安装 zsh-autosuggestions
-		autoSuggestDir := filepath.Join(omzPluginsDir, "zsh-autosuggestions")
-		if _, err := os.Stat(autoSuggestDir); os.IsNotExist(err) {
-			slog.Info("正在安装 zsh-autosuggestions...")
-			if err := execCmd("git", "clone", "https://github.com/zsh-users/zsh-autosuggestions", autoSuggestDir); err != nil {
-				slog.Info("安装 zsh-autosuggestions 失败", "error", err.Error())
-			} else {
-				slog.Info("已安装", "plugin", "zsh-autosuggestions")
-			}
-		} else {
-			slog.Info("zsh-autosuggestions 已存在，跳过")
+		// 定义需要安装的插件
+		plugins := []struct {
+			name string
+			url  string
+		}{
+			{"zsh-autosuggestions", "https://github.com/zsh-users/zsh-autosuggestions"},
+			{"zsh-syntax-highlighting", "https://github.com/zsh-users/zsh-syntax-highlighting.git"},
 		}
 
-		// 安装 zsh-syntax-highlighting
-		syntaxHighlightDir := filepath.Join(omzPluginsDir, "zsh-syntax-highlighting")
-		if _, err := os.Stat(syntaxHighlightDir); os.IsNotExist(err) {
-			slog.Info("正在安装 zsh-syntax-highlighting...")
-			if err := execCmd("git", "clone", "https://github.com/zsh-users/zsh-syntax-highlighting.git", syntaxHighlightDir); err != nil {
-				slog.Info("安装 zsh-syntax-highlighting 失败", "error", err.Error())
+		for _, plugin := range plugins {
+			pluginDir := filepath.Join(omzPluginsDir, plugin.name)
+			if _, err := os.Stat(pluginDir); os.IsNotExist(err) {
+				slog.Info("正在安装插件...", "plugin", plugin.name)
+				if err := execCmd("git", "clone", plugin.url, pluginDir); err != nil {
+					slog.Info("安装插件失败", "plugin", plugin.name, "error", err.Error())
+				} else {
+					slog.Info("已安装", "plugin", plugin.name)
+				}
 			} else {
-				slog.Info("已安装", "plugin", "zsh-syntax-highlighting")
+				slog.Info("插件已存在，跳过", "plugin", plugin.name)
 			}
-		} else {
-			slog.Info("zsh-syntax-highlighting 已存在，跳过")
 		}
 	}
 
 	fmt.Println("\033[36mStep4: 设置默认 shell\033[0m")
 	output, err := exec.Command("sh", "-c", "echo $SHELL").Output()
 	if err != nil {
-		return fmt.Errorf("%w: 获取当前 shell 失败: %w", zshCfgError, err)
+		return fmt.Errorf("%w: 获取当前 shell 失败: %w", getError(ToolZsh, ActionConfig), err)
 	}
 
 	currentShell := strings.TrimSpace(string(output))
@@ -404,7 +617,7 @@ func zsh() error {
 		if os.Getuid() == 0 {
 			slog.Info("当前 shell 不是 zsh，正在切换...")
 			if err := execCmd("chsh", "-s", "/bin/zsh"); err != nil {
-				return fmt.Errorf("%w: 切换 shell 失败: %w", zshCfgError, err)
+				return fmt.Errorf("%w: 切换 shell 失败: %w", getError(ToolZsh, ActionConfig), err)
 			}
 			slog.Info("已切换到 zsh，重新登录后生效")
 		} else {
@@ -423,29 +636,28 @@ func zsh() error {
 }
 
 func vim() error {
-
 	slog.Info("正在配置 vim...")
+	cfgErr := getError(ToolVim, ActionConfig)
+
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return fmt.Errorf("%w: %w", cfgErr, err)
+	}
 
 	// Step1: 复制配置文件
 	fmt.Println("\033[36mStep1: 配置文件\033[0m")
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return fmt.Errorf("%w: %w", vimCfgError, err)
-	}
-
-	// 复制 .vimrc
 	vimrcPath := filepath.Join(homeDir, ".vimrc")
 	if _, err := os.Stat(vimrcPath); os.IsNotExist(err) {
-		input, err := vimConfig.ReadFile("vim/.vimrc")
+		// 尝试读取 .vimrc，如果不存在则使用 simple._vimrc
+		data, err := vimConfig.ReadFile("vim/.vimrc")
 		if err != nil {
-			// 如果 .vimrc 不存在，尝试使用 simple._vimrc
-			input, err = vimConfig.ReadFile("vim/simple._vimrc")
+			data, err = vimConfig.ReadFile("vim/simple._vimrc")
 			if err != nil {
-				return fmt.Errorf("%w: 读取嵌入 vimrc 失败: %w", vimCfgError, err)
+				return fmt.Errorf("%w: 读取嵌入 vimrc 失败: %w", cfgErr, err)
 			}
 		}
-		if err := writeFile(vimrcPath, input, 0644); err != nil {
-			return fmt.Errorf("%w: 写入 .vimrc 失败: %w", vimCfgError, err)
+		if err := writeFile(vimrcPath, data, 0644); err != nil {
+			return fmt.Errorf("%w: 写入 .vimrc 失败: %w", cfgErr, err)
 		}
 		slog.Info("已复制 .vimrc", "path", vimrcPath)
 	} else {
@@ -456,16 +668,16 @@ func vim() error {
 	fmt.Println("\033[36mStep2: 安装插件管理器 vim-plug\033[0m")
 	vimPlugPath := filepath.Join(homeDir, ".vim/autoload/plug.vim")
 	vimPlugInstalled := false
+
 	if _, err := os.Stat(vimPlugPath); os.IsNotExist(err) {
 		slog.Info("下载 vim-plug...")
-		// 创建目录
 		if err := mkdirAll(filepath.Dir(vimPlugPath), 0755); err != nil {
-			return fmt.Errorf("%w: 创建 vim 目录失败: %w", vimCfgError, err)
+			return fmt.Errorf("%w: 创建 vim 目录失败: %w", cfgErr, err)
 		}
-		// 下载 vim-plug
-		cmd := "curl -fLo " + vimPlugPath + " --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"
+
+		cmd := fmt.Sprintf("curl -fLo %s --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim", vimPlugPath)
 		if err := execCmd("sh", "-c", cmd); err != nil {
-			return fmt.Errorf("%w: 下载 vim-plug 失败: %w", vimCfgError, err)
+			return fmt.Errorf("%w: 下载 vim-plug 失败: %w", cfgErr, err)
 		}
 		slog.Info("已安装", "tool", "vim-plug")
 		vimPlugInstalled = true
@@ -485,35 +697,46 @@ func vim() error {
 }
 
 func git() error {
-
 	slog.Info("正在配置 git...")
 
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		return fmt.Errorf("%w: %w", gitCfgError, err)
+		return fmt.Errorf("%w: %w", getError(ToolGit, ActionConfig), err)
 	}
 
-	// 检查用户目录下是否有 .gitconfig 文件
 	gitconfigPath := filepath.Join(homeDir, ".gitconfig")
-	if _, err := os.Stat(gitconfigPath); os.IsNotExist(err) {
-		input, err := gitConfig.ReadFile("git/.gitconfig")
-		if err != nil {
-			return fmt.Errorf("%w: 读取嵌入配置失败: %w", gitCfgError, err)
-		}
-		if err := writeFile(gitconfigPath, input, 0644); err != nil {
-			return fmt.Errorf("%w: 写入文件失败: %w", gitCfgError, err)
-		}
-		slog.Info("已复制 .gitconfig", "path", gitconfigPath)
-	} else {
-		slog.Info(".gitconfig 已存在，跳过配置")
+	return copyConfigFile(gitConfig, "git/.gitconfig", gitconfigPath, getError(ToolGit, ActionConfig))
+}
+
+// macosCustomize macOS
+// 安装 raycast Rectangle Snipaste Monitorcontrol 等
+func macosCustomize() error {
+
+	osStr, err := conditionOS()
+	if err != nil {
+		return err
 	}
 
+	// 仅在 macOS 系统上执行
+	if osStr != OSDarwin {
+		return nil
+	}
+
+	slog.Info("正在执行 macOS 个性化配置...")
+
+	// 忽略错误处理
+	_ = execCmd("brew", "install", "raycast")
+	_ = execCmd("brew", "install", "--cask", "rectangle")
+	_ = execCmd("brew", "install", "--cask", "snipaste")
+	_ = execCmd("brew", "install", "monitorcontrol")
+
+	slog.Info("macOS 个性化配置完成")
 	return nil
 }
 
 func _main() error {
 
-	if !*configVim && !*configGit && !*configZsh && !*configAll {
+	if !*configVim && !*configGit && !*configZsh && !*configMacos && !*configAll {
 		flag.Usage()
 		return nil
 	}
@@ -543,6 +766,10 @@ func _main() error {
 	if *configAll || *configZsh {
 		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolTheFuck, ToolBat)
 		configFuncs = append(configFuncs, zsh)
+	}
+
+	if *configAll || *configMacos {
+		configFuncs = append(configFuncs, macosCustomize)
 	}
 
 	// 检查安装

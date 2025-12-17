@@ -44,6 +44,21 @@ ys_hg_prompt_info() {
 	fi
 }
 
+# 在 terminal pormpt 中显示主机名，远程登陆到多个服务器有用
+function get_hostname() {
+    local host_name
+    if command -v hostname &> /dev/null; then
+        host_name=$(hostname)
+    elif [ -f /etc/hostname ]; then
+        host_name=$(cat /etc/hostname)
+    else
+        host_name=${HOSTNAME:-$(uname -n)}
+    fi
+    # 排除域名？
+    host_name=${host_name%%.*}
+    echo "$host_name"
+}
+
 # Virtualenv
 local venv_info='$(virtenv_prompt)'
 YS_THEME_VIRTUALENV_PROMPT_PREFIX=" %{$fg[green]%}"
@@ -55,6 +70,8 @@ virtenv_prompt() {
 
 local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"
 
+# 可以看情况使用 $(get_hostname)
+# %{$fg[blue]%} $(get_hostname) @ \
 PROMPT="
 %{$terminfo[bold]$fg[blue]%}#%{$reset_color%} \
 %(#,%{$bg[yellow]%}%{$fg[black]%}%n%{$reset_color%},%{$fg[cyan]%}%n) \
