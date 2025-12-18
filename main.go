@@ -29,6 +29,8 @@ var (
 	configMacos *bool
 	configAll   *bool
 	dryRun      *bool
+	gitName     *string
+	gitEmail    *string
 )
 
 func init() {
@@ -38,6 +40,8 @@ func init() {
 	configMacos = flag.Bool("macos", false, "macOS 个性化配置")
 	configAll = flag.Bool("all", false, "配置所有工具")
 	dryRun = flag.Bool("dry-run", false, "预览模式，不实际执行操作")
+	gitName = flag.String("git-name", "", "Git 用户名")
+	gitEmail = flag.String("git-email", "", "Git 邮箱")
 }
 
 func main() {
@@ -699,13 +703,41 @@ func vim() error {
 func git() error {
 	slog.Info("正在配置 git...")
 
+	if *gitName == "" || *gitEmail == "" {
+		slog.Warn("未指定 git 用户名或邮箱，将使用默认配置。建议使用 --git-name 和 --git-email 指定。")
+	}
+
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return fmt.Errorf("%w: %w", getError(ToolGit, ActionConfig), err)
 	}
 
 	gitconfigPath := filepath.Join(homeDir, ".gitconfig")
-	return copyConfigFile(gitConfig, "git/.gitconfig", gitconfigPath, getError(ToolGit, ActionConfig))
+
+	if _, err := os.Stat(gitconfigPath); err == nil {
+		slog.Info("配置文件已存在，跳过", "path", gitconfigPath)
+		return nil
+	}
+
+	data, err := gitConfig.ReadFile("git/.gitconfig")
+	if err != nil {
+		return fmt.Errorf("%w: 读取嵌入配置失败: %w", getError(ToolGit, ActionConfig), err)
+	}
+
+	content := string(data)
+	if *gitName != "" {
+		content = strings.ReplaceAll(content, "name = yuluo-yx", fmt.Sprintf("name = %s", *gitName))
+	}
+	if *gitEmail != "" {
+		content = strings.ReplaceAll(content, "email = yuluo08290126@gmail.com", fmt.Sprintf("email = %s", *gitEmail))
+	}
+
+	if err := writeFile(gitconfigPath, []byte(content), 0644); err != nil {
+		return fmt.Errorf("%w: 写入文件失败: %w", getError(ToolGit, ActionConfig), err)
+	}
+
+	slog.Info("已复制配置文件", "path", gitconfigPath)
+	return nil
 }
 
 // macosCustomize macOS

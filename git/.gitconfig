@@ -6,10 +6,11 @@
 [user]
     name = yuluo-yx
     email = yuluo08290126@gmail.com
-[http]
-        proxy = http://127.0.0.1:7890
-[https]
-        proxy = http://127.0.0.1:7890
+# 如果需要开启 git 代理，可以取消下面两行的注释并设置代理地址    
+# [http]
+#       proxy = http://127.0.0.1:7890
+# [https]
+#       proxy = http://127.0.0.1:7890
 [alias]
     br = branch
     c  = commit -s -m
