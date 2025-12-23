@@ -751,7 +751,7 @@ func macosCustomize() error {
 
 	// 仅在 macOS 系统上执行
 	if osStr != OSDarwin {
-		return nil
+		return fmt.Errorf("当前系统不是 macos，跳过")
 	}
 
 	slog.Info("正在执行 macOS 个性化配置...")
@@ -796,7 +796,7 @@ func _main() error {
 	}
 
 	if *configAll || *configZsh {
-		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolTheFuck, ToolBat)
+		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolTheFuck, ToolBat, ToolFzf, ToolEza)
 		configFuncs = append(configFuncs, zsh)
 	}
 
