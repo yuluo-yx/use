@@ -74,9 +74,9 @@ local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"
 # %{$fg[blue]%} $(get_hostname) @ \
 PROMPT="
 %{$terminfo[bold]$fg[blue]%}#%{$reset_color%} \
-%(#,%{$bg[yellow]%}%{$fg[black]%}%n%{$reset_color%},%{$fg[cyan]%}%n) \
-%{$fg[white]%}%\
-%{$fg[green]%}🎈. \
+%(#,%{$bg[yellow]%}%{$fg[black]%}%n%{$reset_color%},%{$fg[cyan]%}%n\
+%{$fg[blue]%}@$(get_hostname)\
+%{$fg[green] 🎈. \
 %{$fg[white]%}in \
 %{$terminfo[bold]$fg[yellow]%}%~%{$reset_color%}\
 ${hg_info}\
