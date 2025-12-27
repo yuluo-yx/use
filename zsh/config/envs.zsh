@@ -17,3 +17,12 @@ export AI_DASHSCOPE_API_KEY="sk-xxxx"
 
 # zsh 相关的工具会放在家目录下，因此将家目录加入到 PATH 中
 export PATH=${HOME}/.local/bin:$PATH
+
+# fzf
+export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
+
+# AI envs
+AI_DASHSCOPE_API_KEY="sk-762e6e532c8a4745b881bbf2a7db7608"
+
+# eza envs
+export FPATH="/Users/shown/.oh-my-zsh/custom/plugins/ezacompletions/zsh:$FPATH"
