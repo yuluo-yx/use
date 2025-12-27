@@ -5,12 +5,15 @@ ZSH_THEME="use-custom"
 
 plugins=(
     z
-    kubectl
+    eza
+    extract
+    # kubectl
+    # git
+    # docker
     thefuck
     copypath
     copybuffer
     web-search
-    extract
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
