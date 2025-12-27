@@ -10,6 +10,7 @@ plugins=(
     copypath
     copybuffer
     web-search
+    extract
     zsh-autosuggestions
     zsh-syntax-highlighting
 )
