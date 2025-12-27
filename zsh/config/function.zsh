@@ -21,3 +21,10 @@ function logcat() {
     GREP_COLORS='mt=01;42' grep -E 'ERROR|WARNING|INFO|DEBUG' --color=always | \
     GREP_COLORS='mt=01;46' grep "$2" --color=always
 }
+
+# mkdr 创建目录并进入
+function mkcd() {
+	mkdir -p "$1" && cd "$1"
+}
+
+
