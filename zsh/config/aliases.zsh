@@ -34,3 +34,8 @@ alias ls="eza"
 
 # grep/egrep
 alias grep="grep --color=auto"
+
+# cd alias
+alias .="cd .."
+alias ..="cd ../.."
+alias ...="cd ../../.."
