@@ -1,8 +1,9 @@
 # alias config
 
-# Kubectl 
 alias clr="clear"
 alias mk="make"
+
+# Kubectl 
 alias k="kubectl"
 alias kg="kubectl get"
 alias ka="kubectl apply"
