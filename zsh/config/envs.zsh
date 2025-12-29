@@ -22,7 +22,7 @@ export PATH=${HOME}/.local/bin:$PATH
 export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
 
 # AI envs
-AI_DASHSCOPE_API_KEY="xxxx"
+export AI_DASHSCOPE_API_KEY="xxxx"
 
 # eza envs
 export FPATH="/Users/${USER}/.oh-my-zsh/custom/plugins/ezacompletions/zsh:$FPATH"
