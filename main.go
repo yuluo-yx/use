@@ -180,30 +180,9 @@ func mkdirAll(path string, perm os.FileMode) error {
 	return os.MkdirAll(path, perm)
 }
 
-// copyConfigFile 复制嵌入的配置文件到目标路径
-func copyConfigFile(fs embed.FS, srcPath, dstPath string, cfgErr error) error {
-
-	if _, err := os.Stat(dstPath); err == nil {
-		slog.Info("配置文件已存在，跳过", "path", dstPath)
-		return nil
-	}
-
-	data, err := fs.ReadFile(srcPath)
-	if err != nil {
-		return fmt.Errorf("%w: 读取嵌入配置失败: %w", cfgErr, err)
-	}
-
-	if err := writeFile(dstPath, data, 0644); err != nil {
-		return fmt.Errorf("%w: 写入文件失败: %w", cfgErr, err)
-	}
-
-	slog.Info("已复制配置文件", "path", dstPath)
-	return nil
-}
-
 // downloadAndInstallBinary 下载并安装二进制文件
 // 兼容 fzf 包管理器版本过低等其他问题
-func downloadAndInstallBinary(url, tmpFile, binName, targetDir string, needExtract bool) error {
+func downloadAndInstallBinary(url, tmpFile, binName, targetDir string) error {
 
 	if *dryRun {
 		slog.Info("[DRY RUN] 下载并安装二进制", "url", url, "target", filepath.Join(targetDir, binName))
@@ -219,61 +198,50 @@ func downloadAndInstallBinary(url, tmpFile, binName, targetDir string, needExtra
 		return fmt.Errorf("创建目录失败: %w", err)
 	}
 
-	if needExtract {
-		// 解压文件
-		slog.Info("正在解压", "file", tmpFile)
-		tmpDir := filepath.Join("/tmp", "extract_"+binName)
-		if err := mkdirAll(tmpDir, 0755); err != nil {
-			return fmt.Errorf("创建临时目录失败: %w", err)
-		}
-		defer os.RemoveAll(tmpDir)
+	// 都是 tar.gz 文件格式，需要解压
+	slog.Info("正在解压", "file", tmpFile)
+	tmpDir := filepath.Join("/tmp", "extract_"+binName)
+	if err := mkdirAll(tmpDir, 0755); err != nil {
+		return fmt.Errorf("创建临时目录失败: %w", err)
+	}
+	defer os.RemoveAll(tmpDir)
 
-		// 根据文件类型解压
-		if strings.HasSuffix(tmpFile, ".tar.gz") || strings.HasSuffix(tmpFile, ".tgz") {
-			if err := execCmd("tar", "-xzf", tmpFile, "-C", tmpDir); err != nil {
-				return fmt.Errorf("解压失败: %w", err)
+	// 根据文件类型解压
+	if strings.HasSuffix(tmpFile, ".tar.gz") || strings.HasSuffix(tmpFile, ".tgz") {
+		if err := execCmd("tar", "-xzf", tmpFile, "-C", tmpDir); err != nil {
+			return fmt.Errorf("解压失败: %w", err)
+		}
+	} else if strings.HasSuffix(tmpFile, ".zip") {
+		if err := execCmd("unzip", "-q", tmpFile, "-d", tmpDir); err != nil {
+			return fmt.Errorf("解压失败: %w", err)
+		}
+	}
+
+	var foundBinary string
+	filepath.Walk(tmpDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if !info.IsDir() && (info.Name() == binName || strings.HasPrefix(info.Name(), binName)) {
+			if info.Mode()&0111 != 0 {
+				foundBinary = path
+				return filepath.SkipDir
 			}
-		} else if strings.HasSuffix(tmpFile, ".zip") {
-			if err := execCmd("unzip", "-q", tmpFile, "-d", tmpDir); err != nil {
-				return fmt.Errorf("解压失败: %w", err)
-			}
 		}
+		return nil
+	})
 
-		var foundBinary string
-		filepath.Walk(tmpDir, func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if !info.IsDir() && (info.Name() == binName || strings.HasPrefix(info.Name(), binName)) {
-				if info.Mode()&0111 != 0 {
-					foundBinary = path
-					return filepath.SkipDir
-				}
-			}
-			return nil
-		})
+	if foundBinary == "" {
+		return fmt.Errorf("未找到二进制文件: %s", binName)
+	}
 
-		if foundBinary == "" {
-			return fmt.Errorf("未找到二进制文件: %s", binName)
-		}
+	targetPath := filepath.Join(targetDir, binName)
+	if err := execCmd("mv", foundBinary, targetPath); err != nil {
+		return fmt.Errorf("移动文件失败: %w", err)
+	}
 
-		targetPath := filepath.Join(targetDir, binName)
-		if err := execCmd("mv", foundBinary, targetPath); err != nil {
-			return fmt.Errorf("移动文件失败: %w", err)
-		}
-
-		if err := execCmd("chmod", "+x", targetPath); err != nil {
-			return fmt.Errorf("设置权限失败: %w", err)
-		}
-	} else {
-		targetPath := filepath.Join(targetDir, binName)
-		if err := execCmd("mv", tmpFile, targetPath); err != nil {
-			return fmt.Errorf("移动文件失败: %w", err)
-		}
-
-		if err := execCmd("chmod", "+x", targetPath); err != nil {
-			return fmt.Errorf("设置权限失败: %w", err)
-		}
+	if err := execCmd("chmod", "+x", targetPath); err != nil {
+		return fmt.Errorf("设置权限失败: %w", err)
 	}
 
 	if _, err := os.Stat(tmpFile); err == nil {
@@ -323,36 +291,20 @@ func installBinaryTool(tool tools) error {
 	}
 
 	var url, tmpFile, binName string
-	var needExtract bool
 
 	switch tool {
 	case ToolFzf:
-		binName = "fzf"
-		needExtract = true
-		var osName, ext string
-		switch osStr {
-		case OSLinux:
-			osName = "linux"
-			ext = "tar.gz"
-		case OSDarwin:
-			osName = "darwin"
-			ext = "zip"
-		}
-
+		binName = string(tool)
 		archName := "amd64"
 		if arch == ArchARM64 {
 			archName = "arm64"
 		}
 
-		url = fmt.Sprintf(fzfGithubLink, fzfVersion, fzfVersion, osName, archName)
+		url = fmt.Sprintf(fzfGithubLink, fzfVersion, fzfVersion, osStr, archName)
 		tmpFile = "/tmp/fzf.tar.gz"
-		if ext == "zip" {
-			tmpFile = "/tmp/fzf.zip"
-		}
 
 	case ToolBat:
-		binName = "bat"
-		needExtract = true
+		binName = string(tool)
 		var platform string
 		switch osStr {
 		case OSLinux:
@@ -372,8 +324,7 @@ func installBinaryTool(tool tools) error {
 		tmpFile = "/tmp/bat.tar.gz"
 
 	case ToolEza:
-		binName = "eza"
-		needExtract = false
+		binName = string(tool)
 		switch osStr {
 		case OSLinux:
 			var platform string
@@ -383,7 +334,6 @@ func installBinaryTool(tool tools) error {
 				platform = "x86_64-unknown-linux-gnu"
 			}
 			url = fmt.Sprintf(ezaGithubLink, ezaVersion, platform)
-			needExtract = true
 		case OSDarwin:
 			// eza 在 macOS 上没有预编译二进制，尝试使用包管理器
 			pm, args, err := getPackageManager()
@@ -407,7 +357,7 @@ func installBinaryTool(tool tools) error {
 		return fmt.Errorf("无法确定下载链接")
 	}
 
-	return downloadAndInstallBinary(url, tmpFile, binName, targetDir, needExtract)
+	return downloadAndInstallBinary(url, tmpFile, binName, targetDir)
 }
 
 func getPackageManager() (string, []string, error) {
@@ -540,10 +490,17 @@ func zsh() error {
 	}
 	slog.Info("已复制 .zshrc", "path", zshrcPath)
 
+	var customZshCfgDir string
+	if os.Getuid() == 0 {
+		customZshCfgDir = fmt.Sprintf(".%s_env/%s", os.Getenv("SUDO_USER"), ToolZsh)
+	} else {
+		customZshCfgDir = fmt.Sprintf(".%s_env/%s", os.Getenv("USER"), ToolZsh)
+	}
+
 	// 复制 config 目录
 	configDir := filepath.Join(
 		homeDir,
-		fmt.Sprintf(".%s_env/%s", os.Getenv("USER"), ToolZsh),
+		customZshCfgDir,
 	)
 	if err := mkdirAll(configDir, 0755); err != nil {
 		return fmt.Errorf("%w: 创建配置目录失败: %w", getError(ToolZsh, ActionConfig), err)
