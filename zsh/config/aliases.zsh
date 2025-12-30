@@ -1,6 +1,6 @@
 # alias config
 
-alias clr="clear"
+alias c="clear"
 alias mk="make"
 
 # Kubectl 
