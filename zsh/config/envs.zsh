@@ -1,16 +1,23 @@
 # env config
 
+{{if .Gvm}}
 # Go
-# source ~/.gvm/scripts/gvm
+[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
+{{end}}
 
-# # Java
-# export SDKMAN_DIR="$HOME/.sdkman"
-# [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+{{if .Java}}
+# Java
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+{{end}}
 
+{{if .Rust}}
 # Rust
 export RUSTUP_DIST_SERVER="https://rsproxy.cn"
 export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"
 export CARGO_UNSTABLE_SPARSE_REGISTRY=true
+[[ -s "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+{{end}}
 
 # AI envs
 export AI_DASHSCOPE_API_KEY="sk-xxxx"

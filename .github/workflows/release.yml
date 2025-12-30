@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     tags:
-      - 'v*'  # 当推送 v* 标签时触发，例如 v1.0.0
+      - 'v*'
 
 permissions:
   contents: write
@@ -26,10 +26,10 @@ jobs:
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
       - name: Build binaries
-        run: make release
+        run: make release VERSION=${{ steps.version.outputs.VERSION }}
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: |
             bin/use-linux-amd64

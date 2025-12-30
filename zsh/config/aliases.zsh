@@ -3,7 +3,7 @@
 alias c="clear"
 alias mk="make"
 
-# Kubectl 
+# Kubectl
 alias k="kubectl"
 alias kg="kubectl get"
 alias ka="kubectl apply"
@@ -11,7 +11,7 @@ alias kcf="kubectl create -f"
 alias kd="kubectl describe"
 alias klf="kubectl logs -f"
 
-# python 
+# python
 alias py="python3"
 alias pi="pip3 install"
 alias sv="source venv/bin/active"
@@ -36,7 +36,7 @@ alias ls="eza"
 # grep/egrep
 alias grep="grep --color=auto"
 
-# cd alias
+# cd shortcuts
 alias .="cd .."
 alias ..="cd ../.."
 alias ...="cd ../../.."

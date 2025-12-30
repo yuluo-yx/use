@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"embed"
 	"errors"
 	"flag"
@@ -11,6 +12,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"text/template"
 )
 
 //go:embed git/.gitconfig
@@ -28,7 +30,11 @@ var (
 	configZsh   *bool
 	configMacos *bool
 	configAll   *bool
+	configGvm   *bool
+	configJava  *bool
+	configRust  *bool
 	dryRun      *bool
+	force       *bool
 	gitName     *string
 	gitEmail    *string
 )
@@ -39,7 +45,11 @@ func init() {
 	configZsh = flag.Bool("zsh", false, "配置 zsh")
 	configMacos = flag.Bool("macos", false, "macOS 个性化配置")
 	configAll = flag.Bool("all", false, "配置所有工具")
+	configGvm = flag.Bool("gvm", false, "安装并配置 GVM (Go Version Manager)")
+	configJava = flag.Bool("java", false, "安装并配置 SDKMAN (Java Version Manager)")
+	configRust = flag.Bool("rust", false, "安装并配置 Rustup (Rust Version Manager)")
 	dryRun = flag.Bool("dry-run", false, "预览模式，不实际执行操作")
+	force = flag.Bool("f", false, "强制覆盖已存在的文件")
 	gitName = flag.String("git-name", "", "Git 用户名")
 	gitEmail = flag.String("git-email", "", "Git 邮箱")
 }
@@ -94,6 +104,9 @@ var toolErrors = map[tools]map[action]error{
 	ToolEza:     {ActionCheck: errors.New("检查 eza 安装失败"), ActionInstall: errors.New("安装 eza 失败")},
 	ToolFzf:     {ActionCheck: errors.New("检查 fzf 安装失败"), ActionInstall: errors.New("安装 fzf 失败")},
 	ToolBat:     {ActionCheck: errors.New("检查 bat 安装失败"), ActionInstall: errors.New("安装 bat 失败")},
+	ToolGvm:     {ActionCheck: errors.New("检查 gvm 安装失败"), ActionInstall: errors.New("安装 gvm 失败")},
+	ToolSdkman:  {ActionCheck: errors.New("检查 sdkman 安装失败"), ActionInstall: errors.New("安装 sdkman 失败")},
+	ToolRustup:  {ActionCheck: errors.New("检查 rustup 安装失败"), ActionInstall: errors.New("安装 rustup 失败")},
 }
 
 type tools string
@@ -112,6 +125,12 @@ const (
 	ToolFzf tools = "fzf"
 	// https://github.com/sharkdp/bat
 	ToolBat tools = "bat"
+	// https://github.com/moovweb/gvm
+	ToolGvm tools = "gvm"
+	// https://sdkman.io/
+	ToolSdkman tools = "sdkman"
+	// https://rustup.rs/
+	ToolRustup tools = "rustup"
 )
 
 func getError(tool tools, act action) error {
@@ -340,8 +359,22 @@ func installBinaryTool(tool tools) error {
 			if err != nil {
 				return fmt.Errorf("获取包管理器失败: %w", err)
 			}
-			fullArgs := append(args, "eza")
-			if err := execCmd(pm, fullArgs...); err != nil {
+
+			cmd := pm
+			cmdArgs := append(args, "eza")
+
+			// 如果是 root 用户且使用 brew，尝试降级到 SUDO_USER
+			// homebrew 在 root 下会报错
+			if os.Getuid() == 0 && pm == "brew" {
+				if sudoUser := os.Getenv("SUDO_USER"); sudoUser != "" {
+					cmd = "sudo"
+					cmdArgs = append([]string{"-u", sudoUser, pm}, cmdArgs...)
+				} else {
+					slog.Warn("警告: 正在以 root 身份运行 Homebrew，可能会失败")
+				}
+			}
+
+			if err := execCmd(cmd, cmdArgs...); err != nil {
 				return fmt.Errorf("安装 eza 失败: %w", err)
 			}
 			slog.Info("已安装", "tool", "eza")
@@ -394,15 +427,41 @@ func getPackageManager() (string, []string, error) {
 func checkFunc(cmdName tools, errMsg error) ExecFunc {
 
 	return func() error {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			return fmt.Errorf("%w: %w", errMsg, err)
+		}
 
-		if cmdName == "oh-my-zsh" {
-			homeDir, err := os.UserHomeDir()
-			if err != nil {
-				return fmt.Errorf("%w: %w", errMsg, err)
-			}
+		if cmdName == ToolOMZ {
 			omzPath := filepath.Join(homeDir, ".oh-my-zsh")
 			if _, err := os.Stat(omzPath); os.IsNotExist(err) {
 				return fmt.Errorf("%w: oh-my-zsh not found", errMsg)
+			}
+			return nil
+		}
+
+		if cmdName == ToolGvm {
+			gvmPath := filepath.Join(homeDir, ".gvm", "scripts", "gvm")
+			if _, err := os.Stat(gvmPath); os.IsNotExist(err) {
+				return fmt.Errorf("%w: gvm not found", errMsg)
+			}
+			return nil
+		}
+
+		if cmdName == ToolSdkman {
+			sdkmanPath := filepath.Join(homeDir, ".sdkman", "bin", "sdkman-init.sh")
+			if _, err := os.Stat(sdkmanPath); os.IsNotExist(err) {
+				return fmt.Errorf("%w: sdkman not found", errMsg)
+			}
+			return nil
+		}
+
+		if cmdName == ToolRustup {
+			rustupPath := filepath.Join(homeDir, ".cargo", "bin", "rustup")
+			if _, err := os.Stat(rustupPath); os.IsNotExist(err) {
+				if _, err := exec.LookPath("rustup"); err != nil {
+					return fmt.Errorf("%w: rustup not found", errMsg)
+				}
 			}
 			return nil
 		}
@@ -425,6 +484,36 @@ func installFunc(pkgName tools, errMsg error) ExecFunc {
 				return fmt.Errorf("%w: %w", errMsg, err)
 			}
 			slog.Info("已安装", "tool", "oh-my-zsh")
+			return nil
+		}
+
+		if pkgName == ToolGvm {
+			installCmd := `bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)`
+			if err := execCmd("bash", "-c", installCmd); err != nil {
+				slog.Warn("安装 gvm 失败，请尝试手动安装", "error", err)
+				return nil
+			}
+			slog.Info("已安装", "tool", "gvm")
+			return nil
+		}
+
+		if pkgName == ToolSdkman {
+			installCmd := `curl -s "https://get.sdkman.io" | bash`
+			if err := execCmd("bash", "-c", installCmd); err != nil {
+				slog.Warn("安装 sdkman 失败，请尝试手动安装", "error", err)
+				return nil
+			}
+			slog.Info("已安装", "tool", "sdkman")
+			return nil
+		}
+
+		if pkgName == ToolRustup {
+			installCmd := `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y`
+			if err := execCmd("sh", "-c", installCmd); err != nil {
+				slog.Warn("安装 rustup 失败，请尝试手动安装", "error", err)
+				return nil
+			}
+			slog.Info("已安装", "tool", "rustup")
 			return nil
 		}
 
@@ -516,6 +605,25 @@ func zsh() error {
 			slog.Info("跳过文件", "file", file, "reason", "读取失败")
 			continue
 		}
+
+		if file == "envs.zsh" {
+			tmpl, err := template.New("envs").Parse(string(data))
+			if err != nil {
+				return fmt.Errorf("%w: 解析 envs.zsh 模板失败: %w", getError(ToolZsh, ActionConfig), err)
+			}
+			var buf bytes.Buffer
+			dataMap := map[string]interface{}{
+				"Gvm":  *configGvm,
+				"Java": *configJava,
+				"Rust": *configRust,
+				"User": os.Getenv("USER"),
+			}
+			if err := tmpl.Execute(&buf, dataMap); err != nil {
+				return fmt.Errorf("%w: 执行 envs.zsh 模板失败: %w", getError(ToolZsh, ActionConfig), err)
+			}
+			data = buf.Bytes()
+		}
+
 		if err := writeFile(dst, data, 0644); err != nil {
 			return fmt.Errorf("%w: 写入配置文件 %s 失败: %w", getError(ToolZsh, ActionConfig), file, err)
 		}
@@ -553,7 +661,10 @@ func zsh() error {
 
 		for _, plugin := range plugins {
 			pluginDir := filepath.Join(omzPluginsDir, plugin.name)
-			if _, err := os.Stat(pluginDir); os.IsNotExist(err) {
+			if _, err := os.Stat(pluginDir); os.IsNotExist(err) || *force {
+				if *force {
+					os.RemoveAll(pluginDir)
+				}
 				slog.Info("正在安装插件...", "plugin", plugin.name)
 				if err := execCmd("git", "clone", plugin.url, pluginDir); err != nil {
 					slog.Info("安装插件失败", "plugin", plugin.name, "error", err.Error())
@@ -608,7 +719,7 @@ func vim() error {
 	// Step1: 复制配置文件
 	fmt.Println("\033[36mStep1: 配置文件\033[0m")
 	vimrcPath := filepath.Join(homeDir, ".vimrc")
-	if _, err := os.Stat(vimrcPath); os.IsNotExist(err) {
+	if _, err := os.Stat(vimrcPath); os.IsNotExist(err) || *force {
 		// 尝试读取 .vimrc，如果不存在则使用 simple._vimrc
 		data, err := vimConfig.ReadFile("vim/.vimrc")
 		if err != nil {
@@ -630,7 +741,7 @@ func vim() error {
 	vimPlugPath := filepath.Join(homeDir, ".vim/autoload/plug.vim")
 	vimPlugInstalled := false
 
-	if _, err := os.Stat(vimPlugPath); os.IsNotExist(err) {
+	if _, err := os.Stat(vimPlugPath); os.IsNotExist(err) || *force {
 		slog.Info("下载 vim-plug...")
 		if err := mkdirAll(filepath.Dir(vimPlugPath), 0755); err != nil {
 			return fmt.Errorf("%w: 创建 vim 目录失败: %w", cfgErr, err)
@@ -671,7 +782,7 @@ func git() error {
 
 	gitconfigPath := filepath.Join(homeDir, ".gitconfig")
 
-	if _, err := os.Stat(gitconfigPath); err == nil {
+	if _, err := os.Stat(gitconfigPath); err == nil && !*force {
 		slog.Info("配置文件已存在，跳过", "path", gitconfigPath)
 		return nil
 	}
@@ -725,7 +836,7 @@ func macosCustomize() error {
 
 func _main() error {
 
-	if !*configVim && !*configGit && !*configZsh && !*configMacos && !*configAll {
+	if !*configVim && !*configGit && !*configZsh && !*configMacos && !*configAll && !*configGvm && !*configJava && !*configRust {
 		flag.Usage()
 		return nil
 	}
@@ -752,8 +863,17 @@ func _main() error {
 		configFuncs = append(configFuncs, vim)
 	}
 
-	if *configAll || *configZsh {
+	if *configAll || *configZsh || *configGvm || *configJava || *configRust {
 		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolTheFuck, ToolBat, ToolFzf, ToolEza)
+		if *configGvm {
+			toolsToInstall = append(toolsToInstall, ToolGvm)
+		}
+		if *configJava {
+			toolsToInstall = append(toolsToInstall, ToolSdkman)
+		}
+		if *configRust {
+			toolsToInstall = append(toolsToInstall, ToolRustup)
+		}
 		configFuncs = append(configFuncs, zsh)
 	}
 
