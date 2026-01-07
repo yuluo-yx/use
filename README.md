@@ -234,5 +234,5 @@ curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/simple._vimrc >> 
 3. eza 在 centos 系统中不支持 yum 直接安装；
 4. linux 安装软件时需要 sudo 权限，以 sudo ./bin/use --all 执行，mac 不需要；
 5. 如果需要配置 git，需要手动修改 proxy 和 user 信息配置；
-6. 对 zsh 命令行内容，可以任意编译，在 zsh/theme 目录下；
+6. 对 zsh 命令行内容，可以任意编辑，在 zsh/theme 目录下；
 7. 如果 soure ~/.zshrc 出现，unknown option --zsh，需要手动升级 fzf 版本；ß
