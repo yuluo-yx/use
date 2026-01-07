@@ -9,8 +9,10 @@ import (
 	"log/slog"
 	"os"
 	"os/exec"
+	"os/user"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"strings"
 	"text/template"
 )
@@ -174,6 +176,59 @@ func execCmd(cmd string, args ...string) error {
 	return err
 }
 
+// getRealUser 获取实际用户的 UID 和 GID，即使在 sudo 下运行
+// 返回值: uid, gid, error
+func getRealUser() (int, int, error) {
+	// 如果不是 root，直接返回当前用户
+	if os.Getuid() != 0 {
+		return os.Getuid(), os.Getgid(), nil
+	}
+
+	// 如果是 root，尝试获取 SUDO_USER
+	sudoUser := os.Getenv("SUDO_USER")
+	if sudoUser == "" {
+		// 没有 SUDO_USER，可能是真的 root
+		return 0, 0, nil
+	}
+
+	// 获取 SUDO_USER 的用户信息
+	u, err := user.Lookup(sudoUser)
+	if err != nil {
+		return 0, 0, fmt.Errorf("查找用户 %s 失败: %w", sudoUser, err)
+	}
+
+	uid, err := strconv.Atoi(u.Uid)
+	if err != nil {
+		return 0, 0, fmt.Errorf("解析 UID 失败: %w", err)
+	}
+
+	gid, err := strconv.Atoi(u.Gid)
+	if err != nil {
+		return 0, 0, fmt.Errorf("解析 GID 失败: %w", err)
+	}
+
+	return uid, gid, nil
+}
+
+// chownIfNeeded 如果当前是 root 用户运行，则修改文件所有权为实际用户
+func chownIfNeeded(path string) error {
+	if os.Getuid() != 0 {
+		return nil
+	}
+
+	uid, gid, err := getRealUser()
+	if err != nil {
+		return err
+	}
+
+	// 如果是真正的 root 用户（不是 sudo），不需要修改权限
+	if uid == 0 {
+		return nil
+	}
+
+	return os.Chown(path, uid, gid)
+}
+
 func writeFile(path string, data []byte, perm os.FileMode) error {
 
 	if *dryRun {
@@ -181,7 +236,11 @@ func writeFile(path string, data []byte, perm os.FileMode) error {
 		return nil
 	}
 
-	return os.WriteFile(path, data, perm)
+	if err := os.WriteFile(path, data, perm); err != nil {
+		return err
+	}
+
+	return chownIfNeeded(path)
 }
 
 func mkdirAll(path string, perm os.FileMode) error {
@@ -191,7 +250,11 @@ func mkdirAll(path string, perm os.FileMode) error {
 		return nil
 	}
 
-	return os.MkdirAll(path, perm)
+	if err := os.MkdirAll(path, perm); err != nil {
+		return err
+	}
+
+	return chownIfNeeded(path)
 }
 
 // downloadAndInstallBinary 下载并安装二进制文件
