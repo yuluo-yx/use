@@ -55,20 +55,6 @@ clean:
 	@echo "清理编译产物..."
 	@rm -rf $(OUTPUT_DIR)
 
-run:
-	go run main.go
-
-prod-run:
-	./$(OUTPUT_DIR)/$(APP_NAME)
-
-prod: build prod-run
-
-# 显示版本信息
-version:
-	@echo "Version:    $(VERSION)"
-	@echo "Build Time: $(BUILD_TIME)"
-	@echo "Git Commit: $(GIT_COMMIT)"
-
 # 帮助信息
 help:
 	@echo "可用命令："
@@ -81,10 +67,7 @@ help:
 	@echo "  make release            - 发布构建（所有平台+校验和）"
 	@echo "  make checksums          - 生成校验和文件"
 	@echo "  make clean              - 清理编译产物"
-	@echo "  make run                - 运行（开发模式）"
-	@echo "  make prod               - 构建并运行"
-	@echo "  make version            - 显示版本信息"
 	@echo "  make help               - 显示此帮助信息"
 
 .PHONY: build build-all build-linux-amd64 build-linux-arm64 build-darwin-amd64 build-darwin-arm64 \
-	checksums release clean run prod-run prod version help
+	checksums release clean help
