@@ -4,9 +4,9 @@
     longpaths = true
     editor = vim
 [user]
-    name = yuluo-yx
-    email = yuluo08290126@gmail.com
-# 如果需要开启 git 代理，可以取消下面两行的注释并设置代理地址    
+    name = {{.User}}
+    email = {{.Email}}
+# 如果需要开启 git 代理，可以取消下面两行的注释并设置代理地址
 # [http]
 #       proxy = http://127.0.0.1:7890
 # [https]

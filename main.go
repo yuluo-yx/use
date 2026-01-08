@@ -504,46 +504,51 @@ func installFunc(pkgName tools, errMsg error) ExecFunc {
 		// 通过 bash 脚本安装的工具
 		// todo 挪到 downloadAndInstallBinary 函数中
 		if pkgName == ToolOMZ {
-			installCmd := `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended`
-			if err := execCmd("zsh", "-c", installCmd); err != nil {
+			slog.Info("  → 使用脚本安装 Oh-My-Zsh", "url", "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh")
+			installCmd := `RUNZSH=no CHSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
+			if err := execCmd("bash", "-c", installCmd); err != nil {
 				return fmt.Errorf("%w: %w", errMsg, err)
 			}
-			slog.Info("已安装", "tool", "oh-my-zsh")
+			slog.Info("  ✓ 已安装", "tool", "oh-my-zsh")
 			return nil
 		}
 
 		if pkgName == ToolGvm {
+			slog.Info("  → 使用脚本安装 GVM", "url", "https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer")
 			installCmd := `bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)`
 			if err := execCmd("bash", "-c", installCmd); err != nil {
 				slog.Warn("安装 gvm 失败，请尝试手动安装", "error", err)
 				return nil
 			}
-			slog.Info("已安装", "tool", "gvm")
+			slog.Info("  ✓ 已安装", "tool", "gvm")
 			return nil
 		}
 
 		if pkgName == ToolSdkman {
+			slog.Info("  → 使用脚本安装 SDKMAN", "url", "https://get.sdkman.io")
 			installCmd := `curl -s "https://get.sdkman.io" | bash`
 			if err := execCmd("bash", "-c", installCmd); err != nil {
 				slog.Warn("安装 sdkman 失败，请尝试手动安装", "error", err)
 				return nil
 			}
-			slog.Info("已安装", "tool", "sdkman")
+			slog.Info("  ✓ 已安装", "tool", "sdkman")
 			return nil
 		}
 
 		if pkgName == ToolRustup {
+			slog.Info("  → 使用脚本安装 Rustup", "url", "https://sh.rustup.rs")
 			installCmd := `curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y`
-			if err := execCmd("sh", "-c", installCmd); err != nil {
+			if err := execCmd("bash", "-c", installCmd); err != nil {
 				slog.Warn("安装 rustup 失败，请尝试手动安装", "error", err)
 				return nil
 			}
-			slog.Info("已安装", "tool", "rustup")
+			slog.Info("  ✓ 已安装", "tool", "rustup")
 			return nil
 		}
 
 		// fzf, bat, eza 使用自定义的二进制安装方式安装
 		if pkgName == ToolFzf || pkgName == ToolBat || pkgName == ToolEza {
+			slog.Info("  → 使用二进制安装", "tool", string(pkgName))
 			if err := installBinaryTool(pkgName); err != nil {
 				return fmt.Errorf("%w: %w", errMsg, err)
 			}
@@ -555,24 +560,30 @@ func installFunc(pkgName tools, errMsg error) ExecFunc {
 			return fmt.Errorf("获取包管理器失败: %w", err)
 		}
 
+		slog.Info("  → 使用包管理器安装", "package_manager", pm, "tool", string(pkgName))
 		fullArgs := append(args, string(pkgName))
 		if err := execCmd(pm, fullArgs...); err != nil {
 			return fmt.Errorf("%w: %w", errMsg, err)
 		}
 
-		slog.Info("已安装", "tool", string(pkgName))
+		slog.Info("  ✓ 安装成功", "tool", string(pkgName))
 		return nil
 	}
 }
 
 func checkAndInstall(tool tools) error {
 
+	slog.Info("  → 检查工具是否已安装", "tool", string(tool))
 	if err := checkFunc(tool, getError(tool, ActionCheck))(); err != nil {
-		slog.Info("正在安装", "tool", string(tool))
-		return installFunc(tool, getError(tool, ActionInstall))()
+		slog.Info("  → 工具未安装，开始安装", "tool", string(tool))
+		if err := installFunc(tool, getError(tool, ActionInstall))(); err != nil {
+			return err
+		}
+		slog.Info("  ✓ 工具安装完成", "tool", string(tool))
+		return nil
 	}
 
-	slog.Info("已存在", "tool", string(tool))
+	slog.Info("  ✓ 工具已存在", "tool", string(tool))
 	return nil
 }
 
@@ -589,7 +600,9 @@ func zsh() error {
 		}
 	)
 
-	slog.Info("正在配置 zsh...")
+	slog.Info("===========================================")
+	slog.Info("正在配置 zsh")
+	slog.Info("===========================================")
 
 	fmt.Println("\033[36mStep1: 配置文件\033[0m")
 	homeDir, err := os.UserHomeDir()
@@ -599,24 +612,29 @@ func zsh() error {
 
 	// 复制 .zshrc
 	zshrcPath := filepath.Join(homeDir, ".zshrc")
-	// 备份旧文件（如果存在）
-	if _, err := os.Stat(zshrcPath); err == nil {
-		backupPath := zshrcPath + ".backup"
-		if err := os.Rename(zshrcPath, backupPath); err != nil {
-			slog.Info("备份旧配置失败", "error", err.Error())
-		} else {
-			slog.Info("已备份旧配置", "path", backupPath)
-		}
-	}
 
-	input, err := zshConfig.ReadFile("zsh/.zshrc")
-	if err != nil {
-		return fmt.Errorf("%w: 读取嵌入 .zshrc 失败: %w", getError(ToolZsh, ActionConfig), err)
+	if _, err := os.Stat(zshrcPath); err == nil && !*force {
+		slog.Info(".zshrc 已存在，跳过 (使用 -f 强制覆盖)", "path", zshrcPath)
+	} else {
+		// 备份旧文件（如果存在且使用强制覆盖）
+		if _, err := os.Stat(zshrcPath); err == nil && *force {
+			backupPath := zshrcPath + ".backup"
+			if err := os.Rename(zshrcPath, backupPath); err != nil {
+				slog.Info("备份旧配置失败", "error", err.Error())
+			} else {
+				slog.Info("已备份旧配置", "path", backupPath)
+			}
+		}
+
+		input, err := zshConfig.ReadFile("zsh/.zshrc")
+		if err != nil {
+			return fmt.Errorf("%w: 读取嵌入 .zshrc 失败: %w", getError(ToolZsh, ActionConfig), err)
+		}
+		if err := writeFile(zshrcPath, input, 0644); err != nil {
+			return fmt.Errorf("%w: 写入 .zshrc 失败: %w", getError(ToolZsh, ActionConfig), err)
+		}
+		slog.Info("已复制 .zshrc", "path", zshrcPath)
 	}
-	if err := writeFile(zshrcPath, input, 0644); err != nil {
-		return fmt.Errorf("%w: 写入 .zshrc 失败: %w", getError(ToolZsh, ActionConfig), err)
-	}
-	slog.Info("已复制 .zshrc", "path", zshrcPath)
 
 	var customZshCfgDir string
 	if os.Getuid() == 0 {
@@ -638,6 +656,13 @@ func zsh() error {
 	for _, file := range configFiles {
 		src := filepath.Join("zsh/config", file)
 		dst := filepath.Join(configDir, file)
+
+		// 检查文件是否存在，如果存在且没有 force 标志则跳过
+		if _, err := os.Stat(dst); err == nil && !*force {
+			slog.Info("配置文件已存在，跳过", "file", file)
+			continue
+		}
+
 		// 从 embed 配置文件读取
 		data, err := zshConfig.ReadFile(src)
 		if err != nil {
@@ -652,9 +677,9 @@ func zsh() error {
 			}
 			var buf bytes.Buffer
 			dataMap := map[string]interface{}{
-				"Gvm":  *configGvm,
-				"Java": *configJava,
-				"Rust": *configRust,
+				"Gvm":  *configAll || *configGvm,
+				"Java": *configAll || *configJava,
+				"Rust": *configAll || *configRust,
 				"User": os.Getenv("USER"),
 			}
 			if err := tmpl.Execute(&buf, dataMap); err != nil {
@@ -675,12 +700,18 @@ func zsh() error {
 		slog.Info("跳过主题安装", "reason", "oh-my-zsh 未安装")
 	} else {
 		themeDst := filepath.Join(omzCustomDir, "use-custom.zsh-theme")
-		data, err := zshConfig.ReadFile("zsh/theme/use-custom.zsh-theme")
-		if err == nil {
-			if err := writeFile(themeDst, data, 0644); err != nil {
-				return fmt.Errorf("%w: 安装主题失败: %w", getError(ToolZsh, ActionConfig), err)
+
+		// 检查主题文件是否存在
+		if _, err := os.Stat(themeDst); err == nil && !*force {
+			slog.Info("主题已存在，跳过", "theme", "use-custom.zsh-theme")
+		} else {
+			data, err := zshConfig.ReadFile("zsh/theme/use-custom.zsh-theme")
+			if err == nil {
+				if err := writeFile(themeDst, data, 0644); err != nil {
+					return fmt.Errorf("%w: 安装主题失败: %w", getError(ToolZsh, ActionConfig), err)
+				}
+				slog.Info("已安装 zsh 主题")
 			}
-			slog.Info("已安装 zsh 主题")
 		}
 	}
 
@@ -739,7 +770,9 @@ func zsh() error {
 
 func vim() error {
 
-	slog.Info("正在配置 vim...")
+	slog.Info("===========================================")
+	slog.Info("正在配置 vim")
+	slog.Info("===========================================")
 	cfgErr := getError(ToolVim, ActionConfig)
 
 	// todo：home 等公用变量获取一次，往下传递
@@ -802,7 +835,9 @@ func vim() error {
 
 func git() error {
 
-	slog.Info("正在配置 git...")
+	slog.Info("===========================================")
+	slog.Info("正在配置 git")
+	slog.Info("===========================================")
 
 	if *gitName == "" || *gitEmail == "" {
 		slog.Warn("未指定 git 用户名或邮箱，将使用默认配置。建议使用 --git-name 和 --git-email 指定。")
@@ -827,10 +862,10 @@ func git() error {
 
 	content := string(data)
 	if *gitName != "" {
-		content = strings.ReplaceAll(content, "name = need-config", fmt.Sprintf("name = %s", *gitName))
+		content = strings.ReplaceAll(content, "{{.User}}", fmt.Sprintf("name = %s", *gitName))
 	}
 	if *gitEmail != "" {
-		content = strings.ReplaceAll(content, "email = need-config@example.com", fmt.Sprintf("email = %s", *gitEmail))
+		content = strings.ReplaceAll(content, "{{.Email}}", fmt.Sprintf("email = %s", *gitEmail))
 	}
 
 	if err := writeFile(gitConfigPath, []byte(content), 0644); err != nil {
@@ -855,7 +890,9 @@ func macosCustomize() error {
 		return fmt.Errorf("当前系统不是 macos，跳过")
 	}
 
-	slog.Info("正在执行 macOS 个性化配置...")
+	slog.Info("===========================================")
+	slog.Info("正在执行 macOS 个性化配置")
+	slog.Info("===========================================")
 
 	// 忽略错误处理
 	_ = execCmd("brew", "install", "raycast")
@@ -873,6 +910,21 @@ func _main() error {
 		flag.Usage()
 		return nil
 	}
+
+	// 显示配置概览
+	var enabledConfigs []string
+	if *configAll {
+		enabledConfigs = append(enabledConfigs, "all")
+	} else {
+		if *configVim { enabledConfigs = append(enabledConfigs, "vim") }
+		if *configGit { enabledConfigs = append(enabledConfigs, "git") }
+		if *configZsh { enabledConfigs = append(enabledConfigs, "zsh") }
+		if *configMacos { enabledConfigs = append(enabledConfigs, "macos") }
+		if *configGvm { enabledConfigs = append(enabledConfigs, "gvm") }
+		if *configJava { enabledConfigs = append(enabledConfigs, "java") }
+		if *configRust { enabledConfigs = append(enabledConfigs, "rust") }
+	}
+	slog.Info("配置概览", "enabled", strings.Join(enabledConfigs, ", "), "force", *force, "dry-run", *dryRun)
 
 	if *dryRun {
 		slog.Info("========================================")
@@ -898,13 +950,13 @@ func _main() error {
 
 	if *configAll || *configZsh || *configGvm || *configJava || *configRust {
 		toolsToInstall = append(toolsToInstall, ToolZsh, ToolOMZ, ToolTheFuck, ToolBat, ToolFzf, ToolEza)
-		if *configGvm {
+		if *configAll || *configGvm {
 			toolsToInstall = append(toolsToInstall, ToolGvm)
 		}
-		if *configJava {
+		if *configAll || *configJava {
 			toolsToInstall = append(toolsToInstall, ToolSdkman)
 		}
-		if *configRust {
+		if *configAll || *configRust {
 			toolsToInstall = append(toolsToInstall, ToolRustup)
 		}
 		configFunc = append(configFunc, zsh)
@@ -915,21 +967,31 @@ func _main() error {
 	}
 
 	// 检查安装
-	slog.Info("开始检查和安装工具...")
-	for _, tool := range toolsToInstall {
+	slog.Info("===========================================")
+	slog.Info("开始检查和安装工具", "total", len(toolsToInstall))
+	slog.Info("===========================================")
+	for i, tool := range toolsToInstall {
+		slog.Info("检查工具", "step", fmt.Sprintf("%d/%d", i+1, len(toolsToInstall)), "tool", string(tool))
 		if err := checkAndInstall(tool); err != nil {
 			return err
 		}
 	}
+	slog.Info("所有工具检查完成", "total", len(toolsToInstall))
 
 	// 配置
-	slog.Info("开始配置...")
-	for _, cfgFunc := range configFunc {
+	slog.Info("===========================================")
+	slog.Info("开始应用配置", "total", len(configFunc))
+	slog.Info("===========================================")
+	for i, cfgFunc := range configFunc {
+		slog.Info("应用配置", "step", fmt.Sprintf("%d/%d", i+1, len(configFunc)))
 		if err := cfgFunc(); err != nil {
 			return err
 		}
 	}
+	slog.Info("所有配置应用完成", "total", len(configFunc))
 
-	slog.Info("所有配置完成！")
+	slog.Info("===========================================")
+	slog.Info("配置完成！")
+	slog.Info("===========================================")
 	return nil
 }

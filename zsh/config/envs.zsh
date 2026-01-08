@@ -1,5 +1,9 @@
 # env config
 
+export GO111MODULE=on
+export GOPROXY=https://goproxy.cn,direct
+export GVM_GO_GET='https://golang.google.cn/dl/'
+
 {{if .Gvm}}
 # Go
 [[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"

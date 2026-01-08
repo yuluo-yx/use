@@ -37,6 +37,6 @@ alias ls="eza"
 alias grep="grep --color=auto"
 
 # cd shortcuts
-alias .="cd .."
-alias ..="cd ../.."
-alias ...="cd ../../.."
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
