@@ -887,7 +887,8 @@ func macosCustomize() error {
 
 	// 仅在 macOS 系统上执行
 	if osStr != OSDarwin {
-		return fmt.Errorf("当前系统不是 macos，跳过")
+		slog.Info("当前系统不是 macos，跳过 macOS 个性化配置")
+		return nil
 	}
 
 	slog.Info("===========================================")
