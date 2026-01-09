@@ -361,7 +361,7 @@ func installBinaryTool(tool tools) error {
 
 	// 对于二进制文件路径，优先使用系统 bin 路径，其次用用户 bin 路径
 	homeBinDir = fmt.Sprintf("%s/.local/bin", homeDir)
-	var targetDir string
+	targetDir := systemBinDir
 	if _, err := os.Stat(systemBinDir); os.IsNotExist(err) {
 		if err := mkdirAll(systemBinDir, 0755); err != nil {
 			targetDir = homeBinDir
