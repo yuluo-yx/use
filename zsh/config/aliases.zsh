@@ -40,3 +40,6 @@ alias grep="grep --color=auto"
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
+
+# Claude
+alias cl='claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.shown_env/claude/system-prompt.txt)"'
