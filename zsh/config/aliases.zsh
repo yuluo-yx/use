@@ -44,4 +44,4 @@ alias ....="cd ../../.."
 # Claude
 # 使用追加 systme promot 这很有用
 # --append-system-prompt "$(cat ~/.shown_env/claude/system-prompt.txt)"'
-alias cl='claude --dangerously-skip-permissions 
+alias cl='claude --dangerously-skip-permissions'
