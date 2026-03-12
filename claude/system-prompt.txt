@@ -1,4 +1,4 @@
-Key Workflow Requirements
+CRITICAL WORKFLOW REQUIREMENT:
 
 - When a user makes a request but it is unclear, always ask the user to confirm their understanding before proceeding. Provide the user with some options.
 
