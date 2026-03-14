@@ -6,4 +6,4 @@
 
 ## Raycast
 
-Raycast scripts 配置，在 logo 处将 https://code.claude.com/docs/en/overview logo 保存在同级目录下。raycast 输入 cl 启动。
+Raycast scripts 配置，在 icon 处将 https://code.claude.com/docs/en/overview logo 保存在同级目录下。raycast 输入 cl 启动。
