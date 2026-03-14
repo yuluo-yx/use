@@ -2,7 +2,7 @@
 
 ## Alias 配置
 
-alias cl='claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.shown_env/claude/system-prompt.txt)"'
+`alias cl='claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.shown_env/claude/system-prompt.txt)"'`
 
 ## Raycast
 
