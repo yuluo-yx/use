@@ -1,0 +1,64 @@
+# ============================================
+# 字体设置
+# ============================================
+font-family = Symbols Nerd Font Mono
+font-family = PragmataPro Liga
+font-family = Sarasa Mono SC
+font-family-bold = PragmataPro Liga
+font-family-italic = PragmataPro Liga
+font-family-bold-italic = PragmataPro Liga
+
+# 上下文替代
+font-feature = calt
+# 连字
+font-feature = liga
+# Stylistic Set 13
+font-feature = ss13
+
+font-size = 16
+window-inherit-font-size = true
+
+# ============================================
+# 窗口设置
+# ============================================
+window-height = 30
+window-width = 100
+# 垂直同步，仅 macOS 支持
+window-vsync = true
+
+# ============================================
+# 光标设置
+# ============================================
+cursor-style = bar
+# 反转前景/背景色
+cursor-invert-fg-bg = true
+cursor-opacity = 0.8
+adjust-cursor-thickness = 3
+adjust-underline-position = 3
+
+# ============================================
+# 外观设置
+# ============================================
+theme = Pro
+background-opacity = 0.8
+background-blur = true
+# background-image = /Users/shown/Downloads/ghostty-bgc.jpeg
+# background-image-fit = stretch
+bold-is-bright = true
+
+# ============================================
+# 行为设置
+# ============================================
+# 自动识别链接
+copy-on-select = true
+link-url = true
+link-previews = true
+mouse-hide-while-typing = true
+
+# ============================================
+# macOS 专用设置
+# ============================================
+macos-icon = custom-style
+macos-icon-ghost-color = #D8D0E8
+macos-icon-screen-color = #000000
+macos-icon-frame = plastic
