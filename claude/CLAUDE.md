@@ -8,7 +8,6 @@
 
 ## Output Guidelines
 
-
 deleting a paragraph wouldn't affect my decision-making, don't include it.
 
 - Directly state the conclusion or solution; avoid preamble.

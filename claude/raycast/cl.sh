@@ -11,7 +11,11 @@
 # Documentation:
 # @raycast.description open claude code
 
+# Mac 自带 terminal 写法
 osascript -e 'tell application "Terminal"
     do script "cl"
     activate
 end tell'
+
+# Ghosty 写法
+open -na Ghostty.app --args -e "zsh" "-l" "-c" "claude --dangerously-skip-permissions --append-system-prompt \"\$(cat ~/.shown_env/claude/system-prompt.txt)\""
