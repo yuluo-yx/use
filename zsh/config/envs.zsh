@@ -36,4 +36,4 @@ export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
 export AI_DASHSCOPE_API_KEY="xxxx"
 
 # eza envs
-export FPATH="/Users/${USER}/.oh-my-zsh/custom/plugins/ezacompletions/zsh:$FPATH"
+export FPATH="$HOME/.oh-my-zsh/custom/plugins/ezacompletions/zsh:$FPATH"

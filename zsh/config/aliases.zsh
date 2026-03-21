@@ -1,6 +1,6 @@
 # alias config
 
-alias c="clear"
+alias clr="clear"
 alias mk="make"
 
 # Kubectl
@@ -14,7 +14,7 @@ alias klf="kubectl logs -f"
 # python
 alias py="python3"
 alias pi="pip3 install"
-alias sv="source venv/bin/active"
+alias sv="source venv/bin/activate"
 
 # git
 alias gg="git clone"
@@ -42,7 +42,7 @@ alias ...="cd ../.."
 alias ....="cd ../../.."
 
 # Claude
-alias cl='claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.shown_env/claude/system-prompt.txt)"'
+alias cl='claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.claude/system-prompt.txt)"'
 
 # Kitty
 alias kdiff="kitty +kitten diff"
