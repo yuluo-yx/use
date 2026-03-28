@@ -1,91 +1,30 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本仓库是开发环境配置集合，不再包含 Go 安装器、构建产物或模板渲染逻辑。
 
-## 项目概述
+## 目录结构
 
-开发环境配置仓库，用于管理 Mac/Linux 开发环境。核心是一个 Go 程序（main.go），使用 embed 将配置文件嵌入二进制中。
-
-## 核心结构
-
-```
+```text
 use/
-├── main.go               # 安装程序源码
-├── bin/use               # 编译后的二进制
-├── zsh/                  # zsh 配置（embed 嵌入）
-├── vim/                  # vim 配置（embed 嵌入）
-├── git/.gitconfig        # git 配置模板
-└── claude/               # Claude Code 配置
+├── git/       # Git 配置
+├── zsh/       # zsh 主配置、模块脚本和主题
+├── vim/       # Vim 配置
+├── ghostty/   # Ghostty 配置
+├── raycast/   # Raycast 脚本
+├── claude/    # Claude Code 配置
+├── codex/     # Codex 配置说明
+└── mac/       # macOS 使用笔记
 ```
 
-## 构建与运行
+## 仓库约定
 
-```bash
-# 构建
-go build -o bin/use main.go
+- 配置通过复制或软链手动应用，不再提供统一 CLI。
+- 修改 README、子目录说明和配置内容时，保持与仓库现状一致，不要重新引入 Go 入口、模板变量或二进制文件。
+- `git/.gitconfig` 不包含用户姓名和邮箱，需由使用者自行通过 `git config` 设置。
 
-# 基础配置（git + vim + zsh）
-./bin/use apply
+## 配置提示
 
-# 全量配置（含语言管理器 + macOS 个性化步骤）
-./bin/use apply --profile full
-
-# 按组件配置
-./bin/use apply --components git,zsh
-
-# 预览模式（不实际执行）
-./bin/use apply --profile full --dry-run
-
-# 强制覆盖已存在文件
-./bin/use apply -f
-
-# 配置 git 并指定用户信息
-./bin/use apply --components git --git-name "YourName" --git-email "your@email.com"
-
-# 彻底还原所有配置项
-./bin/use reset --yes
-```
-
-## 架构说明
-
-### 安装流程
-
-main.go 定义了安装流程：检查工具 → 安装缺失工具 → 应用配置。
-
-**工具安装方式**：
-- 包管理器：git, zsh, thefuck
-- 脚本安装：oh-my-zsh, gvm, sdkman, rustup
-- 二进制下载：fzf, bat, eza（从 GitHub releases 下载）
-
-**配置文件处理**：
-- 使用 `//go:embed` 嵌入配置文件
-- `envs.zsh` 和 `.gitconfig` 使用 Go 模板，根据参数动态生成
-
-### zsh 配置
-
-- 依赖 oh-my-zsh 框架
-- 插件：z, eza, extract, thefuck, zsh-autosuggestions, zsh-syntax-highlighting
-- 遇到 `unknown option --zsh` 错误时需升级 fzf
-
-### 配置文件位置
-
-安装后配置位于：
-- `~/.zshrc` - zsh 主配置
-- `~/.config/zsh/` - zsh 模块化配置（aliases.zsh, envs.zsh, function.zsh, fzf.zsh）
-- `~/.gitconfig` - git 配置
-- `~/.vimrc` - vim 配置
-
-## 常用别名
-
-```bash
-cl='claude --dangerously-skip-permissions'  # Claude
-ff='fzf --preview "bat --color=always {}"'  # 带预览的模糊搜索
-k='kubectl'                                  # kubectl 缩写
-ls='eza'                                     # 替代 ls
-```
-
-## Linux 注意事项
-
-- 安装需要 sudo 权限
-- eza 在 CentOS 上不支持 yum 直接安装
-- 安装前确保系统已换源
+- `zsh/.zshrc` 会加载 `~/.config/zsh/` 下的模块脚本。
+- `zsh` 相关配置依赖 `oh-my-zsh`、`zsh-autosuggestions`、`zsh-syntax-highlighting`、`eza` 和 `fzf`。
+- `vim/.vimrc` 使用 `vim-plug` 管理插件，当前不再包含 Go 专属插件。
+- 图片资源只用于展示效果，不参与任何自动安装逻辑。

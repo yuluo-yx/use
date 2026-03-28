@@ -2,14 +2,11 @@
 
 # Required parameters:
 # @raycast.schemaVersion 1
-# @raycast.title cl
+# @raycast.title codex
 # @raycast.mode silent
 
-# Optional parameters:
-# @raycast.icon ./claude-code-favicon.ico
-
 # Documentation:
-# @raycast.description open claude code
+# @raycast.description open codex in Ghostty
 
 # Mac 自带 terminal 写法
 # osascript -e 'tell application "Terminal"
@@ -17,5 +14,5 @@
 #     activate
 # end tell'
 
-# Ghosty 写法
+# Ghostty 写法
 open -na Ghostty.app --args -e "zsh" "-l" "-c" "codex"

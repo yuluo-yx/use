@@ -226,13 +226,3 @@ ctrl w w 在打开的文件目录和终端之间互相切换
 ```shell
 curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/simple._vimrc >> ~/.vimrc
 ```
-
-## Quick Start
-
-1. 确保系统已经换源；
-2. thefuck 需要 python 3.11 版本；
-3. eza 在 centos 系统中不支持 yum 直接安装；
-4. linux 安装软件时需要 sudo 权限，推荐执行 `sudo ./bin/use apply --profile full`，mac 不需要；
-5. 如果需要配置 git，需要手动修改 proxy 和 user 信息配置；
-6. 对 zsh 命令行内容，可以任意编辑，在 zsh/theme 目录下；
-7. 如果 soure ~/.zshrc 出现，unknown option --zsh，需要手动升级 fzf 版本；ß

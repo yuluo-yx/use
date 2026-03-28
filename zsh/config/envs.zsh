@@ -1,30 +1,14 @@
-# env config
+# 环境变量配置
 
-export GO111MODULE=on
-export GOPROXY=https://goproxy.cn,direct
-export GVM_GO_GET='https://golang.google.cn/dl/'
-
-{{if .Gvm}}
-# Go
-[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "$HOME/.gvm/scripts/gvm"
-{{end}}
-
-{{if .Java}}
 # Java
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-{{end}}
 
-{{if .Rust}}
 # Rust
 export RUSTUP_DIST_SERVER="https://rsproxy.cn"
 export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"
 export CARGO_UNSTABLE_SPARSE_REGISTRY=true
 [[ -s "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
-{{end}}
-
-# AI envs
-export AI_DASHSCOPE_API_KEY="sk-xxxx"
 
 # zsh 相关的工具会放在家目录下，因此将家目录加入到 PATH 中
 export PATH=${HOME}/.local/bin:$PATH

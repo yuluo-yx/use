@@ -4,8 +4,8 @@
     longpaths = true
     editor = vim
 [user]
-    name = {{.User}}
-    email = {{.Email}}
+    name = yuluo-yx
+    email = yuluo08290126@gmail.com
 # 如果需要开启 git 代理，可以取消下面两行的注释并设置代理地址
 # [http]
 #       proxy = http://127.0.0.1:7890
@@ -17,7 +17,7 @@
     co = checkout
     ch = cherry-pick
     dump = cat-file -p
-    hist = log --pretty=format:'%C(yellow)[%ad]%C(reset) %C(green)[%h]%C(reset) | %C(red)%s %C(bold red){{%an}}%C(reset) %C(blue)%d%C(reset)' --graph --date=short
+    hist = log --pretty=format:'%C(yellow)[%ad]%C(reset) %C(green)[%h]%C(reset) | %C(red)%s %C(bold red)[%an]%C(reset) %C(blue)%d%C(reset)' --graph --date=short
     st = status
     type = cat-file -t
 [filter "lfs"]

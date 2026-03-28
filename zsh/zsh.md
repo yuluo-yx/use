@@ -11,10 +11,10 @@ z 是一个快速目录跳转的工具，在终端中按下 z 并回车，会看
 
 ```shell
 $ z       
-5218       /Users/shown/workspace/java/open_source
-6949       /Users/shown/workspace/java/open_source/spring-ai-alibaba
-10469      /Users/shown/workspace/golang/open_source/ai-gateway
-13811      /Users/shown/.sdkman
+5218       /workspace/java/open_source
+6949       /workspace/java/open_source/spring-ai-alibaba
+10469      /workspace/project/open_source/ai-gateway
+13811      /home/user/.sdkman
 
 z open_source 即可跳转到目录中去。
 ```
@@ -69,7 +69,7 @@ copypath可以用来将当前目录快速复制到剪切板
 
 ```shell
 $ copypath       
-/Users/shown/workspace/java/open_source/spring-ai-alibaba copied to clipboard.
+/workspace/java/open_source/spring-ai-alibaba copied to clipboard.
 ```
 
 copybuffer会自动映射到 ctrl + o快捷键，用于复制当前终端显示的命令

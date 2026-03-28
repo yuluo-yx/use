@@ -44,8 +44,6 @@ theme = Catppuccin Mocha
 background-opacity = 0.8
 background-blur-radius = 30
 background-blur = true
-# background-image = /Users/shown/Downloads/ghostty-bgc.jpeg
-# background-image-fit = stretch
 bold-is-bright = true
 
 # ============================================

@@ -1,9 +1,18 @@
-# Claude 配置目录
+# Claude 配置
 
-## Alias 配置
+## 配置文件
 
-`alias cl='claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.shown_env/claude/system-prompt.txt)"'`
+```bash
+mkdir -p ~/.claude
+cp claude/settings.json ~/.claude/settings.json
+cp claude/system-prompt.txt ~/.claude/system-prompt.txt
+```
+
+## Alias
+
+`alias cl='claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.claude/system-prompt.txt)"'`
 
 ## Raycast
 
-Raycast scripts [cl](../raycast/cl.sh) 配置，在 icon 处将 https://code.claude.com/docs/en/overview logo 保存在同级目录下。raycast 输入 cl 启动。
+- [raycast/cl.sh](../raycast/cl.sh) 使用与 alias 相同的 `~/.claude/system-prompt.txt` 路径。
+- `cl` 脚本默认通过 Ghostty 以登录 shell 方式启动 Claude Code。
