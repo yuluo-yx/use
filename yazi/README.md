@@ -1,0 +1,1 @@
+# Yazi Config

@@ -1,0 +1,9 @@
+--theme="Dracula"
+
+--style="numbers,changes,header"
+
+--map-syntax='*.ini:INI'
+--map-syntax='.ignore:Git Ignore'
+--map-syntax="*.ino:C++"
+
+--italic-text=always
