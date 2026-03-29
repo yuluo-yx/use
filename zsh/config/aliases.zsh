@@ -29,6 +29,7 @@ alias c="onefetch"
 # fzf
 alias f="fzf"
 alias ff='fzf --preview "bat --color=always {}"'
+alias gco="git branch | fzf | xargs git checkout"
 
 # eza ls
 alias ls="eza"

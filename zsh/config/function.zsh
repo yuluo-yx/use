@@ -1,10 +1,5 @@
 # Function Plugin config
 
-# The fuck
-# The fuck 需要 python 3.11
-# https://github.com/nvbn/thefuck/issues/1434
-# eval $(thefuck --alias fuck)
-
 # Yazi
 # 目前为止还没有用起来...
 function y() {
