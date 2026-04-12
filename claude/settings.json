@@ -1,29 +1,47 @@
 {
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "env": {
-    "ANTHROPIC_AUTH_TOKEN": "sk-762e6e532c8xxxxxx1bbf2a7db7608",
+    "ANTHROPIC_AUTH_TOKEN": "sk-xxxx",
     "API_TIMEOUT_MS": "3000000",
     "ANTHROPIC_BASE_URL": "https://dashscope.aliyuncs.com/apps/anthropic",
     "DISABLE_AUTOUPDATER": "1"
   },
   "includeCoAuthoredBy": false,
   "model": "glm-5",
+  "model_base": "qwen3.6-plus",
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": "zsh",
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.claude/hooks/block-dangerous-commands.js"
+            "command": "node ~/.claude/hooks/protect-secrets.js",
+            "statusMessage": "PreToolUse:ProtectSecrets"
           }
         ]
-      },
+      }
+    ],
+     "UserPromptSubmit": [
       {
-        "matcher": "Bash",
+        "matcher": "zsh",
         "hooks": [
           {
             "type": "command",
-            "command": "node ~/.claude/hooks/protect-secrets.js"
+            "command": "~/.claude/hooks/skill-reminder.sh",
+            "statusMessage": "UserPromptSubmit:SkillReminder"
+          }
+        ]
+      }
+    ],
+      "Stop": [
+      {
+        "matcher": "zsh",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node ~/.claude/hooks/protect-secrets.js",
+            "statusMessage": "Stop:ProtectSecrets"
           }
         ]
       }
@@ -31,13 +49,108 @@
   },
   "statusLine": {
     "type": "command",
-    "command": "npx ccsp@latest --preset PMBTUS --theme powerline"
+    "command": "bash -c 'plugin_dir=$(ls -d \"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"/plugins/cache/claude-hud/claude-hud/*/ 2>/dev/null | awk -F/ '\"'\"'{ print $(NF-1) \"\\t\" $0 }'\"'\"' | sort -t. -k1,1n -k2,2n -k3,3n -k4,4n | tail -1 | cut -f2-); exec \"/opt/homebrew/bin/node\" \"${plugin_dir}dist/index.js\"'"
   },
   "enabledPlugins": {
-    "pua@pua-skills": true
+    "pua@pua-skills": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "claude-hud@claude-hud": true,
+    "frontend-design@claude-plugins-official": true
   },
   "language": "chinese",
   "alwaysThinkingEnabled": true,
   "small_model": "qwen3.5-flash",
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "mcpServers": {
+    "fetch": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-fetch-server"
+      ]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp"
+      ]
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ]
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/shown"
+      ]
+    }
+  },
+  "permissions": {
+    "allow": [
+      "Edit(*)",
+      "Write(*)",
+      "NotebookEdit(*)",
+      "Bash(*)",
+      "WebFetch(domain:*)",
+      "WebSearch",
+      "mcp__*",
+      "mcp__ide__*",
+      "mcp__chrome-devtools__*",
+      "mcp__claude-in-chrome__*",
+      "mcp__playwright__*",
+      "mcp__reddit-mcp-server__search_reddit",
+      "mcp__reddit-mcp-server__get_post_details",
+      "mcp__tavily-web-search__tavily_search",
+      "mcp__tavily-web-search__tavily_extract",
+      "WebFetch(domain:api.open-meteo.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:docs.anthropic.com)",
+      "WebFetch(domain:support.claude.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:json.schemastore.org)",
+      "WebFetch(domain:claudelog.com)",
+      "WebFetch(domain:www.eesel.ai)",
+      "WebFetch(domain:shipyard.build)"
+    ],
+    "deny": [],
+    "ask": [
+      "Bash(rm *)",
+      "Bash(rmdir *)",
+      "Bash(shred *)",
+      "Bash(unlink *)",
+      "Bash(dd *)",
+      "Bash(mkfs *)",
+      "Bash(fdisk *)",
+      "Bash(chmod *)",
+      "Bash(chown *)",
+      "Bash(npm *)",
+      "Bash(pip *)",
+      "Bash(pip3 *)",
+      "Bash(yarn *)",
+      "Bash(pnpm *)",
+      "Bash(docker *)",
+      "Bash(kubectl *)",
+      "Bash(firebase *)",
+      "Bash(gcloud *)",
+      "Bash(wget *)",
+      "Bash(kill *)",
+      "Bash(killall *)",
+      "Bash(pkill *)"
+    ]
+  },
 }

@@ -15,4 +15,4 @@
 # end tell'
 
 # Ghostty 写法
-open -na Ghostty.app --args -e "zsh" "-l" "-c" "claude --dangerously-skip-permissions --append-system-prompt \"\$(cat ~/.claude/system-prompt.txt)\""
+open -na Ghostty.app --args -e "zsh" "-l" "-c" "claude --dangerously-skip-permissions"

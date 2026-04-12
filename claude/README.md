@@ -10,9 +10,8 @@ cp claude/system-prompt.txt ~/.claude/system-prompt.txt
 
 ## Alias
 
-`alias cl='claude --dangerously-skip-permissions --append-system-prompt "$(cat ~/.claude/system-prompt.txt)"'`
+`alias cc='claude --dangerously-skip-permissions`
 
 ## Raycast
 
-- [raycast/cl.sh](../raycast/cl.sh) 使用与 alias 相同的 `~/.claude/system-prompt.txt` 路径。
-- `cl` 脚本默认通过 Ghostty 以登录 shell 方式启动 Claude Code。
+- [raycast/cc.sh](../raycast/cl.sh) `cc` 脚本默认通过 Ghostty 登录 shell 并启动 Claude Code。
