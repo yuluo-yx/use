@@ -15,3 +15,5 @@ cp claude/system-prompt.txt ~/.claude/system-prompt.txt
 ## Raycast
 
 - [raycast/cc.sh](../raycast/cl.sh) `cc` 脚本默认通过 Ghostty 登录 shell 并启动 Claude Code。
+
+![](cc.png)
