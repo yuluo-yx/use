@@ -1,0 +1,36 @@
+# yazi.toml
+[mgr]
+# 显示隐藏文件
+show_hidden = true
+# 按照文件最后修改时间排序
+sort_by = "mtime"
+# 先显示目录
+sort_dir_first = true
+# 显示文件的大小和修改时间
+linemode = "size_and_mtime"
+# 显示 link 链接信息
+show_symlink = true
+
+[[plugin.prepend_fetchers]]
+id    = "git" # Remove if Yazi > v26.1.22
+url   = "*"
+run   = "git"
+group = "git"
+
+[[plugin.prepend_fetchers]]
+id    = "git" # Remove if Yazi > v26.1.22
+url   = "*/"
+run   = "git"
+group = "git"
+
+[plugin]
+
+prepend_previewers = [
+    { url = "*.csv", run = "rich-preview"}, # for csv files
+    { url = "*.md", run = "rich-preview" }, # for markdown (.md) files
+    { url = "*.rst", run = "rich-preview"}, # for restructured text (.rst) files
+    { url = "*.ipynb", run = "rich-preview"}, # for jupyter notebooks (.ipynb)
+    { url = "*.json", run = "rich-preview"}, # for json (.json) files
+#    { url = "*.lang_type", run = "rich-preview"} # for particular language files eg. .py, .go., .lua, etc.
+]
+

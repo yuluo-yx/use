@@ -1,0 +1,15 @@
+[[mgr.prepend_keymap]]
+on   = "l"
+run  = "plugin smart-enter"
+desc = "Enter the child directory, or open the fileo"
+
+[[mgr.prepend_keymap]]
+on = "<A-y>"
+run = ["plugin copy-file-contents"]
+desc = "Copy contents of file"
+
+[[mgr.prepend_keymap]]
+on = [ "'", ":" ]
+run = 'plugin custom-shell -- auto --interactive --block --option'
+desc = "custom-shell as default, interactive, block"
+
