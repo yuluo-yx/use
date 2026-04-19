@@ -1,12 +1,12 @@
 # ============================================
 # 字体设置
 # ============================================
-font-family = Symbols Nerd Font Mono
-font-family = PragmataPro Liga
+font-family = Fira Code
 font-family = Sarasa Mono SC
-font-family-bold = PragmataPro Liga
-font-family-italic = PragmataPro Liga
-font-family-bold-italic = PragmataPro Liga
+font-family = Symbols Nerd Font Mono
+font-family-bold = Sarasa Mono SC
+font-family-italic = Sarasa Mono SC
+font-family-bold-italic = Sarasa Mono SC
 
 # 上下文替代
 font-feature = calt
