@@ -1,0 +1,207 @@
+# 按 OpenAI Codex 0.116.0 官方文档整理。
+# 参考：
+# - https://developers.openai.com/codex/config-basic
+# - https://developers.openai.com/codex/config-advanced
+# - https://developers.openai.com/codex/config-reference
+
+################################################################################
+# 核心模型与文档
+################################################################################
+
+# 当当前目录缺少 AGENTS.md 时，降级读取这些文件名。
+project_doc_fallback_filenames = ["CLAUDE.md"]
+
+# 默认模型与 /review 模型。
+model = "gpt-5.5"
+review_model = "gpt-5.3-codex"
+
+# 主动把上下文上限限制到 1,000,000，而不是完全跟随模型自动值。
+model_context_window = 1000000
+
+# 自动压缩阈值，低于上下文上限，用于控制历史 compaction 的触发点。
+model_auto_compact_token_limit = 350000
+
+# 单次工具输出写入历史时允许保留的 token 上限。
+tool_output_token_limit = 40000
+
+################################################################################
+# 推理与输出风格
+################################################################################
+
+# 推理强度: minimal | low | medium | high | xhigh
+model_reasoning_effort = "high"
+
+# 推理摘要风格: auto | concise | detailed | none
+model_reasoning_summary = "detailed"
+
+# Plan 模式推理强度。
+plan_mode_reasoning_effort = "high"
+
+# GPT-5 系列输出详略: low | medium | high
+model_verbosity = "high"
+
+# 强制声明当前模型支持推理摘要。
+model_supports_reasoning_summaries = true
+
+################################################################################
+# 执行与常用偏好
+################################################################################
+
+# 审批策略: untrusted | on-request | never
+approval_policy = "on-request"
+
+# 沙箱等级: read-only | workspace-write | danger-full-access
+sandbox_mode = "danger-full-access"
+
+# 官方当前写法；原来的 web_search_request 已废弃。
+web_search = "disabled"
+
+# commit 的共同作者尾注。设为 "" 可关闭。
+commit_attribution = ""
+
+# 每次启动时检查更新。默认 true，这里显式关闭。
+check_for_update_on_startup = false
+
+# 每次启动时 mcp 的初始化时间
+startup_timeout_sec = 10
+
+################################################################################
+# 功能开关
+################################################################################
+
+[features]
+# Shell 工具。
+shell_tool = true
+
+# Shell 快照。关闭可减少 shell_snapshots 目录继续增长。
+shell_snapshot = false
+
+# 撤销功能。
+undo = true
+
+# 使用统一 PTY 执行工具。
+unified_exec = true
+
+# 启用多 agent 能力。
+multi_agent = true
+
+# 运行中阻止机器休眠。
+prevent_idle_sleep = true
+
+# Fast mode 会提升用量，这里保持关闭。
+fast_mode = false
+
+################################################################################
+# Agent 角色
+################################################################################
+
+[agents]
+max_threads = 12
+max_depth = 2
+
+[agents.default]
+description = "General-purpose helper."
+model = "gpt-5.3-codex"
+model_reasoning_effort = "xhigh"
+
+[agents.worker]
+description = "Do not use this agent, it's silly named and not optimized for any particular role."
+model = "gpt-5.2"
+model_reasoning_effort = "high"
+
+[agents.explorer]
+description = "Fast codebase explorer for read-heavy tasks."
+model = "gpt-5.3-codex"
+model_reasoning_effort = "xhigh"
+sandbox_mode = "read-only"
+
+[agents.awaiter]
+description = "Long-running command and task monitoring role."
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+
+[agents.reviewer]
+description = "Reviewer agent for code reviews and feedback."
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+
+################################################################################
+# Shell 与沙箱补充设置
+################################################################################
+
+[shell_environment_policy]
+# 环境变量继承策略: all | core | none
+inherit = "all"
+
+# 保留名字中包含 KEY/SECRET/TOKEN 的环境变量，便于本地命令继承登录态。
+# 这会扩大子进程可见变量范围，属于有意保留的行为。
+ignore_default_excludes = true
+
+[sandbox_workspace_write]
+# 仅在 sandbox_mode = "workspace-write" 时生效。
+network_access = true
+
+################################################################################
+# TUI 与通知
+################################################################################
+
+[tui]
+# 审批或回合结束时发送桌面通知。
+notifications = true
+
+# 主题名称。可用 /theme 预览。
+theme = "zenburn"
+
+status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-remaining", "five-hour-limit", "codex-version", "context-window-size", "used-tokens", "session-id"]
+
+[tui.model_availability_nux]
+"gpt-5.5" = 2
+
+[notice]
+hide_rate_limit_model_nudge = true
+
+[notice.model_migrations]
+"gpt-5.2" = "gpt-5.3-codex"
+"gpt-5.2-codex" = "gpt-5.3-codex"
+
+################################################################################
+# MCP
+################################################################################
+
+[mcp]
+enabled = true
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp@latest"]
+
+[mcp_servers.sequential-thinking]
+command = "npx"
+args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+
+[mcp_servers.mcp-server-time]
+command = "/opt/homebrew/opt/python@3.13/bin/python3.13"
+args = ["-m", "uv", "tool", "run", "mcp-server-time", "--local-timezone=Asia/Shanghai"]
+
+[mcp_servers.mcp-shrimp-task-manager]
+command = "npx"
+args = ["-y", "mcp-shrimp-task-manager"]
+env = { DATA_DIR = "/Users/shown/.codex/sqlite/mcp-shrimp-task-manager", TEMPLATES_USE = "zh", ENABLE_GUI = "false" }
+
+[mcp_servers.fetch]
+type = "stdio"
+command = "/opt/homebrew/opt/python@3.13/bin/python3.13"
+args = ["-m", "uv", "tool", "run", "mcp-server-fetch"]
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest"]
+
+################################################################################
+# 项目信任
+################################################################################
+
+[projects]
+
+[projects."/Users/shown"]
+trust_level = "trusted"
