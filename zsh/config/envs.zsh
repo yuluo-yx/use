@@ -21,3 +21,10 @@ export AI_DASHSCOPE_API_KEY="xxxx"
 
 # eza envs
 export FPATH="$HOME/.oh-my-zsh/custom/plugins/ezacompletions/zsh:$FPATH"
+
+# PATH env
+export PATH="$HOME/.local/bin:$PATH"
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
