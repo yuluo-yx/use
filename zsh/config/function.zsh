@@ -21,3 +21,20 @@ function logcat() {
 function mkcd() {
 	mkdir -p "$1" && cd "$1"
 }
+
+# bun completions
+[ -s "/Users/shown/.bun/_bun" ] && source "/Users/shown/.bun/_bun"
+
+function proxy(){
+    export http_proxy="http://127.0.0.1:7890"
+    export https_proxy="http://127.0.0.1:7890"
+    export all_proxy="socks5://127.0.0.1:7898"
+    echo "proxy on..."
+}
+
+function noproxy() {
+    unset http_proxy
+    unset https_proxy
+    unset all_proxy
+    echo "proxy off..."
+}
