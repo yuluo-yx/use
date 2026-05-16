@@ -73,6 +73,7 @@
 | mcp-shrimp-task-manager | 深度分析、任务拆解、验证与研究记录 | 复杂实施任务、需细化验收标准时使用 |
 | Playwright MCP | 网页交互、截图、网络/控制台观测 | 需要浏览器级验证、登录态页面检查或 UI 回归时使用 |
 | 本地知识源 | `config.toml`、`history.jsonl`、`sessions/`、`skills/`、`memories/` | 作为环境事实、历史偏差和经验沉淀的证据来源 |
+| 环境变量管理工具 | 管理我当前系统上的开发 SDK，例如 Go 版本等 | 需要切换或者下载新的 SDK 时使用，优先 mise list 确认 |
 
 ### 3.1 本地检索主线
 - 结构化检索优先顺序：
