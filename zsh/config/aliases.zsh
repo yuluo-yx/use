@@ -15,6 +15,7 @@ alias klf="kubectl logs -f"
 alias py="python3"
 alias pi="pip3 install"
 alias sv="source venv/bin/activate"
+alias www="python3 -m http.server 58080"
 
 # git
 alias gg="git clone"
