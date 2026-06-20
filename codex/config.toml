@@ -29,7 +29,7 @@ tool_output_token_limit = 40000
 ################################################################################
 
 # 推理强度: minimal | low | medium | high | xhigh
-model_reasoning_effort = "high"
+model_reasoning_effort = "xhigh"
 
 # 推理摘要风格: auto | concise | detailed | none
 model_reasoning_summary = "detailed"
@@ -61,9 +61,6 @@ commit_attribution = ""
 
 # 每次启动时检查更新。默认 true，这里显式关闭。
 check_for_update_on_startup = false
-
-# 每次启动时 mcp 的初始化时间
-startup_timeout_sec = 10
 
 ################################################################################
 # 功能开关
@@ -155,7 +152,7 @@ theme = "zenburn"
 status_line = ["model-with-reasoning", "current-dir", "git-branch", "context-remaining", "five-hour-limit", "codex-version", "context-window-size", "used-tokens", "session-id"]
 
 [tui.model_availability_nux]
-"gpt-5.5" = 2
+"gpt-5.5" = 4
 
 [notice]
 hide_rate_limit_model_nudge = true
@@ -174,28 +171,88 @@ enabled = true
 [mcp_servers.context7]
 command = "npx"
 args = ["-y", "@upstash/context7-mcp@latest"]
+startup_timeout_sec = 120
+env = { NPM_CONFIG_CACHE = "/Users/shown/.codex/cache/npm" }
 
 [mcp_servers.sequential-thinking]
 command = "npx"
 args = ["-y", "@modelcontextprotocol/server-sequential-thinking"]
+startup_timeout_sec = 120
+env = { NPM_CONFIG_CACHE = "/Users/shown/.codex/cache/npm" }
+
+[mcp_servers.sequential-thinking.tools.sequentialthinking]
+approval_mode = "approve"
 
 [mcp_servers.mcp-server-time]
-command = "/opt/homebrew/opt/python@3.13/bin/python3.13"
-args = ["-m", "uv", "tool", "run", "mcp-server-time", "--local-timezone=Asia/Shanghai"]
+command = "/opt/homebrew/bin/uv"
+args = ["tool", "run", "mcp-server-time", "--local-timezone=Asia/Shanghai"]
+startup_timeout_sec = 120
 
 [mcp_servers.mcp-shrimp-task-manager]
 command = "npx"
 args = ["-y", "mcp-shrimp-task-manager"]
-env = { DATA_DIR = "/Users/shown/.codex/sqlite/mcp-shrimp-task-manager", TEMPLATES_USE = "zh", ENABLE_GUI = "false" }
+startup_timeout_sec = 120
+env = { DATA_DIR = "/Users/shown/.codex/sqlite/mcp-shrimp-task-manager", TEMPLATES_USE = "zh", ENABLE_GUI = "false", NPM_CONFIG_CACHE = "/Users/shown/.codex/cache/npm" }
+
+[mcp_servers.mcp-shrimp-task-manager.tools.analyze_task]
+approval_mode = "approve"
+
+[mcp_servers.mcp-shrimp-task-manager.tools.reflect_task]
+approval_mode = "approve"
+
+[mcp_servers.mcp-shrimp-task-manager.tools.split_tasks]
+approval_mode = "approve"
+
+[mcp_servers.mcp-shrimp-task-manager.tools.research_mode]
+approval_mode = "approve"
+
+[mcp_servers.mcp-shrimp-task-manager.tools.process_thought]
+approval_mode = "approve"
 
 [mcp_servers.fetch]
 type = "stdio"
-command = "/opt/homebrew/opt/python@3.13/bin/python3.13"
-args = ["-m", "uv", "tool", "run", "mcp-server-fetch"]
+command = "/opt/homebrew/bin/uv"
+args = ["tool", "run", "mcp-server-fetch"]
+startup_timeout_sec = 120
+
+[mcp_servers.fetch.tools.fetch]
+approval_mode = "approve"
 
 [mcp_servers.playwright]
 command = "npx"
 args = ["-y", "@playwright/mcp@latest"]
+startup_timeout_sec = 120
+env = { NPM_CONFIG_CACHE = "/Users/shown/.codex/cache/npm" }
+
+[mcp_servers.playwright.tools.browser_run_code_unsafe]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_navigate]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_resize]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_click]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_evaluate]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_fill_form]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_tabs]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_close]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_press_key]
+approval_mode = "approve"
+
+[mcp_servers.playwright.tools.browser_type]
+approval_mode = "approve"
 
 ################################################################################
 # 项目信任
