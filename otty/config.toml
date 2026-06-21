@@ -1,0 +1,256 @@
+theme = "Glass Light"
+theme-dark = "Glass Light"
+auto-theme-dark-mode = false
+
+# 使用内置 Glass Light 主题色；不要在主配置中覆盖 foreground/background/palette/ui-*，避免破坏玻璃亮色观感
+# palette-1 = "#f38ba8" (reset to default)
+# palette-2 = "#a6e3a1" (reset to default)
+# palette-3 = "#f9e2af" (reset to default)
+# palette-4 = "#89b4fa" (reset to default)
+# palette-5 = "#f5c2e7" (reset to default)
+# palette-6 = "#94e2d5" (reset to default)
+# palette-7 = "#bac2de" (reset to default)
+# palette-8 = "#585b70" (reset to default)
+# palette-9 = "#f38ba8" (reset to default)
+# palette-10 = "#a6e3a1" (reset to default)
+# palette-11 = "#f9e2af" (reset to default)
+# palette-12 = "#89b4fa" (reset to default)
+# palette-13 = "#f5c2e7" (reset to default)
+# palette-14 = "#94e2d5" (reset to default)
+# palette-15 = "#ebebe6" (reset to default)
+# language = "chinese" (reset to default)
+
+# window-layout = "tabs-top" (reset to default)
+
+# selection-background = "#edc4be" (reset to default)
+# cursor-color = "#cc8595" (reset to default)
+
+# selection-foreground = "#2a2422" (reset to default)
+# cursor-text = "#f5f0f0" (reset to default)
+
+# palette-15 = "#cdcdcd" (reset to default)
+
+# selection-foreground = "#fafaff" (reset to default)
+# selection-background = "#ad95e9" (reset to default)
+# cursor-color = "#303030" (reset to default)
+# cursor-text = "#565656" (reset to default)
+
+# selection-foreground = "#fafaff" (reset to default)
+# cursor-text = "#565656" (reset to default)
+
+# palette-15 = "#a6adc8" (reset to default)
+# palette-15 = "#a6adc8" (reset to default)
+
+# palette-15 = "#fdfff1" (reset to default)
+
+# selection-foreground = "#fdfff1" (reset to default)
+# selection-background = "#57584f" (reset to default)
+# cursor-color = "#c0c1b5" (reset to default)
+# cursor-text = "#8d8e82" (reset to default)
+
+# palette-15 = "#fdfff1" (reset to default)
+
+# palette-15 = "#eceff4" (reset to default)
+
+# selection-foreground = "#2e3440" (reset to default)
+# cursor-text = "#2e3440" (reset to default)
+
+# font-blending = "linear" (reset to default)
+
+font-size = 16
+
+# text-bold = "synthetic" (reset to default)
+
+# text-blink = true (reset to default)
+
+# dock-icon-animate-progress = true (reset to default)
+
+# dock-icon-error-badge = false (reset to default)
+
+# notification-attention = false (reset to default)
+
+# dock-icon-error-badge = false (reset to default)
+
+dock-icon-error-badge = false
+
+# 有任务或命令发出进度状态时，在 Dock 图标上显示进度动画
+dock-icon-animate-progress = true
+
+keybind = "opt+i=open_quickly"
+
+details-panel-width = 500
+
+# ── 复制与剪贴板 ──────────────────────────────────────
+
+# 选中即复制：选中文本后自动写入剪贴板，无需按 ⌘C
+copy-on-select = true
+
+# 复制时自动去除每行末尾的空格
+clipboard-trim-trailing-spaces = true
+
+# 粘贴保护：粘贴多行、含 sudo、尾部换行或控制字符时弹出确认（安全防线）
+clipboard-paste-protection = true
+
+# 支持 bracketed paste 的程序粘贴时跳过保护检查（vim/less 等已安全处理粘贴）
+clipboard-paste-bracketed-safe = true
+
+# 程序通过 OSC 52 写入剪贴板的权限：allow / ask / deny
+clipboard-write = allow
+
+# 程序通过 OSC 52 读取剪贴板的权限：ask 防止远程程序偷读剪贴板
+clipboard-read = ask
+
+# ── 选区行为 ──────────────────────────────────────────
+
+# 输入任意字符时清除选区
+selection-clear-on-typing = true
+
+# 显式复制（⌘C）后清除选区高亮；copy-on-select 开启时此项不生效
+selection-clear-on-copy = false
+
+# 在可编辑提示行上有选区时，Backspace 删除整个选区而非单个字符
+selection-backspace-deletes = true
+
+# ── 提效配置：Shell 集成 ───────────────────────────────
+
+# 开启命令边界、退出状态、CWD 跟踪、Outline、Tab Badge 与补全增强
+shell-integration = true
+
+# SSH 会话也启用 Otty 集成，便于远程开发时保留状态、路径与文件能力
+ssh-integration = true
+
+# 省略 otty 前缀，直接使用 jump/view/edit/learn/watch 等包装命令
+omit-otty-prefix = true
+
+# 不覆盖已有同名 shell 命令，避免意外抢占系统或个人别名
+cli-allow-overwrite = false
+
+# 高频 Otty CLI 短别名：j 跳目录，v 预览，e 编辑
+cli-alias = j=jump
+cli-alias = v=view
+cli-alias = e=edit
+
+# ── 提效配置：目录跳转 ─────────────────────────────────
+
+# 目录跳转统一交给 zoxide，关闭 Otty 自带的目录 frecency 自动记录，避免两套目录历史并行维护
+frecency-auto-record = false
+
+# ── 提效配置：Quick Terminal ───────────────────────────
+
+# Quick Terminal 收起后保留同一个会话，避免临时命令上下文丢失
+quick-terminal-persist-session = true
+
+# Quick Terminal 默认使用当前 pane 的工作目录，便于围绕当前项目执行临时命令
+quick-terminal-cwd = current-pane
+
+# ── 提效配置：Tab 面板显示 ─────────────────────────────
+
+# 启动时固定显示左侧 Tab 面板；always 表示单 Tab 也始终显示，不走自动隐藏
+window-layout = sidebar-left
+sidebar-visible = true
+auto-hide-tabs-panel = always
+
+# 如果切换为顶部或底部 Tab 条，也始终显示 Tab 条
+auto-hide-tab-bar = always
+
+# 加宽侧边 Tab 面板，便于多 Tab 或多 Agent 会话时查看标题与状态
+sidebar-width = 260
+
+# ── 提效配置：窗口尺寸 ─────────────────────────────────
+
+# 新窗口按终端字符网格打开，保证每次都有稳定的代码、日志和 diff 可视空间
+window-size = grid
+window-cols = 120
+window-rows = 40
+
+# ── 提效配置：工作目录继承 ─────────────────────────────
+
+# 新终端默认继承当前上下文目录，减少在同一项目内反复 cd
+working-directory = inherit
+tab-working-directory = inherit
+split-working-directory = inherit
+
+# ── 提效配置：Agent 状态提醒 ───────────────────────────
+
+# Agent 运行、完成或等待输入时在 Tab 上显示状态，减少来回切换检查
+privilege-badge-agent-processing = true
+privilege-badge-agent-task-complete = true
+privilege-badge-agent-awaiting-input = true
+
+# Agent 完成任务或等待批准/输入时发送系统通知
+privilege-notify-agent-task-complete = true
+privilege-notify-agent-awaiting-input = true
+
+# 会话恢复时保留继续恢复 Agent session 的入口
+privilege-resume-agent-session = true
+
+# ── 提效配置：命令完成提醒 ─────────────────────────────
+
+# Otty 在前台但当前 Tab 未聚焦时显示命令通知，避免通知过度打扰
+notification-foreground = tab-unfocused
+
+# 长命令完成、失败或 watch 包装命令完成时发送通知
+privilege-notification-on-finish = true
+privilege-notification-on-error = true
+privilege-notification-on-watch-finish = true
+
+# 后台命令退出状态和活动输出显示在 Tab badge 上，便于快速定位需要关注的会话
+privilege-badge-exit-status = true
+privilege-badge-activity = true
+
+# ── 提效配置：文件与链接打开方式 ───────────────────────
+
+# 终端中的文件、目录和链接默认在 Otty pane/tab/split 内打开，减少切换到 Finder 或浏览器
+file-open-with = otty
+folder-open-with = otty
+link-open-with = otty
+
+# Cmd 悬停链接时显示完整目标，便于打开前确认路径或 URL
+link-previews = true
+
+# ── 提效配置：鼠标体验 ─────────────────────────────────
+
+# 鼠标指针保持可见；Otty 没有独立指针颜色/大小配置，关闭自动隐藏可避免输入后找不到鼠标
+mouse-hide-while-typing = false
+
+# 鼠标移入分屏 pane 时自动切换键盘焦点，减少多 pane 操作时的额外点击
+focus-follows-mouse = true
+
+# ── 提效配置：终端滚动体验 ─────────────────────────────
+
+# 底部保留到光标行的滚动空间，避免输入位置紧贴窗口底边
+terminal-scroll-past-end = cursor-line
+
+# 新输出到来时保持滚动留白，不自动挤回底部
+terminal-scroll-past-end-sticky = true
+
+# 保持像素级平滑滚动
+terminal-scroll-smooth = true
+
+# ── 提效配置：关闭确认 ─────────────────────────────────
+
+# 关闭仍有运行进程的 Tab 时确认，避免误关编辑器、服务或远程会话
+confirm-close-tab = process
+
+# 关闭包含多个 Tab 的窗口时确认，避免一次误关多个工作上下文
+confirm-close-window = multiple_tabs
+
+# ── 安全配置：Secure Input ────────────────────────────
+
+# 密码类提示自动启用 macOS Secure Keyboard Entry，并在标题栏显示状态提示
+auto-secure-input = true
+secure-input-indication = true
+
+# ── 本轮明确不启用的配置记录 ───────────────────────────
+
+# 不启用主动自动补全候选与补全历史忽略规则：保留默认补全行为，避免干扰 shell 原生补全和既有输入习惯
+# 不启用 Otty 目录 frecency 自动记录：目录跳转统一交给 zoxide，避免两套目录历史并行维护
+# 不显式设置启动恢复和新 Tab 位置：保留 Otty 默认行为
+# 不启用 Agent 处理时防睡眠：避免移动或电池场景额外耗电
+# 不增大 scrollback 和会话日志容量：保留默认资源占用
+# 不设置 Recipe 命令自动重放：保留默认确认策略，避免自动执行命令
+# 不把 macOS Option 键改为 Alt/Meta：保留 Option 输入特殊字符的系统行为
+# 不改右键行为：保留右键菜单中的 Open With、Reveal、Copy Path 等入口
+# 不限制自定义 URL scheme：保留 Otty 默认识别所有 scheme:// 链接
+# 不固定 UI 语言：继续跟随 Otty 默认或系统语言
+# 不启用 Auto Approve / IPC send-keys：避免扩大自动输入和敏感会话操作面
