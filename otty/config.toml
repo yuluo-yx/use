@@ -1,8 +1,8 @@
-theme = "Glass Light"
+theme = "glass-light-readable"
 theme-dark = "Glass Light"
 auto-theme-dark-mode = false
 
-# 使用内置 Glass Light 主题色；不要在主配置中覆盖 foreground/background/palette/ui-*，避免破坏玻璃亮色观感
+# 使用自定义 Glass Light Readable 主题色；终端区域改为高对比实底和深色 ANSI 灰阶，保留 Glass Light 的玻璃 UI 外观
 # palette-1 = "#f38ba8" (reset to default)
 # palette-2 = "#a6e3a1" (reset to default)
 # palette-3 = "#f9e2af" (reset to default)
@@ -89,46 +89,46 @@ copy-on-select = true
 clipboard-trim-trailing-spaces = true
 
 # 粘贴保护：粘贴多行、含 sudo、尾部换行或控制字符时弹出确认（安全防线）
-clipboard-paste-protection = true
+# clipboard-paste-protection = true (reset to default)
 
 # 支持 bracketed paste 的程序粘贴时跳过保护检查（vim/less 等已安全处理粘贴）
-clipboard-paste-bracketed-safe = true
+# clipboard-paste-bracketed-safe = true (reset to default)
 
 # 程序通过 OSC 52 写入剪贴板的权限：allow / ask / deny
-clipboard-write = allow
+# clipboard-write = allow (reset to default)
 
 # 程序通过 OSC 52 读取剪贴板的权限：ask 防止远程程序偷读剪贴板
-clipboard-read = ask
+# clipboard-read = ask (reset to default)
 
 # ── 选区行为 ──────────────────────────────────────────
 
 # 输入任意字符时清除选区
-selection-clear-on-typing = true
+# selection-clear-on-typing = true (reset to default)
 
 # 显式复制（⌘C）后清除选区高亮；copy-on-select 开启时此项不生效
-selection-clear-on-copy = false
+# selection-clear-on-copy = false (reset to default)
 
 # 在可编辑提示行上有选区时，Backspace 删除整个选区而非单个字符
-selection-backspace-deletes = true
+# selection-backspace-deletes = true (reset to default)
 
 # ── 提效配置：Shell 集成 ───────────────────────────────
 
 # 开启命令边界、退出状态、CWD 跟踪、Outline、Tab Badge 与补全增强
-shell-integration = true
+# shell-integration = true (reset to default)
 
 # SSH 会话也启用 Otty 集成，便于远程开发时保留状态、路径与文件能力
-ssh-integration = true
+# ssh-integration = true (reset to default)
 
 # 省略 otty 前缀，直接使用 jump/view/edit/learn/watch 等包装命令
 omit-otty-prefix = true
 
 # 不覆盖已有同名 shell 命令，避免意外抢占系统或个人别名
-cli-allow-overwrite = false
+# cli-allow-overwrite = false (reset to default)
 
 # 高频 Otty CLI 短别名：j 跳目录，v 预览，e 编辑
-cli-alias = j=jump
-cli-alias = v=view
-cli-alias = e=edit
+cli-alias = "j=jump"
+cli-alias = "v=view"
+cli-alias = "e=edit"
 
 # ── 提效配置：目录跳转 ─────────────────────────────────
 
@@ -141,17 +141,17 @@ frecency-auto-record = false
 quick-terminal-persist-session = true
 
 # Quick Terminal 默认使用当前 pane 的工作目录，便于围绕当前项目执行临时命令
-quick-terminal-cwd = current-pane
+# quick-terminal-cwd = current-pane (reset to default)
 
 # ── 提效配置：Tab 面板显示 ─────────────────────────────
 
 # 启动时固定显示左侧 Tab 面板；always 表示单 Tab 也始终显示，不走自动隐藏
-window-layout = sidebar-left
-sidebar-visible = true
-auto-hide-tabs-panel = always
+# window-layout = sidebar-left (reset to default)
+# sidebar-visible = true (reset to default)
+auto-hide-tabs-panel = "always"
 
 # 如果切换为顶部或底部 Tab 条，也始终显示 Tab 条
-auto-hide-tab-bar = always
+auto-hide-tab-bar = "always"
 
 # 加宽侧边 Tab 面板，便于多 Tab 或多 Agent 会话时查看标题与状态
 sidebar-width = 260
@@ -159,59 +159,59 @@ sidebar-width = 260
 # ── 提效配置：窗口尺寸 ─────────────────────────────────
 
 # 新窗口按终端字符网格打开，保证每次都有稳定的代码、日志和 diff 可视空间
-window-size = grid
+window-size = "grid"
 window-cols = 120
 window-rows = 40
 
 # ── 提效配置：工作目录继承 ─────────────────────────────
 
 # 新终端默认继承当前上下文目录，减少在同一项目内反复 cd
-working-directory = inherit
-tab-working-directory = inherit
-split-working-directory = inherit
+# working-directory = inherit (reset to default)
+# tab-working-directory = inherit (reset to default)
+# split-working-directory = inherit (reset to default)
 
 # ── 提效配置：Agent 状态提醒 ───────────────────────────
 
 # Agent 运行、完成或等待输入时在 Tab 上显示状态，减少来回切换检查
-privilege-badge-agent-processing = true
-privilege-badge-agent-task-complete = true
-privilege-badge-agent-awaiting-input = true
+# privilege-badge-agent-processing = true (reset to default)
+# privilege-badge-agent-task-complete = true (reset to default)
+# privilege-badge-agent-awaiting-input = true (reset to default)
 
 # Agent 完成任务或等待批准/输入时发送系统通知
-privilege-notify-agent-task-complete = true
-privilege-notify-agent-awaiting-input = true
+# privilege-notify-agent-task-complete = true (reset to default)
+# privilege-notify-agent-awaiting-input = true (reset to default)
 
 # 会话恢复时保留继续恢复 Agent session 的入口
-privilege-resume-agent-session = true
+# privilege-resume-agent-session = true (reset to default)
 
 # ── 提效配置：命令完成提醒 ─────────────────────────────
 
 # Otty 在前台但当前 Tab 未聚焦时显示命令通知，避免通知过度打扰
-notification-foreground = tab-unfocused
+notification-foreground = "tab-unfocused"
 
 # 长命令完成、失败或 watch 包装命令完成时发送通知
 privilege-notification-on-finish = true
-privilege-notification-on-error = true
-privilege-notification-on-watch-finish = true
+# privilege-notification-on-error = true (reset to default)
+# privilege-notification-on-watch-finish = true (reset to default)
 
 # 后台命令退出状态和活动输出显示在 Tab badge 上，便于快速定位需要关注的会话
-privilege-badge-exit-status = true
-privilege-badge-activity = true
+# privilege-badge-exit-status = true (reset to default)
+# privilege-badge-activity = true (reset to default)
 
 # ── 提效配置：文件与链接打开方式 ───────────────────────
 
-# 终端中的文件、目录和链接默认在 Otty pane/tab/split 内打开，减少切换到 Finder 或浏览器
-file-open-with = otty
-folder-open-with = otty
-link-open-with = otty
+# 终端中的文件和目录默认在 Otty pane/tab/split 内打开，链接交给系统默认浏览器
+file-open-with = "otty"
+folder-open-with = "otty"
+# link-open-with = "browser" (reset to default)
 
 # Cmd 悬停链接时显示完整目标，便于打开前确认路径或 URL
-link-previews = true
+# link-previews = true (reset to default)
 
 # ── 提效配置：鼠标体验 ─────────────────────────────────
 
 # 鼠标指针保持可见；Otty 没有独立指针颜色/大小配置，关闭自动隐藏可避免输入后找不到鼠标
-mouse-hide-while-typing = false
+# mouse-hide-while-typing = false (reset to default)
 
 # 鼠标移入分屏 pane 时自动切换键盘焦点，减少多 pane 操作时的额外点击
 focus-follows-mouse = true
@@ -219,27 +219,27 @@ focus-follows-mouse = true
 # ── 提效配置：终端滚动体验 ─────────────────────────────
 
 # 底部保留到光标行的滚动空间，避免输入位置紧贴窗口底边
-terminal-scroll-past-end = cursor-line
+terminal-scroll-past-end = "cursor-line"
 
 # 新输出到来时保持滚动留白，不自动挤回底部
 terminal-scroll-past-end-sticky = true
 
 # 保持像素级平滑滚动
-terminal-scroll-smooth = true
+# terminal-scroll-smooth = true (reset to default)
 
 # ── 提效配置：关闭确认 ─────────────────────────────────
 
 # 关闭仍有运行进程的 Tab 时确认，避免误关编辑器、服务或远程会话
-confirm-close-tab = process
+# confirm-close-tab = process (reset to default)
 
 # 关闭包含多个 Tab 的窗口时确认，避免一次误关多个工作上下文
-confirm-close-window = multiple_tabs
+confirm-close-window = "multiple_tabs"
 
 # ── 安全配置：Secure Input ────────────────────────────
 
 # 密码类提示自动启用 macOS Secure Keyboard Entry，并在标题栏显示状态提示
-auto-secure-input = true
-secure-input-indication = true
+# auto-secure-input = true (reset to default)
+# secure-input-indication = true (reset to default)
 
 # ── 本轮明确不启用的配置记录 ───────────────────────────
 
@@ -254,3 +254,11 @@ secure-input-indication = true
 # 不限制自定义 URL scheme：保留 Otty 默认识别所有 scheme:// 链接
 # 不固定 UI 语言：继续跟随 Otty 默认或系统语言
 # 不启用 Auto Approve / IPC send-keys：避免扩大自动输入和敏感会话操作面
+
+faint-opacity = 1
+
+minimum-contrast = 10
+
+autocomplete-show-candidates = "disable"
+
+autocomplete-inline-suggestion = false
