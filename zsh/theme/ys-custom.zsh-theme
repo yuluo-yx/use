@@ -29,19 +29,19 @@ ZSH_THEME_SVN_PROMPT_CLEAN="$YS_VCS_PROMPT_CLEAN"
 # HG info
 local hg_info='$(ys_hg_prompt_info)'
 ys_hg_prompt_info() {
-	# make sure this is a hg dir
-	if [ -d '.hg' ]; then
-		echo -n "${YS_VCS_PROMPT_PREFIX1}hg${YS_VCS_PROMPT_PREFIX2}"
-		echo -n $(hg branch 2>/dev/null)
-		if [[ "$(hg config oh-my-zsh.hide-dirty 2>/dev/null)" != "1" ]]; then
-			if [ -n "$(hg status 2>/dev/null)" ]; then
-				echo -n "$YS_VCS_PROMPT_DIRTY"
-			else
-				echo -n "$YS_VCS_PROMPT_CLEAN"
-			fi
-		fi
-		echo -n "$YS_VCS_PROMPT_SUFFIX"
-	fi
+        # make sure this is a hg dir
+        if [ -d '.hg' ]; then
+                echo -n "${YS_VCS_PROMPT_PREFIX1}hg${YS_VCS_PROMPT_PREFIX2}"
+                echo -n $(hg branch 2>/dev/null)
+                if [[ "$(hg config oh-my-zsh.hide-dirty 2>/dev/null)" != "1" ]]; then
+                        if [ -n "$(hg status 2>/dev/null)" ]; then
+                                echo -n "$YS_VCS_PROMPT_DIRTY"
+                        else
+                                echo -n "$YS_VCS_PROMPT_CLEAN"
+                        fi
+                fi
+                echo -n "$YS_VCS_PROMPT_SUFFIX"
+        fi
 }
 
 # 在 terminal pormpt 中显示主机名，远程登陆到多个服务器有用
@@ -64,8 +64,8 @@ local venv_info='$(virtenv_prompt)'
 YS_THEME_VIRTUALENV_PROMPT_PREFIX=" %{$fg[green]%}"
 YS_THEME_VIRTUALENV_PROMPT_SUFFIX=" %{$reset_color%}%"
 virtenv_prompt() {
-	[[ -n "${VIRTUAL_ENV:-}" ]] || return
-	echo "${YS_THEME_VIRTUALENV_PROMPT_PREFIX}${VIRTUAL_ENV:t}${YS_THEME_VIRTUALENV_PROMPT_SUFFIX}"
+        [[ -n "${VIRTUAL_ENV:-}" ]] || return
+        echo "${YS_THEME_VIRTUALENV_PROMPT_PREFIX}${VIRTUAL_ENV:t}${YS_THEME_VIRTUALENV_PROMPT_SUFFIX}"
 }
 
 local exit_code="%(?,,C:%{$fg[red]%}%?%{$reset_color%})"
@@ -76,11 +76,11 @@ PROMPT="
 %{$terminfo[bold]$fg[blue]%}#%{$reset_color%} \
 %(#,%{$bg[yellow]%}%{$fg[black]%}%n%{$reset_color%},%{$fg[cyan]%}%n\
 %{$fg[blue]%}@$(get_hostname)\
-%{$fg[green] 🎈. \
+%{$reset_color%} 🎈. \
 %{$fg[white]%}in \
 %{$terminfo[bold]$fg[yellow]%}%~%{$reset_color%}\
 ${hg_info}\
 ${git_info}\
- \
-%{$fg[white]%}[%*] $exit_code
-%{$terminfo[bold]$fg[red]%}$ %{$reset_color%}"
+%{$reset_color%}
+%{$fg[white]%}[%*] ${exit_code}
+%{$terminfo[bold]$fg[red]%}$%{$reset_color%} "
