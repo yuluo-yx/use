@@ -1,14 +1,8 @@
 # 环境变量配置
 
-# Java
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=30
 
-# Rust
-export RUSTUP_DIST_SERVER="https://rsproxy.cn"
-export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"
-export CARGO_UNSTABLE_SPARSE_REGISTRY=true
-[[ -s "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+export LANG=en_US.UTF-8
 
 # zsh 相关的工具会放在家目录下，因此将家目录加入到 PATH 中
 export PATH=${HOME}/.local/bin:$PATH
