@@ -1,9 +1,13 @@
-# alias config
+############################
+# General Aliases
+############################
 
 alias clr="clear"
 alias mk="make"
 
-# Kubectl alias
+############################
+# Kubectl Aliases
+############################
 alias k="kubectl"
 alias kg="kubectl get"
 alias ka="kubectl apply"
@@ -11,54 +15,63 @@ alias kcf="kubectl create -f"
 alias kd="kubectl describe"
 alias klf="kubectl logs -f"
 
-# Docker alias
+############################
+# Docker Aliases
+############################
 alias d="docker"
 
-# python
+############################
+# Python Aliases
+############################
 alias py="python3"
 alias pi="pip3 install"
-alias sv="source .venv/bin/active"
+alias sv="source .venv/bin/activate"
 
-# git
+############################
+# Git Aliases
+############################
 alias gg="git clone"
 
-# Yazi
-alias y="yazi"
-
-# neofetch
+############################
+# System Information
+############################
 alias sf="fastfetch"
 
-# fzf
+############################
+# Fzf Aliases
+############################
 alias f="fzf"
 alias ff='fzf --preview "bat --color=always {}"'
 alias gco="git branch | fzf | xargs git checkout"
 
-# Better ls
+############################
+# Directory Listing
+############################
 alias ls='eza --icons'
 
-# Detailed listing
 alias ll='eza -lh --icons --git'
 
-# Detailed listing including hidden files
 alias la='eza -lah --icons --git'
 
-# Tree view
 alias tree='eza --tree --icons'
 
-# Reuse ls completions for eza (avoids defining a separate completion function)
 compdef eza=ls
 
-# Better cat
-alias cat='bat'
+############################
+# Directory Shortcuts
+############################
+alias -- --='cd ..'
+alias -- ---='cd ../..'
+alias -- ----='cd ../../..'
 
-# alias cd
-alias "--"="cd .."
-alias "---"="cd ../.."
-alias "----"="cd ../../.."
-
-# claude
+############################
+# Claude Code
+############################
 alias cc='claude --dangerously-skip-permissions'
 
+############################
+# Command Replacements
+############################
 alias grep='rg --color=auto'
 alias diff='diff --color=auto'
 alias df='df -h'

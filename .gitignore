@@ -1,1 +1,5 @@
 .idea
+zsh/config/custom_vars.local.zsh
+zsh/config/custom_vars.zsh
+zsh/config/blog_algoia.zsh
+zsh/config/wine.zsh

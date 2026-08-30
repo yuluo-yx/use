@@ -1,13 +1,26 @@
-# =========================================================
-# fzf
-# =========================================================
+############################
+# Fzf Availability
+############################
 
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --strip-cwd-prefix'  # strip-cwd-prefix removes the leading ./ from results
+if ! command -v fzf >/dev/null 2>&1; then
+  return
+fi
 
-# Ctrl-T uses fd
+############################
+# File Discovery
+############################
+if command -v fd >/dev/null 2>&1; then
+  export FZF_DEFAULT_COMMAND='fd --type f --hidden --strip-cwd-prefix --exclude .git'
+fi
+
+############################
+# Ctrl T Search
+############################
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
-# UI
+############################
+# Interface
+############################
 export FZF_DEFAULT_OPTS='
   --height=60%
   --layout=reverse
@@ -17,15 +30,38 @@ export FZF_DEFAULT_OPTS='
   --preview-window=right:65%:wrap:border-left
 '
 
-export _FZF_PREVIEW_CMD='bat --color=always --style=plain,numbers --line-range=:500 {}'
+############################
+# File Preview
+############################
+if command -v bat >/dev/null 2>&1; then
+  export _FZF_PREVIEW_CMD='bat --color=always --style=plain,numbers --line-range=:500 {}'
+else
+  export _FZF_PREVIEW_CMD='sed -n "1,500p" {}'
+fi
 export FZF_CTRL_T_OPTS="--preview '$_FZF_PREVIEW_CMD'"
 
-# Ctrl+F: file picker excluding hidden files
+############################
+# Shell Integration
+############################
+if [[ -o interactive ]]; then
+  source <(fzf --zsh)
+fi
+
+############################
+# Ctrl F Search
+############################
 _fzf_file_no_hidden() {
-  local cmd result
-  cmd="${FZF_DEFAULT_COMMAND/--hidden /}"
-  result=$(eval "${cmd:-find . -type f}" | fzf --preview "$_FZF_PREVIEW_CMD") \
-    && LBUFFER+="$result"  # LBUFFER is the text left of the cursor
+  local result
+  if command -v fd >/dev/null 2>&1; then
+    result=$(command fd --type f --strip-cwd-prefix --exclude .git | command fzf --preview "$_FZF_PREVIEW_CMD") || return
+  else
+    result=$(command find . -type f | command fzf --preview "$_FZF_PREVIEW_CMD") || return
+  fi
+  LBUFFER+="${(q)result}"
   zle reset-prompt
 }
-zle -N _fzf_file_no_hidden
+
+if [[ -o interactive ]]; then
+  zle -N _fzf_file_no_hidden
+  bindkey '^F' _fzf_file_no_hidden
+fi
