@@ -1,1 +1,0 @@
-eval "$(typo init zsh)"
