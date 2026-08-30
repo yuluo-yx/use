@@ -1,24 +1,21 @@
-# 环境变量配置
-
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE=fg=30
-
-export LANG=en_US.UTF-8
-
-# zsh 相关的工具会放在家目录下，因此将家目录加入到 PATH 中
-export PATH=${HOME}/.local/bin:$PATH
-
-# fzf
-export FZF_ALT_C_OPTS="--preview 'tree -C {}'"
-
 # AI envs
-export AI_DASHSCOPE_API_KEY="xxxx"
+export AI_DASHSCOPE_API_KEY="sk-xxxx"
+export AI_OPENAI_API_KEY="sk-xxxx"
 
-# eza envs
-export FPATH="$HOME/.oh-my-zsh/custom/plugins/ezacompletions/zsh:$FPATH"
+# fultter
+export PUB_HOSTED_URL=https://pub.flutter-io.cn
+export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
-# PATH env
-export PATH="$HOME/.local/bin:$PATH"
+# daytona sandbox
+# https://app.daytona.io/dashboard/onboarding
+export DAYTONA_API_KEY="xxxx"
 
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
+# Rust
+export RUSTUP_DIST_SERVER="https://rsproxy.cn"
+export RUSTUP_UPDATE_ROOT="https://rsproxy.cn/rustup"
+export CARGO_UNSTABLE_SPARSE_REGISTRY=true
+[[ -s "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+
+# Go
+export GO111MODULE=on
+export GOPROXY=https://goproxy.cn,direct
