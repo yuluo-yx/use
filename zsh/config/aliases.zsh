@@ -45,11 +45,11 @@ alias la='eza -lah --icons --git'
 # Tree view
 alias tree='eza --tree --icons'
 
-# grep/egrep
-alias grep="grep --color=auto"
-
 # Reuse ls completions for eza (avoids defining a separate completion function)
 compdef eza=ls
+
+# Better cat
+alias cat='bat'
 
 # alias cd
 alias "--"="cd .."
