@@ -2,8 +2,6 @@
 
 本目录保存 macOS 使用的通用 Zsh 配置。配置基于 Oh My Zsh，命令行工具优先由 mise 管理。mise 无法管理的组件使用 Homebrew 或项目官方安装方式。
 
-`custom_vars.zsh`、`blog_algoia.zsh` 和 `wine.zsh` 属于机器本地配置，不提交到仓库，也不会被通用配置覆盖。
-
 ## 目录结构
 
 ```text
