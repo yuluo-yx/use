@@ -73,7 +73,7 @@ mise use --global \
 Typo 不在 mise 的简写 registry 中，但提供标准 GitHub Release。使用 GitHub backend 安装：
 
 ```shell
-mise use --global 'github:yuluo-yx/typo@latest[bin=typo]'
+mise use --global 'ubi:yuluo-yx/typo[exe=typo]'
 ```
 
 如需使用 `toolchains.zsh` 中的开发工具链变量，可继续交给 mise 管理：
