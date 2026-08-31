@@ -55,10 +55,3 @@ function noproxy() {
     unset http_proxy https_proxy all_proxy
     echo "proxy off"
 }
-
-############################
-# Remote Server
-############################
-function ssh@2450() {
-    ssh -p 22 root@149.104.24.50
-}
