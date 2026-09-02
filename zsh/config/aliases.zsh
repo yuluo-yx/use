@@ -57,6 +57,8 @@ alias tree='eza --tree --icons'
 
 compdef eza=ls
 
+alias cat='bat'
+
 ############################
 # Directory Shortcuts
 ############################
