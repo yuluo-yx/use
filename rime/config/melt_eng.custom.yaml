@@ -1,0 +1,4 @@
+# 英文拼写派生适配小鹤双拼；跨文件引用使用完整文件名前缀。
+patch:
+  speller/algebra:
+    __include: melt_eng.schema:/algebra_double_pinyin_flypy

@@ -1,0 +1,50 @@
+{
+  "title": "sing-box 代理",
+  "symbol": "network",
+  "metricsBarValue": "OFF",
+  "metrics": [
+    {
+      "title": "代理",
+      "formattedValue": "已停止"
+    },
+    {
+      "title": "系统代理",
+      "formattedValue": "未启用"
+    },
+    {
+      "title": "代理下载",
+      "formattedValue": "0 B/s",
+      "normalizedValue": 0
+    },
+    {
+      "title": "代理上传",
+      "formattedValue": "0 B/s",
+      "normalizedValue": 0
+    },
+    {
+      "title": "网络接口",
+      "formattedValue": "en0"
+    },
+    {
+      "title": "节点",
+      "formattedValue": "proxy.example.com:443"
+    },
+    {
+      "title": "出口 IP",
+      "formattedValue": "--"
+    },
+    {
+      "title": "代理延迟",
+      "formattedValue": "--"
+    },
+    {
+      "title": "进程",
+      "formattedValue": "CPU 0% / 0 MB"
+    },
+    {
+      "title": "运行时间",
+      "formattedValue": "--"
+    }
+  ],
+  "lastUpdatedDate": "2026-10-19T00:00:00Z"
+}

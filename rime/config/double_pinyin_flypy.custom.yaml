@@ -1,0 +1,43 @@
+# double_pinyin_flypy.custom.yaml
+# 用户补丁：中文双拼、英文候选补全、分号/引号快捷选词
+# 注意：__include 引用跨文件节点时必须带文件名前缀（rime-ice issue #133）
+patch:
+  # 每次激活方案恢复中文，并隐藏方案菜单中的西文开关。
+  switches/@0:
+    name: ascii_mode
+    reset: 0
+  # 中文模式下：空格确认中文候选，回车提交原始字母（如 github）。
+  editor/bindings/Return: commit_raw_input
+  editor/bindings/Control+Return: commit_composition
+  editor/bindings/Control+Shift+Return: commit_composition
+  # 禁用邮件、网址和下划线文本的自动西文直通。
+  recognizer/patterns/email: ""
+  recognizer/patterns/url: ""
+  recognizer/patterns/underscore: ""
+  # ===== 英文作为双拼中的候选与补全，不增加独立英文输入方案 =====
+  melt_eng/enable_completion: true
+  melt_eng/initial_quality: 0.8
+  # 整表覆写自 schema 原始 translators（保留英文，去掉中英混合短语 cn_en）；
+  # 升级 rime-ice 后若 translators 有变动，需重新对照 schema 调整
+  engine/translators:
+    - punct_translator
+    - script_translator
+    - lua_translator@*date_translator    # 时间、日期、星期
+    - lua_translator@*lunar              # 农历
+    - lua_translator@*uuid               # UUID
+    - table_translator@custom_phrase     # 自定义短语 custom_phrase_double.txt
+    - table_translator@melt_eng          # 英文词库与前缀补全
+    - table_translator@radical_lookup    # 部件拆字反查
+    - lua_translator@*unicode            # Unicode
+    - lua_translator@*number_translator  # 数字、金额大写
+    - lua_translator@*calc_translator    # 计算器
+    - lua_translator@*force_gc           # 暴力 GC
+  # 英文词库只作为依赖编译，方案菜单仍只有小鹤双拼。
+  schema/dependencies:
+    - melt_eng
+    - radical_pinyin
+
+  # ===== 分号选第二候选、引号选第三候选（输入过程中生效）=====
+  key_binder/bindings/+:
+    - {accept: semicolon, send: 2, when: has_menu}
+    - {accept: apostrophe, send: 3, when: has_menu}

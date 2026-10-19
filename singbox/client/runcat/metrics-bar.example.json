@@ -1,0 +1,8 @@
+{
+  "visibleCustomMetricsSourceIDs": [],
+  "showsCPU": false,
+  "showsStorage": false,
+  "showsBattery": false,
+  "showsNetwork": false,
+  "showsMemory": false
+}

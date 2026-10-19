@@ -1,0 +1,47 @@
+# squirrel.custom.yaml
+patch:
+  "style/color_scheme": light_blue
+  "style/color_scheme_dark": dark_coral
+  "style/candidate_list_layout": linear
+  "style/inline_preedit": true
+  "style/corner_radius": 12
+  "style/hilited_corner_radius": 10
+  "style/border_height": 5
+  "style/border_width": 6
+  "style/spacing": 12
+  "style/line_spacing": 5
+  "style/font_face": "PingFangSC-Regular"
+  "style/font_point": 16
+  "style/candidate_format": "[label]. [candidate][comment]"
+
+  # 浅色：白底 + 浅蓝高亮胶囊（仿 macOS 原生输入法，参考用户截图）
+  # Rime 颜色为 0xBBGGRR 逆序格式
+  "preset_color_schemes/light_blue":
+    name: "浅蓝／Light Blue"
+    author: "Shown"
+    back_color: 0xFFFFFF
+    border_color: 0xE6E6E6
+    text_color: 0x1A1A1A
+    hilited_text_color: 0x1A1A1A
+    candidate_text_color: 0x1A1A1A
+    label_color: 0xB0B0B0
+    comment_text_color: 0x999999
+    hilited_candidate_back_color: 0xFBEBDD        # #DDEBFB 浅蓝
+    hilited_candidate_text_color: 0xE5881E        # #1E88E5 蓝
+    hilited_candidate_label_color: 0xF0D8A8       # #A8D8F0 淡蓝
+    hilited_comment_text_color: 0xE5881E
+
+  "preset_color_schemes/dark_coral":
+    name: "暗黑珊瑚／Dark Coral"
+    author: "Shown"
+    back_color: 0x151515
+    border_color: 0x2A2A2A
+    text_color: 0x888888
+    hilited_text_color: 0xFFFFFF
+    candidate_text_color: 0xD0D0D0
+    label_color: 0x7E7E7E
+    comment_text_color: 0x7E7E7E
+    hilited_candidate_back_color: 0x7A83DA
+    hilited_candidate_text_color: 0xFFFFFF
+    hilited_candidate_label_color: 0xFFFFFF
+    hilited_comment_text_color: 0xF2F2F2

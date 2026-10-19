@@ -1,0 +1,19 @@
+# default.custom.yaml
+# 用户补丁：只启用小鹤双拼，每页 6 个候选
+patch:
+  "menu/page_size": 6
+  "schema_list":
+    - schema: double_pinyin_flypy
+  # 默认保持中文双拼；英文通过候选或回车输入，不使用英文模式切换。
+  "ascii_composer/good_old_caps_lock": false
+  "ascii_composer/switch_key":
+    Caps_Lock: noop
+    Shift_L: noop
+    Shift_R: noop
+    Control_L: noop
+    Control_R: noop
+  "switcher/hotkeys":
+    - F4
+    - Control+grave
+    - Control+Shift+grave
+    - Control+asciitilde

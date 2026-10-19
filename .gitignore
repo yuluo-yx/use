@@ -3,3 +3,14 @@ zsh/config/custom_vars.local.zsh
 zsh/config/custom_vars.zsh
 zsh/config/blog_algoia.zsh
 zsh/config/wine.zsh
+
+config.json
+*.local.json
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+*.db
+*.db-*
+*.log

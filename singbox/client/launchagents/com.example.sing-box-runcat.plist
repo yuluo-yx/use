@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- 使用前将 __USER_HOME__ 替换为用户主目录的绝对路径；launchd 不展开 ~ 或 $HOME。 -->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.example.sing-box-runcat</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__USER_HOME__/.local/libexec/sing-box-proxy/update-sing-box-runcat.sh</string>
+  </array>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HOME</key>
+    <string>__USER_HOME__</string>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>ProcessType</key>
+  <string>Background</string>
+  <key>ThrottleInterval</key>
+  <integer>5</integer>
+  <key>StandardOutPath</key>
+  <string>__USER_HOME__/Library/Logs/sing-box-proxy/runcat.stdout.log</string>
+  <key>StandardErrorPath</key>
+  <string>__USER_HOME__/Library/Logs/sing-box-proxy/runcat.stderr.log</string>
+</dict>
+</plist>

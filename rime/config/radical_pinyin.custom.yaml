@@ -1,0 +1,6 @@
+# radical_pinyin.custom.yaml
+# 部件拆字反查及辅码适配小鹤双拼（原默认为全拼 algebra_rime_ice）
+# __include 引用跨文件节点时必须带文件名前缀，见 rime-ice issue #133
+patch:
+  speller/algebra:
+    __include: radical_pinyin.schema.yaml:/algebra_double_pinyin_flypy

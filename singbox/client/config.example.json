@@ -1,0 +1,126 @@
+{
+  "log": {
+    "level": "info",
+    "timestamp": true
+  },
+  "dns": {
+    "servers": [
+      {
+        "type": "local",
+        "tag": "system-dns"
+      },
+      {
+        "type": "udp",
+        "tag": "corp-dns",
+        "server": "192.0.2.53",
+        "server_port": 53
+      }
+    ],
+    "final": "system-dns"
+  },
+  "inbounds": [
+    {
+      "type": "mixed",
+      "tag": "local-test",
+      "listen": "127.0.0.1",
+      "listen_port": 18080,
+      "set_system_proxy": true
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "hysteria2",
+      "tag": "hy2-test",
+      "server": "proxy.example.com",
+      "domain_resolver": "system-dns",
+      "server_port": 443,
+      "password": "REPLACE_WITH_HYSTERIA2_PASSWORD",
+      "tls": {
+        "enabled": true,
+        "server_name": "proxy.example.com",
+        "certificate_path": "./cert.pem",
+        "alpn": [
+          "h3"
+        ]
+      }
+    },
+    {
+      "type": "direct",
+      "tag": "direct",
+      "domain_resolver": "system-dns"
+    },
+    {
+      "type": "direct",
+      "tag": "direct-corp",
+      "domain_resolver": "corp-dns"
+    },
+    {
+      "type": "direct",
+      "tag": "direct-orb",
+      "bind_interface": "bridge100",
+      "domain_resolver": "system-dns"
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "domain_suffix": [
+          "orb.local"
+        ],
+        "action": "route",
+        "outbound": "direct-orb"
+      },
+      {
+        "domain_suffix": [
+          "corp.example.com"
+        ],
+        "action": "route",
+        "outbound": "direct-corp"
+      },
+      {
+        "ip_is_private": true,
+        "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "cn",
+        "action": "route",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "cnip",
+        "action": "route",
+        "outbound": "direct"
+      }
+    ],
+    "final": "hy2-test",
+    "rule_set": [
+      {
+        "type": "remote",
+        "tag": "cn",
+        "format": "binary",
+        "url": "https://rules.example.com/geosite-cn.srs",
+        "http_client": {
+          "detour": "hy2-test"
+        },
+        "update_interval": "1d"
+      },
+      {
+        "type": "remote",
+        "tag": "cnip",
+        "format": "binary",
+        "url": "https://rules.example.com/geoip-cn.srs",
+        "http_client": {
+          "detour": "hy2-test"
+        },
+        "update_interval": "1d"
+      }
+    ]
+  },
+  "experimental": {
+    "cache_file": {
+      "enabled": true,
+      "path": "./cache.db"
+    }
+  }
+}

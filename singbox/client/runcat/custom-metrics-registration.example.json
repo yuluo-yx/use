@@ -1,0 +1,10 @@
+{
+  "sources": [
+    {
+      "fileURL": "file://__USER_HOME__/.local/share/sing-box-proxy/runcat.json",
+      "id": "00000000-0000-4000-8000-000000000001",
+      "displayName": "sing-box 代理",
+      "symbol": "network"
+    }
+  ]
+}

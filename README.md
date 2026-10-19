@@ -16,6 +16,14 @@ Refined GitHub 重构 Github 页面效果
 
 ## Mac
 
+### sing-box 代理
+
+[sing-box 配置](singbox/README.md)：Hysteria2 服务端与 macOS 客户端的脱敏配置，分别存放在 `singbox/server` 和 `singbox/client`。
+
+### 鼠须管输入法
+
+[Rime 配置](rime/README.md)：小鹤双拼、英文候选与前缀补全、浅蓝／暗珊瑚皮肤，附完整词库和恢复说明。
+
 ### 键盘说明
 
 ⌘ Command <br>
