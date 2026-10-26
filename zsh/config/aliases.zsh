@@ -43,6 +43,7 @@ alias sf="fastfetch"
 alias f="fzf"
 alias ff='fzf --preview "bat --color=always {}"'
 alias gco="git branch | fzf | xargs git checkout"
+alias gbd="git branch | grep -vE "main|dev|test|prod" | xargs git branch -D"
 
 ############################
 # Directory Listing
