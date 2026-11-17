@@ -235,6 +235,8 @@ ctrl w w 在打开的文件目录和终端之间互相切换
 curl https://raw.githubusercontent.com/yuluo-yx/use/master/vim/simple._vimrc >> ~/.vimrc
 ```
 
-## Typora
+## ~~Typora~~ 🥱
 
-主题配置文件，基于 yuluo-css 主题。详细安装说明见 [typora/README.md](typora/README.md)。
+自己写了 mory 用。
+
+~~主题配置文件，基于 yuluo-css 主题。详细安装说明见 [typora/README.md](typora/README.md)。~~
