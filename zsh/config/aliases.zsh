@@ -73,6 +73,11 @@ alias -- ----='cd ../../..'
 alias cc='claude --dangerously-skip-permissions'
 
 ############################
+# Codex
+############################
+alias codexs='codex --sandbox danger-full-access'
+
+############################
 # Command Replacements
 ############################
 alias grep='rg --color=auto'
