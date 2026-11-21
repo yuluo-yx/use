@@ -101,7 +101,7 @@ Command + shift + . 显示隐藏文件
 
 ### 应用整理
 
-Raycast 应用启动器
+~~Raycast~~ Tinycast 应用启动器
 
 Snipaste 截图软件
 
@@ -123,7 +123,7 @@ Shui 提醒每隔一定时间喝水
 
 Mos 让鼠标滚轮更丝滑
 
-OrbStack Docker Desktop 平替
+OrbStack, Docker Desktop 平替
 
 #### 没啥大作用的软件 🥱
 
