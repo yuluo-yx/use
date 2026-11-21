@@ -1,16 +1,20 @@
 ## Chrome 扩展
 
-JSON Viewer pro 格式化查看 json 数据，可能是最好看的
+JSON Viewer pro 格式化查看 json 数据；
 
-AdBlock 拦截广告
+AdBlock 拦截广告；
 
-Chrono下载管理器 好用的 google 浏览器下载管理插件
+Chrono 下载管理器；
 
-油猴 任意网站都可以使用的脚本管理工具
+油猴 任意网站都可以使用的脚本管理工具；
 
-File Icons for GitHub and GitLab 精美的 Github 图标
+File Icons for GitHub and GitLab 精美的 Github 图标；
 
-Refined GitHub 重构 Github 页面效果
+Refined GitHub 重构 Github 页面效果；
+
+BetterHistory：历史记录管理器；
+
+為什麼你們就是不能加個空格呢？：网页显示排版。
 
 ~~IDM Integration Module IDM 下载扩展插件，接管浏览器下载行为，下载速度更快(需要下载 IDM)~~
 
@@ -114,8 +118,6 @@ Monitorcontrol 控制外接显示器的屏幕亮度
 Rectangle 窗口管理
 
 - control + option + 方向箭头 应用屏幕朝箭头方向分屏 (⌃ + ⌥ + →)
-
-有道翻译
 
 RunCat 显示一个奔跑的小猫，速度越快 CPU 负载越高，可以很方便的看到 ip. ~~（raycast 输入 ip 也可以）~~
 
